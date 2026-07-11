@@ -1,0 +1,1 @@
+/home/hamdan/ros2_test/build/ros2_orb_slam3/ament_cmake_environment_hooks/local_setup.bash

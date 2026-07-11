@@ -1,0 +1,22 @@
+[35m[1mConsolidate compiler generated dependencies of target orb_slam3_lib[0m
+[  3%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/Tracking.cc.o[0m
+[  6%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/LocalMapping.cc.o[0m
+[  9%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/LoopClosing.cc.o[0m
+[ 12%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/FrameDrawer.cc.o[0m
+[ 15%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/Atlas.cc.o[0m
+[ 18%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/Optimizer.cc.o[0m
+[ 21%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/Viewer.cc.o[0m
+[ 25%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/Settings.cc.o[0m
+[ 28%] [32m[1mLinking CXX shared library liborb_slam3_lib.so[0m
+[ 90%] Built target orb_slam3_lib
+[35m[1mConsolidate compiler generated dependencies of target mono_node_cpp[0m
+[ 93%] [32mBuilding CXX object CMakeFiles/mono_node_cpp.dir/src/mono_example.cpp.o[0m
+[ 96%] [32mBuilding CXX object CMakeFiles/mono_node_cpp.dir/src/common.cpp.o[0m
+[100%] [32m[1mLinking CXX executable mono_node_cpp[0m
+[100%] Built target mono_node_cpp
+[100%] Built target ament_cmake_python_symlink_ros2_orb_slam3
+running egg_info
+writing ros2_orb_slam3.egg-info/PKG-INFO
+writing dependency_links to ros2_orb_slam3.egg-info/dependency_links.txt
+writing top-level names to ros2_orb_slam3.egg-info/top_level.txt
+reading manifest file 'ros2_orb_slam3.egg-info/SOURCES.txt'

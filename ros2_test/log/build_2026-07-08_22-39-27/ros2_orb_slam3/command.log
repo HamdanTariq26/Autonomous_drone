@@ -1,0 +1,4 @@
+Invoking command in '/home/hamdan/ros2_test/build/ros2_orb_slam3': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/hamdan/ros2_test/build/ros2_orb_slam3 -- -j12 -l12
+Invoked command in '/home/hamdan/ros2_test/build/ros2_orb_slam3' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/hamdan/ros2_test/build/ros2_orb_slam3 -- -j12 -l12
+Invoking command in '/home/hamdan/ros2_test/build/ros2_orb_slam3': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/hamdan/ros2_test/build/ros2_orb_slam3
+Invoked command in '/home/hamdan/ros2_test/build/ros2_orb_slam3' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/hamdan/ros2_test/build/ros2_orb_slam3
