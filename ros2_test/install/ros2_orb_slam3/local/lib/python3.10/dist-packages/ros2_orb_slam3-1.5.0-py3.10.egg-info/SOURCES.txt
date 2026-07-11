@@ -1,1 +1,6 @@
-/home/hamdan/ros2_test/build/ros2_orb_slam3/ament_cmake_python/ros2_orb_slam3/ros2_orb_slam3.egg-info/SOURCES.txt
+setup.py
+ros2_orb_slam3/__init__.py
+ros2_orb_slam3.egg-info/PKG-INFO
+ros2_orb_slam3.egg-info/SOURCES.txt
+ros2_orb_slam3.egg-info/dependency_links.txt
+ros2_orb_slam3.egg-info/top_level.txt

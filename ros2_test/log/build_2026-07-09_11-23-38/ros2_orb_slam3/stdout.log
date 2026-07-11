@@ -1,4 +1,0 @@
-[ 90%] Built target orb_slam3_lib
-[35m[1mConsolidate compiler generated dependencies of target mono_node_cpp[0m
-[ 93%] [32mBuilding CXX object CMakeFiles/mono_node_cpp.dir/src/mono_example.cpp.o[0m
-[ 96%] [32mBuilding CXX object CMakeFiles/mono_node_cpp.dir/src/common.cpp.o[0m

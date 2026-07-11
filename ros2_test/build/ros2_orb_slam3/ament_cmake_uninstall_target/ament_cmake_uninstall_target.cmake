@@ -2,7 +2,7 @@
 # ament_cmake_core/cmake/uninstall_target/ament_cmake_uninstall_target.cmake.in
 
 function(ament_cmake_uninstall_target_remove_empty_directories path)
-  set(install_space "/home/hamdan/ros2_test/install/ros2_orb_slam3")
+  set(install_space "/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3")
   if(install_space STREQUAL "")
     message(FATAL_ERROR "The CMAKE_INSTALL_PREFIX variable must not be empty")
   endif()
@@ -29,7 +29,7 @@ function(ament_cmake_uninstall_target_remove_empty_directories path)
 endfunction()
 
 # uninstall files installed using the standard install() function
-set(install_manifest "/home/hamdan/ros2_test/build/ros2_orb_slam3/install_manifest.txt")
+set(install_manifest "/home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3/install_manifest.txt")
 if(NOT EXISTS "${install_manifest}")
   message(FATAL_ERROR "Cannot find install manifest: ${install_manifest}")
 endif()
@@ -55,6 +55,3 @@ endforeach()
 message(STATUS "Execute custom uninstall script")
 
 # begin of custom uninstall code
-
-# uninstall files installed using the symlink install functions
-include("/home/hamdan/ros2_test/build/ros2_orb_slam3/ament_cmake_symlink_install/ament_cmake_symlink_install_uninstall_script.cmake")

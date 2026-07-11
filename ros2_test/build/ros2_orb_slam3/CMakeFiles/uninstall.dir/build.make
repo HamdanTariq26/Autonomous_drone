@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/hamdan/ros2_test/src/ros2_orb_slam3
+CMAKE_SOURCE_DIR = /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/hamdan/ros2_test/build/ros2_orb_slam3
+CMAKE_BINARY_DIR = /home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3
 
 # Utility rule file for uninstall.
 
@@ -78,6 +78,6 @@ CMakeFiles/uninstall.dir/clean:
 .PHONY : CMakeFiles/uninstall.dir/clean
 
 CMakeFiles/uninstall.dir/depend:
-	cd /home/hamdan/ros2_test/build/ros2_orb_slam3 && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/hamdan/ros2_test/src/ros2_orb_slam3 /home/hamdan/ros2_test/src/ros2_orb_slam3 /home/hamdan/ros2_test/build/ros2_orb_slam3 /home/hamdan/ros2_test/build/ros2_orb_slam3 /home/hamdan/ros2_test/build/ros2_orb_slam3/CMakeFiles/uninstall.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3 && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3 /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3 /home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3 /home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3 /home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3/CMakeFiles/uninstall.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/uninstall.dir/depend
 
