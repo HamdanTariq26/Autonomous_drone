@@ -670,6 +670,34 @@ CMakeFiles/mono_node_cpp.dir/src/mono_example.cpp.o: \
  /opt/ros/humble/include/sensor_msgs/sensor_msgs/msg/detail/image__traits.hpp \
  /opt/ros/humble/include/sensor_msgs/sensor_msgs/msg/detail/image__type_support.hpp \
  /opt/ros/humble/include/sensor_msgs/sensor_msgs/msg/rosidl_generator_cpp__visibility_control.hpp \
+ /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/pose_stamped.hpp \
+ /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/pose_stamped__struct.hpp \
+ /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/pose__struct.hpp \
+ /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/point__struct.hpp \
+ /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/quaternion__struct.hpp \
+ /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/pose_stamped__builder.hpp \
+ /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/pose_stamped__traits.hpp \
+ /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/pose__traits.hpp \
+ /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/point__traits.hpp \
+ /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/quaternion__traits.hpp \
+ /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/pose_stamped__type_support.hpp \
+ /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/rosidl_generator_cpp__visibility_control.hpp \
+ /opt/ros/humble/include/sensor_msgs/sensor_msgs/msg/point_cloud2.hpp \
+ /opt/ros/humble/include/sensor_msgs/sensor_msgs/msg/detail/point_cloud2__struct.hpp \
+ /opt/ros/humble/include/sensor_msgs/sensor_msgs/msg/detail/point_field__struct.hpp \
+ /opt/ros/humble/include/sensor_msgs/sensor_msgs/msg/detail/point_cloud2__builder.hpp \
+ /opt/ros/humble/include/sensor_msgs/sensor_msgs/msg/detail/point_cloud2__traits.hpp \
+ /opt/ros/humble/include/sensor_msgs/sensor_msgs/msg/detail/point_field__traits.hpp \
+ /opt/ros/humble/include/sensor_msgs/sensor_msgs/msg/detail/point_cloud2__type_support.hpp \
+ /opt/ros/humble/include/sensor_msgs/sensor_msgs/point_cloud2_iterator.hpp \
+ /usr/include/c++/11/cstdarg \
+ /opt/ros/humble/include/sensor_msgs/sensor_msgs/impl/point_cloud2_iterator.hpp \
+ /opt/ros/humble/include/nav_msgs/nav_msgs/msg/path.hpp \
+ /opt/ros/humble/include/nav_msgs/nav_msgs/msg/detail/path__struct.hpp \
+ /opt/ros/humble/include/nav_msgs/nav_msgs/msg/detail/path__builder.hpp \
+ /opt/ros/humble/include/nav_msgs/nav_msgs/msg/detail/path__traits.hpp \
+ /opt/ros/humble/include/nav_msgs/nav_msgs/msg/detail/path__type_support.hpp \
+ /opt/ros/humble/include/nav_msgs/nav_msgs/msg/rosidl_generator_cpp__visibility_control.hpp \
  /usr/include/eigen3/Eigen/Dense /usr/include/eigen3/Eigen/Core \
  /usr/include/eigen3/Eigen/src/Core/util/DisableStupidWarnings.h \
  /usr/include/eigen3/Eigen/src/Core/util/Macros.h \
@@ -1445,7 +1473,7 @@ CMakeFiles/mono_node_cpp.dir/src/mono_example.cpp.o: \
  /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/CameraModels/GeometricCamera.h \
  /usr/include/boost/serialization/export.hpp \
  /usr/include/boost/serialization/extended_type_info.hpp \
- /usr/include/c++/11/cstdarg /usr/include/boost/noncopyable.hpp \
+ /usr/include/boost/noncopyable.hpp \
  /usr/include/boost/core/noncopyable.hpp \
  /usr/include/boost/serialization/config.hpp \
  /usr/include/boost/config/auto_link.hpp \

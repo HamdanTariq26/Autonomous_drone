@@ -1,6 +1,6 @@
 # generated from ament_cmake_export_dependencies/cmake/ament_cmake_export_dependencies-extras.cmake.in
 
-set(_exported_dependencies "orb_slam3_lib;rclcpp;rclpy;std_msgs;sensor_msgs;cv_bridge;image_transport;OpenCV;Eigen3;Pangolin")
+set(_exported_dependencies "orb_slam3_lib;rclcpp;rclpy;std_msgs;sensor_msgs;cv_bridge;image_transport;OpenCV;Eigen3;Pangolin;nav_msgs")
 
 find_package(ament_cmake_libraries QUIET REQUIRED)
 

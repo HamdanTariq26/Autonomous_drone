@@ -25,6 +25,8 @@
   <!-- As suggested by the official tutorial, add your custom message interfaces as follows -->
   <!-- <depend>your_custom_msg_interface</depend>  -->
   
+  <depend>nav_msgs</depend>
+  
   <exec_depend>rclcpp</exec_depend>
   <exec_depend>rclpy</exec_depend>
   <exec_depend>std_msgs</exec_depend>

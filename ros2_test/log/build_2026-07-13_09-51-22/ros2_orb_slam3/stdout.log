@@ -1,0 +1,32 @@
+[35m[1mConsolidate compiler generated dependencies of target orb_slam3_lib[0m
+[  3%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/Tracking.cc.o[0m
+[  6%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/LocalMapping.cc.o[0m
+[  9%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/LoopClosing.cc.o[0m
+[ 12%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/ORBextractor.cc.o[0m
+[ 15%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/ORBmatcher.cc.o[0m
+[ 18%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/FrameDrawer.cc.o[0m
+[ 21%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/Converter.cc.o[0m
+[ 25%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/MapPoint.cc.o[0m
+[ 28%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/KeyFrame.cc.o[0m
+[ 31%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/Atlas.cc.o[0m
+[ 34%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/Map.cc.o[0m
+[ 37%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/MapDrawer.cc.o[0m
+[ 40%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/Optimizer.cc.o[0m
+[ 43%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/Frame.cc.o[0m
+[ 46%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/KeyFrameDatabase.cc.o[0m
+[ 50%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/Sim3Solver.cc.o[0m
+[ 53%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/Viewer.cc.o[0m
+[ 56%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/ImuTypes.cc.o[0m
+[ 59%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/G2oTypes.cc.o[0m
+[ 62%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/CameraModels/Pinhole.cpp.o[0m
+[ 65%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/CameraModels/KannalaBrandt8.cpp.o[0m
+[ 68%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/OptimizableTypes.cpp.o[0m
+[ 71%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/MLPnPsolver.cpp.o[0m
+[ 75%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/GeometricTools.cc.o[0m
+[ 78%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/TwoViewReconstruction.cc.o[0m
+[ 81%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/Config.cc.o[0m
+[ 84%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/Settings.cc.o[0m
+[ 87%] [32m[1mLinking CXX shared library liborb_slam3_lib.so[0m
+[ 90%] Built target orb_slam3_lib
+[ 93%] [32mBuilding CXX object CMakeFiles/mono_node_cpp.dir/src/mono_example.cpp.o[0m
+[ 96%] [32mBuilding CXX object CMakeFiles/mono_node_cpp.dir/src/common.cpp.o[0m

@@ -29,6 +29,13 @@
 #include <std_msgs/msg/string.hpp>
 #include <std_msgs/msg/bool.hpp>
 #include "sensor_msgs/msg/image.hpp"
+
+//Added: (Hamdan)
+#include <geometry_msgs/msg/pose_stamped.hpp>
+#include <sensor_msgs/msg/point_cloud2.hpp>
+#include <sensor_msgs/point_cloud2_iterator.hpp>
+#include <nav_msgs/msg/path.hpp>
+
 using std::placeholders::_1; //* TODO why this is suggested in official tutorial
 
 // Include Eigen
@@ -86,6 +93,11 @@ class MonocularMode : public rclcpp::Node
         std::string subTimestepMsgName = ""; // Topic to subscribe to receive the timestep related to the 
         std::string pubKeyframeTimestampsName = ""; //Added
         std::string pubMapTopologyChangedName = ""; //Added
+        //Added: (Hamdan)
+        std::string pubCurrentPoseRawName = "";
+        std::string pubCurrentPointsRawName = "";
+        std::string pubKeyframePointsName = "";   // REPLACES the live CSV
+        std::string pubTrajectoryName = "";       // NEW - fixes the multi-map trajectory bug
 
         //* Definitions of publisher and subscribers
         rclcpp::Subscription<std_msgs::msg::String>::SharedPtr expConfig_subscription_;
@@ -94,6 +106,11 @@ class MonocularMode : public rclcpp::Node
         rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr subTimestepMsg_subscription_;
         rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr keyframeTimestamps_publisher_; // Added: (Hamdan), To publish time stamps
         rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr mapTopologyChanged_publisher_; //Added: Fires whenever the set of active maps_ids changes (new map, or merge/loop closure) //Hamdan
+        //Added: (Hamdan)
+        rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr currentPoseRaw_publisher_;
+        rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr currentPointsRaw_publisher_;
+        rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr keyframePoints_publisher_;
+        rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr trajectory_publisher_;
 
         //* ORB_SLAM3 related variables
         ORB_SLAM3::System* pAgent; // pointer to a ORB SLAM3 object
@@ -103,7 +120,6 @@ class MonocularMode : public rclcpp::Node
         
         //* Live-CSV related, ADDED (Hamdan)
         rclcpp::TimerBase::SharedPtr liveCsvTimer_;   // fires every ~1s, rewrites live_sparse_map_points.csv from scratch
-        std::string liveFilePath = "";                // set once pAgent/homeDir are known, in initializeVSLAM()
 
         std::set<long unsigned int> prevMapIds_; //Added: maps_ids seen on the prev LIveCsvTimer_callback tick (Hamdan)
 
@@ -111,7 +127,7 @@ class MonocularMode : public rclcpp::Node
         void experimentSetting_callback(const std_msgs::msg::String& msg); // Callback to process settings sent over by Python node
         void Timestep_callback(const std_msgs::msg::Float64& time_msg); // Callback to process the timestep for this image
         void Img_callback(const sensor_msgs::msg::Image& msg); // Callback to process RGB image and semantic matrix sent by Python node
-        void LiveCsvTimer_callback(); // ADDED: periodic full-rewrite of live CSV + publish keyframe timestamps (Hamdan)
+        void LiveCsvTimer_callback(); // ADDED: periodic full-rewrite of live CSV(Changed) + publish keyframe timestamps (Hamdan)
         
         //* Helper functions
         // ORB_SLAM3::eigenMatXf convertToEigenMat(const std_msgs::msg::Float32MultiArray& msg); // Helper method, converts semantic matrix eigenMatXf, a Eigen 4x4 float matrix
@@ -125,6 +141,10 @@ class MonocularMode : public rclcpp::Node
         void WriteKeyframeDataToFile(const std::string& filepath, std::vector<double>& outTimestamps,std::set<long unsigned int>& outMapIds);
         
         void SaveSparseMapPointsPerKeyframe(const std::string& filepath);
+
+        //Added: (Hamdan)
+        void PublishCurrentPoseAndPoints(const Sophus::SE3f& Tcw); // per-frame, called from Img_callback
+        void PublishLiveMapData();  // periodic, called from LiveCsvTimer_callback - REPLACES the CSV write
 
 
 };

@@ -25,6 +25,7 @@ find_package(OpenCV 4.2 REQUIRED)
 find_package(Eigen3 3.3.0 REQUIRED) # Matched with Sophus
 find_package(Pangolin REQUIRED)
 find_package(image_transport REQUIRED)
+find_package(nav_msgs REQUIRED)
 
 
 # Header file locations [C++ node]
@@ -57,6 +58,7 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
   OpenCV
   Eigen3
   Pangolin
+  nav_msgs
 )
 
 #* ORB SLAM3 as a shared library

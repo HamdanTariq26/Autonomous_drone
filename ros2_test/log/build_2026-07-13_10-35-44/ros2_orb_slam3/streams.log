@@ -1,0 +1,8 @@
+[0.010s] Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3
+[0.112s] [ 90%] Built target orb_slam3_lib
+[0.132s] [35m[1mConsolidate compiler generated dependencies of target mono_node_cpp[0m
+[0.175s] [ 93%] [32mBuilding CXX object CMakeFiles/mono_node_cpp.dir/src/common.cpp.o[0m
+[2.094s] gmake[2]: *** [CMakeFiles/mono_node_cpp.dir/build.make:90: CMakeFiles/mono_node_cpp.dir/src/common.cpp.o] Interrupt
+[2.094s] gmake[1]: *** [CMakeFiles/Makefile2:168: CMakeFiles/mono_node_cpp.dir/all] Interrupt
+[2.094s] gmake: *** [Makefile:146: all] Interrupt
+[2.119s] Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3' returned '-2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3

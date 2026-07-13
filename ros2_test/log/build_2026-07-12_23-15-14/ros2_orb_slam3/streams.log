@@ -1,0 +1,499 @@
+[0.011s] Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3
+[0.161s] [35m[1mConsolidate compiler generated dependencies of target orb_slam3_lib[0m
+[0.267s] [ 90%] Built target orb_slam3_lib
+[0.281s] [35m[1mConsolidate compiler generated dependencies of target mono_node_cpp[0m
+[0.314s] [ 93%] [32mBuilding CXX object CMakeFiles/mono_node_cpp.dir/src/common.cpp.o[0m
+[4.741s] In file included from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:47[m[K,
+[4.741s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[4.741s] [01m[K/opt/ros/humble/include/image_transport/image_transport/image_transport.h:32:89:[m[K [01;36m[Knote: [m[K‘[01m[K#pragma message: Warning: This header is deprecated. Use 'image_transport.hpp' instead[m[K’
+[4.741s]    32 | Warning: This header is deprecated. Use 'image_transport.hpp' instead"[01;36m[K)[m[K
+[4.741s]       |                                                                       [01;36m[K^[m[K
+[4.741s] 
+[4.892s] In file included from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:30[m[K,
+[4.892s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28[m[K,
+[4.893s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23[m[K,
+[4.893s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/FrameDrawer.h:24[m[K,
+[4.893s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Viewer.h:23[m[K,
+[4.893s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Tracking.h:26[m[K,
+[4.893s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/System.h:31[m[K,
+[4.893s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:50[m[K,
+[4.893s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[4.893s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/ImuTypes.h:[m[K In member function ‘[01m[Kvoid ORB_SLAM3::IMU::Preintegrated::printMeasurements() const[m[K’:
+[4.893s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/ImuTypes.h:204:23:[m[K [01;35m[Kwarning: [m[Kcomparison of integer expressions of different signedness: ‘[01m[Kint[m[K’ and ‘[01m[Kstd::vector<ORB_SLAM3::IMU::Preintegrated::integrable>::size_type[m[K’ {aka ‘[01m[Klong unsigned int[m[K’} [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wsign-compare-Wsign-compare]8;;[m[K]
+[4.893s]   204 |         for(int i=0; [01;35m[Ki<mvMeasurements.size()[m[K; i++){
+[4.893s]       |                      [01;35m[K~^~~~~~~~~~~~~~~~~~~~~~[m[K
+[4.956s] In file included from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:37[m[K,
+[4.956s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26[m[K,
+[4.956s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33[m[K,
+[4.956s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28[m[K,
+[4.956s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23[m[K,
+[4.956s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/FrameDrawer.h:24[m[K,
+[4.957s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Viewer.h:23[m[K,
+[4.957s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Tracking.h:26[m[K,
+[4.957s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/System.h:31[m[K,
+[4.957s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:50[m[K,
+[4.957s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[4.957s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h:[m[K At global scope:
+[4.957s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h:62:74:[m[K [01;35m[Kwarning: [m[K‘[01m[KEigen::AlignedBit[m[K’ is deprecated [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wdeprecated-declarations-Wdeprecated-declarations]8;;[m[K]
+[4.957s]    62 | igen::Map<Matrix<double, D, D>, Matrix<double,D,D>::Flags & [01;35m[KAlignedBit[m[K ? Aligned : Unaligned >  HessianBlockType;
+[4.957s]       |                                                             [01;35m[K^~~~~~~~~~[m[K
+[4.957s] 
+[4.957s] In file included from [01m[K/usr/include/eigen3/Eigen/Core:161[m[K,
+[4.957s]                  from [01m[K/usr/include/eigen3/Eigen/Dense:1[m[K,
+[4.957s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:36[m[K,
+[4.957s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[4.957s] [01m[K/usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37:[m[K [01;36m[Knote: [m[Kdeclared here
+[4.957s]   167 | EIGEN_DEPRECATED const unsigned int [01;36m[KAlignedBit[m[K = 0x80;
+[4.957s]       |                                     [01;36m[K^~~~~~~~~~[m[K
+[4.972s] In file included from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38[m[K,
+[4.972s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26[m[K,
+[4.972s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33[m[K,
+[4.972s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28[m[K,
+[4.972s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23[m[K,
+[4.972s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/FrameDrawer.h:24[m[K,
+[4.972s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Viewer.h:23[m[K,
+[4.972s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Tracking.h:26[m[K,
+[4.972s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/System.h:31[m[K,
+[4.972s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:50[m[K,
+[4.972s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[4.972s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:59:82:[m[K [01;35m[Kwarning: [m[K‘[01m[KEigen::AlignedBit[m[K’ is deprecated [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wdeprecated-declarations-Wdeprecated-declarations]8;;[m[K]
+[4.972s]    59 | Map<Matrix<double, Di, Dj>, Matrix<double, Di, Dj>::Flags & [01;35m[KAlignedBit[m[K ? Aligned : Unaligned > HessianBlockType;
+[4.972s]       |                                                             [01;35m[K^~~~~~~~~~[m[K
+[4.972s] 
+[4.972s] In file included from [01m[K/usr/include/eigen3/Eigen/Core:161[m[K,
+[4.973s]                  from [01m[K/usr/include/eigen3/Eigen/Dense:1[m[K,
+[4.973s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:36[m[K,
+[4.973s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[4.973s] [01m[K/usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37:[m[K [01;36m[Knote: [m[Kdeclared here
+[4.973s]   167 | EIGEN_DEPRECATED const unsigned int [01;36m[KAlignedBit[m[K = 0x80;
+[4.973s]       |                                     [01;36m[K^~~~~~~~~~[m[K
+[4.973s] In file included from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38[m[K,
+[4.973s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26[m[K,
+[4.973s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33[m[K,
+[4.973s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28[m[K,
+[4.973s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23[m[K,
+[4.973s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/FrameDrawer.h:24[m[K,
+[4.973s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Viewer.h:23[m[K,
+[4.973s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Tracking.h:26[m[K,
+[4.973s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/System.h:31[m[K,
+[4.973s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:50[m[K,
+[4.973s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[4.973s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:60:82:[m[K [01;35m[Kwarning: [m[K‘[01m[KEigen::AlignedBit[m[K’ is deprecated [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wdeprecated-declarations-Wdeprecated-declarations]8;;[m[K]
+[4.973s]    60 | Map<Matrix<double, Dj, Di>, Matrix<double, Dj, Di>::Flags & [01;35m[KAlignedBit[m[K ? Aligned : Unaligned > HessianBlockTransposedType;
+[4.973s]       |                                                             [01;35m[K^~~~~~~~~~[m[K
+[4.973s] 
+[4.973s] In file included from [01m[K/usr/include/eigen3/Eigen/Core:161[m[K,
+[4.973s]                  from [01m[K/usr/include/eigen3/Eigen/Dense:1[m[K,
+[4.973s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:36[m[K,
+[4.973s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[4.974s] [01m[K/usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37:[m[K [01;36m[Knote: [m[Kdeclared here
+[4.974s]   167 | EIGEN_DEPRECATED const unsigned int [01;36m[KAlignedBit[m[K = 0x80;
+[4.974s]       |                                     [01;36m[K^~~~~~~~~~[m[K
+[5.232s] In file included from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:37[m[K,
+[5.233s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26[m[K,
+[5.233s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33[m[K,
+[5.233s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28[m[K,
+[5.233s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23[m[K,
+[5.233s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/FrameDrawer.h:24[m[K,
+[5.233s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Viewer.h:23[m[K,
+[5.233s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Tracking.h:26[m[K,
+[5.233s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/System.h:31[m[K,
+[5.233s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:50[m[K,
+[5.233s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[5.233s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h: In instantiation of ‘[01m[Kclass g2o::BaseVertex<3, Eigen::Matrix<double, 3, 1> >[m[K’:
+[5.233s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_sba.h:40:35:[m[K   required from here
+[5.233s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h:62:72:[m[K [01;35m[Kwarning: [m[K‘[01m[KEigen::AlignedBit[m[K’ is deprecated [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wdeprecated-declarations-Wdeprecated-declarations]8;;[m[K]
+[5.233s]    62 |  Eigen::Map<Matrix<double, D, D>, Matrix<double,D,D>::[01;35m[KFlags & AlignedBit[m[K ? Aligned : Unaligned >  HessianBlockType;
+[5.233s]       |                                                       [01;35m[K~~~~~~^~~~~~~~~~~~[m[K
+[5.233s] 
+[5.233s] In file included from [01m[K/usr/include/eigen3/Eigen/Core:161[m[K,
+[5.233s]                  from [01m[K/usr/include/eigen3/Eigen/Dense:1[m[K,
+[5.233s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:36[m[K,
+[5.233s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[5.233s] [01m[K/usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37:[m[K [01;36m[Knote: [m[Kdeclared here
+[5.233s]   167 | EIGEN_DEPRECATED const unsigned int [01;36m[KAlignedBit[m[K = 0x80;
+[5.234s]       |                                     [01;36m[K^~~~~~~~~~[m[K
+[5.252s] In file included from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:37[m[K,
+[5.252s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26[m[K,
+[5.252s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33[m[K,
+[5.252s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28[m[K,
+[5.252s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23[m[K,
+[5.252s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/FrameDrawer.h:24[m[K,
+[5.252s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Viewer.h:23[m[K,
+[5.252s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Tracking.h:26[m[K,
+[5.252s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/System.h:31[m[K,
+[5.252s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:50[m[K,
+[5.252s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[5.252s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h: In instantiation of ‘[01m[Kclass g2o::BaseVertex<6, g2o::SE3Quat>[m[K’:
+[5.253s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:59:33:[m[K   required from here
+[5.253s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h:62:72:[m[K [01;35m[Kwarning: [m[K‘[01m[KEigen::AlignedBit[m[K’ is deprecated [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wdeprecated-declarations-Wdeprecated-declarations]8;;[m[K]
+[5.253s]    62 |  Eigen::Map<Matrix<double, D, D>, Matrix<double,D,D>::[01;35m[KFlags & AlignedBit[m[K ? Aligned : Unaligned >  HessianBlockType;
+[5.253s]       |                                                       [01;35m[K~~~~~~^~~~~~~~~~~~[m[K
+[5.253s] 
+[5.253s] In file included from [01m[K/usr/include/eigen3/Eigen/Core:161[m[K,
+[5.253s]                  from [01m[K/usr/include/eigen3/Eigen/Dense:1[m[K,
+[5.253s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:36[m[K,
+[5.253s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[5.253s] [01m[K/usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37:[m[K [01;36m[Knote: [m[Kdeclared here
+[5.253s]   167 | EIGEN_DEPRECATED const unsigned int [01;36m[KAlignedBit[m[K = 0x80;
+[5.253s]       |                                     [01;36m[K^~~~~~~~~~[m[K
+[5.271s] In file included from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38[m[K,
+[5.272s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26[m[K,
+[5.272s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33[m[K,
+[5.272s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28[m[K,
+[5.272s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23[m[K,
+[5.272s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/FrameDrawer.h:24[m[K,
+[5.272s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Viewer.h:23[m[K,
+[5.272s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Tracking.h:26[m[K,
+[5.272s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/System.h:31[m[K,
+[5.272s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:50[m[K,
+[5.272s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[5.272s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h: In instantiation of ‘[01m[Kclass g2o::BaseBinaryEdge<6, g2o::SE3Quat, g2o::VertexSE3Expmap, g2o::VertexSE3Expmap>[m[K’:
+[5.272s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:83:24:[m[K   required from here
+[5.272s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:59:80:[m[K [01;35m[Kwarning: [m[K‘[01m[KEigen::AlignedBit[m[K’ is deprecated [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wdeprecated-declarations-Wdeprecated-declarations]8;;[m[K]
+[5.272s]    59 | ::Map<Matrix<double, Di, Dj>, Matrix<double, Di, Dj>::[01;35m[KFlags & AlignedBit[m[K ? Aligned : Unaligned > HessianBlockType;
+[5.272s]       |                                                       [01;35m[K~~~~~~^~~~~~~~~~~~[m[K
+[5.272s] 
+[5.272s] In file included from [01m[K/usr/include/eigen3/Eigen/Core:161[m[K,
+[5.272s]                  from [01m[K/usr/include/eigen3/Eigen/Dense:1[m[K,
+[5.273s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:36[m[K,
+[5.273s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[5.273s] [01m[K/usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37:[m[K [01;36m[Knote: [m[Kdeclared here
+[5.273s]   167 | EIGEN_DEPRECATED const unsigned int [01;36m[KAlignedBit[m[K = 0x80;
+[5.273s]       |                                     [01;36m[K^~~~~~~~~~[m[K
+[5.273s] In file included from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38[m[K,
+[5.273s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26[m[K,
+[5.273s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33[m[K,
+[5.273s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28[m[K,
+[5.273s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23[m[K,
+[5.273s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/FrameDrawer.h:24[m[K,
+[5.273s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Viewer.h:23[m[K,
+[5.273s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Tracking.h:26[m[K,
+[5.273s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/System.h:31[m[K,
+[5.273s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:50[m[K,
+[5.273s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[5.273s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:60:80:[m[K [01;35m[Kwarning: [m[K‘[01m[KEigen::AlignedBit[m[K’ is deprecated [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wdeprecated-declarations-Wdeprecated-declarations]8;;[m[K]
+[5.273s]    60 | ::Map<Matrix<double, Dj, Di>, Matrix<double, Dj, Di>::[01;35m[KFlags & AlignedBit[m[K ? Aligned : Unaligned > HessianBlockTransposedType;
+[5.273s]       |                                                       [01;35m[K~~~~~~^~~~~~~~~~~~[m[K
+[5.273s] 
+[5.273s] In file included from [01m[K/usr/include/eigen3/Eigen/Core:161[m[K,
+[5.273s]                  from [01m[K/usr/include/eigen3/Eigen/Dense:1[m[K,
+[5.273s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:36[m[K,
+[5.273s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[5.273s] [01m[K/usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37:[m[K [01;36m[Knote: [m[Kdeclared here
+[5.274s]   167 | EIGEN_DEPRECATED const unsigned int [01;36m[KAlignedBit[m[K = 0x80;
+[5.274s]       |                                     [01;36m[K^~~~~~~~~~[m[K
+[5.312s] In file included from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38[m[K,
+[5.312s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26[m[K,
+[5.312s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33[m[K,
+[5.312s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28[m[K,
+[5.313s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23[m[K,
+[5.313s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/FrameDrawer.h:24[m[K,
+[5.313s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Viewer.h:23[m[K,
+[5.313s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Tracking.h:26[m[K,
+[5.313s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/System.h:31[m[K,
+[5.313s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:50[m[K,
+[5.313s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[5.313s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h: In instantiation of ‘[01m[Kclass g2o::BaseBinaryEdge<2, Eigen::Matrix<double, 2, 1>, g2o::VertexSBAPointXYZ, g2o::VertexSE3Expmap>[m[K’:
+[5.313s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:114:35:[m[K   required from here
+[5.313s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:59:80:[m[K [01;35m[Kwarning: [m[K‘[01m[KEigen::AlignedBit[m[K’ is deprecated [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wdeprecated-declarations-Wdeprecated-declarations]8;;[m[K]
+[5.313s]    59 | ::Map<Matrix<double, Di, Dj>, Matrix<double, Di, Dj>::[01;35m[KFlags & AlignedBit[m[K ? Aligned : Unaligned > HessianBlockType;
+[5.313s]       |                                                       [01;35m[K~~~~~~^~~~~~~~~~~~[m[K
+[5.313s] 
+[5.313s] In file included from [01m[K/usr/include/eigen3/Eigen/Core:161[m[K,
+[5.313s]                  from [01m[K/usr/include/eigen3/Eigen/Dense:1[m[K,
+[5.313s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:36[m[K,
+[5.313s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[5.313s] [01m[K/usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37:[m[K [01;36m[Knote: [m[Kdeclared here
+[5.313s]   167 | EIGEN_DEPRECATED const unsigned int [01;36m[KAlignedBit[m[K = 0x80;
+[5.313s]       |                                     [01;36m[K^~~~~~~~~~[m[K
+[5.320s] In file included from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38[m[K,
+[5.320s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26[m[K,
+[5.320s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33[m[K,
+[5.320s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28[m[K,
+[5.320s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23[m[K,
+[5.320s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/FrameDrawer.h:24[m[K,
+[5.320s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Viewer.h:23[m[K,
+[5.320s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Tracking.h:26[m[K,
+[5.320s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/System.h:31[m[K,
+[5.321s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:50[m[K,
+[5.321s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[5.321s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:60:80:[m[K [01;35m[Kwarning: [m[K‘[01m[KEigen::AlignedBit[m[K’ is deprecated [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wdeprecated-declarations-Wdeprecated-declarations]8;;[m[K]
+[5.321s]    60 | ::Map<Matrix<double, Dj, Di>, Matrix<double, Dj, Di>::[01;35m[KFlags & AlignedBit[m[K ? Aligned : Unaligned > HessianBlockTransposedType;
+[5.321s]       |                                                       [01;35m[K~~~~~~^~~~~~~~~~~~[m[K
+[5.321s] 
+[5.321s] In file included from [01m[K/usr/include/eigen3/Eigen/Core:161[m[K,
+[5.321s]                  from [01m[K/usr/include/eigen3/Eigen/Dense:1[m[K,
+[5.321s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:36[m[K,
+[5.321s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[5.321s] [01m[K/usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37:[m[K [01;36m[Knote: [m[Kdeclared here
+[5.321s]   167 | EIGEN_DEPRECATED const unsigned int [01;36m[KAlignedBit[m[K = 0x80;
+[5.321s]       |                                     [01;36m[K^~~~~~~~~~[m[K
+[5.356s] In file included from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38[m[K,
+[5.356s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26[m[K,
+[5.356s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33[m[K,
+[5.357s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28[m[K,
+[5.357s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23[m[K,
+[5.357s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/FrameDrawer.h:24[m[K,
+[5.357s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Viewer.h:23[m[K,
+[5.357s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Tracking.h:26[m[K,
+[5.357s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/System.h:31[m[K,
+[5.357s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:50[m[K,
+[5.357s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[5.357s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h: In instantiation of ‘[01m[Kclass g2o::BaseBinaryEdge<3, Eigen::Matrix<double, 3, 1>, g2o::VertexSBAPointXYZ, g2o::VertexSE3Expmap>[m[K’:
+[5.357s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:146:41:[m[K   required from here
+[5.357s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:59:80:[m[K [01;35m[Kwarning: [m[K‘[01m[KEigen::AlignedBit[m[K’ is deprecated [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wdeprecated-declarations-Wdeprecated-declarations]8;;[m[K]
+[5.357s]    59 | ::Map<Matrix<double, Di, Dj>, Matrix<double, Di, Dj>::[01;35m[KFlags & AlignedBit[m[K ? Aligned : Unaligned > HessianBlockType;
+[5.357s]       |                                                       [01;35m[K~~~~~~^~~~~~~~~~~~[m[K
+[5.357s] 
+[5.357s] In file included from [01m[K/usr/include/eigen3/Eigen/Core:161[m[K,
+[5.357s]                  from [01m[K/usr/include/eigen3/Eigen/Dense:1[m[K,
+[5.357s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:36[m[K,
+[5.357s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[5.357s] [01m[K/usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37:[m[K [01;36m[Knote: [m[Kdeclared here
+[5.357s]   167 | EIGEN_DEPRECATED const unsigned int [01;36m[KAlignedBit[m[K = 0x80;
+[5.358s]       |                                     [01;36m[K^~~~~~~~~~[m[K
+[5.358s] In file included from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38[m[K,
+[5.358s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26[m[K,
+[5.358s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33[m[K,
+[5.358s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28[m[K,
+[5.358s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23[m[K,
+[5.358s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/FrameDrawer.h:24[m[K,
+[5.358s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Viewer.h:23[m[K,
+[5.358s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Tracking.h:26[m[K,
+[5.358s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/System.h:31[m[K,
+[5.358s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:50[m[K,
+[5.358s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[5.358s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:60:80:[m[K [01;35m[Kwarning: [m[K‘[01m[KEigen::AlignedBit[m[K’ is deprecated [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wdeprecated-declarations-Wdeprecated-declarations]8;;[m[K]
+[5.358s]    60 | ::Map<Matrix<double, Dj, Di>, Matrix<double, Dj, Di>::[01;35m[KFlags & AlignedBit[m[K ? Aligned : Unaligned > HessianBlockTransposedType;
+[5.358s]       |                                                       [01;35m[K~~~~~~^~~~~~~~~~~~[m[K
+[5.358s] 
+[5.358s] In file included from [01m[K/usr/include/eigen3/Eigen/Core:161[m[K,
+[5.358s]                  from [01m[K/usr/include/eigen3/Eigen/Dense:1[m[K,
+[5.358s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:36[m[K,
+[5.358s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[5.358s] [01m[K/usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37:[m[K [01;36m[Knote: [m[Kdeclared here
+[5.358s]   167 | EIGEN_DEPRECATED const unsigned int [01;36m[KAlignedBit[m[K = 0x80;
+[5.358s]       |                                     [01;36m[K^~~~~~~~~~[m[K
+[5.484s] In file included from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:37[m[K,
+[5.484s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26[m[K,
+[5.484s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33[m[K,
+[5.484s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28[m[K,
+[5.484s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23[m[K,
+[5.485s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/FrameDrawer.h:24[m[K,
+[5.485s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Viewer.h:23[m[K,
+[5.485s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Tracking.h:26[m[K,
+[5.485s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/System.h:31[m[K,
+[5.485s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:50[m[K,
+[5.485s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[5.485s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h: In instantiation of ‘[01m[Kclass g2o::BaseVertex<7, g2o::Sim3>[m[K’:
+[5.485s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_seven_dof_expmap.h:48:35:[m[K   required from here
+[5.485s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h:62:72:[m[K [01;35m[Kwarning: [m[K‘[01m[KEigen::AlignedBit[m[K’ is deprecated [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wdeprecated-declarations-Wdeprecated-declarations]8;;[m[K]
+[5.485s]    62 |  Eigen::Map<Matrix<double, D, D>, Matrix<double,D,D>::[01;35m[KFlags & AlignedBit[m[K ? Aligned : Unaligned >  HessianBlockType;
+[5.485s]       |                                                       [01;35m[K~~~~~~^~~~~~~~~~~~[m[K
+[5.485s] 
+[5.485s] In file included from [01m[K/usr/include/eigen3/Eigen/Core:161[m[K,
+[5.485s]                  from [01m[K/usr/include/eigen3/Eigen/Dense:1[m[K,
+[5.485s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:36[m[K,
+[5.485s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[5.485s] [01m[K/usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37:[m[K [01;36m[Knote: [m[Kdeclared here
+[5.485s]   167 | EIGEN_DEPRECATED const unsigned int [01;36m[KAlignedBit[m[K = 0x80;
+[5.485s]       |                                     [01;36m[K^~~~~~~~~~[m[K
+[5.505s] In file included from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38[m[K,
+[5.505s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26[m[K,
+[5.505s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33[m[K,
+[5.506s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28[m[K,
+[5.506s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23[m[K,
+[5.506s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/FrameDrawer.h:24[m[K,
+[5.506s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Viewer.h:23[m[K,
+[5.506s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Tracking.h:26[m[K,
+[5.506s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/System.h:31[m[K,
+[5.506s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:50[m[K,
+[5.506s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[5.506s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h: In instantiation of ‘[01m[Kclass g2o::BaseBinaryEdge<7, g2o::Sim3, g2o::VertexSim3Expmap, g2o::VertexSim3Expmap>[m[K’:
+[5.506s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_seven_dof_expmap.h:99:27:[m[K   required from here
+[5.506s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:59:80:[m[K [01;35m[Kwarning: [m[K‘[01m[KEigen::AlignedBit[m[K’ is deprecated [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wdeprecated-declarations-Wdeprecated-declarations]8;;[m[K]
+[5.506s]    59 | ::Map<Matrix<double, Di, Dj>, Matrix<double, Di, Dj>::[01;35m[KFlags & AlignedBit[m[K ? Aligned : Unaligned > HessianBlockType;
+[5.506s]       |                                                       [01;35m[K~~~~~~^~~~~~~~~~~~[m[K
+[5.506s] 
+[5.506s] In file included from [01m[K/usr/include/eigen3/Eigen/Core:161[m[K,
+[5.506s]                  from [01m[K/usr/include/eigen3/Eigen/Dense:1[m[K,
+[5.506s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:36[m[K,
+[5.506s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[5.506s] [01m[K/usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37:[m[K [01;36m[Knote: [m[Kdeclared here
+[5.506s]   167 | EIGEN_DEPRECATED const unsigned int [01;36m[KAlignedBit[m[K = 0x80;
+[5.507s]       |                                     [01;36m[K^~~~~~~~~~[m[K
+[5.507s] In file included from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38[m[K,
+[5.507s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26[m[K,
+[5.507s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33[m[K,
+[5.507s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28[m[K,
+[5.507s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23[m[K,
+[5.507s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/FrameDrawer.h:24[m[K,
+[5.507s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Viewer.h:23[m[K,
+[5.507s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Tracking.h:26[m[K,
+[5.507s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/System.h:31[m[K,
+[5.507s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:50[m[K,
+[5.507s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[5.507s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:60:80:[m[K [01;35m[Kwarning: [m[K‘[01m[KEigen::AlignedBit[m[K’ is deprecated [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wdeprecated-declarations-Wdeprecated-declarations]8;;[m[K]
+[5.507s]    60 | ::Map<Matrix<double, Dj, Di>, Matrix<double, Dj, Di>::[01;35m[KFlags & AlignedBit[m[K ? Aligned : Unaligned > HessianBlockTransposedType;
+[5.507s]       |                                                       [01;35m[K~~~~~~^~~~~~~~~~~~[m[K
+[5.507s] 
+[5.507s] In file included from [01m[K/usr/include/eigen3/Eigen/Core:161[m[K,
+[5.507s]                  from [01m[K/usr/include/eigen3/Eigen/Dense:1[m[K,
+[5.507s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:36[m[K,
+[5.507s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[5.507s] [01m[K/usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37:[m[K [01;36m[Knote: [m[Kdeclared here
+[5.507s]   167 | EIGEN_DEPRECATED const unsigned int [01;36m[KAlignedBit[m[K = 0x80;
+[5.507s]       |                                     [01;36m[K^~~~~~~~~~[m[K
+[5.531s] In file included from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38[m[K,
+[5.532s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26[m[K,
+[5.532s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33[m[K,
+[5.532s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28[m[K,
+[5.532s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23[m[K,
+[5.532s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/FrameDrawer.h:24[m[K,
+[5.532s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Viewer.h:23[m[K,
+[5.532s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Tracking.h:26[m[K,
+[5.532s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/System.h:31[m[K,
+[5.532s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:50[m[K,
+[5.532s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[5.532s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h: In instantiation of ‘[01m[Kclass g2o::BaseBinaryEdge<2, Eigen::Matrix<double, 2, 1>, g2o::VertexSBAPointXYZ, g2o::VertexSim3Expmap>[m[K’:
+[5.532s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_seven_dof_expmap.h:130:36:[m[K   required from here
+[5.532s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:59:80:[m[K [01;35m[Kwarning: [m[K‘[01m[KEigen::AlignedBit[m[K’ is deprecated [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wdeprecated-declarations-Wdeprecated-declarations]8;;[m[K]
+[5.532s]    59 | ::Map<Matrix<double, Di, Dj>, Matrix<double, Di, Dj>::[01;35m[KFlags & AlignedBit[m[K ? Aligned : Unaligned > HessianBlockType;
+[5.532s]       |                                                       [01;35m[K~~~~~~^~~~~~~~~~~~[m[K
+[5.532s] 
+[5.532s] In file included from [01m[K/usr/include/eigen3/Eigen/Core:161[m[K,
+[5.533s]                  from [01m[K/usr/include/eigen3/Eigen/Dense:1[m[K,
+[5.533s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:36[m[K,
+[5.533s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[5.533s] [01m[K/usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37:[m[K [01;36m[Knote: [m[Kdeclared here
+[5.533s]   167 | EIGEN_DEPRECATED const unsigned int [01;36m[KAlignedBit[m[K = 0x80;
+[5.533s]       |                                     [01;36m[K^~~~~~~~~~[m[K
+[5.540s] In file included from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38[m[K,
+[5.540s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26[m[K,
+[5.540s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33[m[K,
+[5.540s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28[m[K,
+[5.541s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23[m[K,
+[5.541s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/FrameDrawer.h:24[m[K,
+[5.541s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Viewer.h:23[m[K,
+[5.541s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Tracking.h:26[m[K,
+[5.541s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/System.h:31[m[K,
+[5.541s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:50[m[K,
+[5.541s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[5.541s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:60:80:[m[K [01;35m[Kwarning: [m[K‘[01m[KEigen::AlignedBit[m[K’ is deprecated [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wdeprecated-declarations-Wdeprecated-declarations]8;;[m[K]
+[5.541s]    60 | ::Map<Matrix<double, Dj, Di>, Matrix<double, Dj, Di>::[01;35m[KFlags & AlignedBit[m[K ? Aligned : Unaligned > HessianBlockTransposedType;
+[5.541s]       |                                                       [01;35m[K~~~~~~^~~~~~~~~~~~[m[K
+[5.541s] 
+[5.541s] In file included from [01m[K/usr/include/eigen3/Eigen/Core:161[m[K,
+[5.541s]                  from [01m[K/usr/include/eigen3/Eigen/Dense:1[m[K,
+[5.541s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:36[m[K,
+[5.541s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[5.541s] [01m[K/usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37:[m[K [01;36m[Knote: [m[Kdeclared here
+[5.541s]   167 | EIGEN_DEPRECATED const unsigned int [01;36m[KAlignedBit[m[K = 0x80;
+[5.541s]       |                                     [01;36m[K^~~~~~~~~~[m[K
+[6.446s] In file included from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Atlas.h:27[m[K,
+[6.446s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/FrameDrawer.h:25[m[K,
+[6.446s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Viewer.h:23[m[K,
+[6.446s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Tracking.h:26[m[K,
+[6.446s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/System.h:31[m[K,
+[6.446s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:50[m[K,
+[6.446s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[6.446s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/CameraModels/KannalaBrandt8.h:[m[K In constructor ‘[01m[KORB_SLAM3::KannalaBrandt8::KannalaBrandt8(std::vector<float>)[m[K’:
+[6.446s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/CameraModels/KannalaBrandt8.h:102:21:[m[K [01;35m[Kwarning: [m[K‘[01m[KORB_SLAM3::KannalaBrandt8::precision[m[K’ will be initialized after [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wreorder-Wreorder]8;;[m[K]
+[6.446s]   102 |         const float [01;35m[Kprecision[m[K;
+[6.446s]       |                     [01;35m[K^~~~~~~~~[m[K
+[6.446s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/CameraModels/KannalaBrandt8.h:88:26:[m[K [01;35m[Kwarning: [m[K  ‘[01m[Kstd::vector<int> ORB_SLAM3::KannalaBrandt8::mvLappingArea[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wreorder-Wreorder]8;;[m[K]
+[6.446s]    88 |         std::vector<int> [01;35m[KmvLappingArea[m[K;
+[6.446s]       |                          [01;35m[K^~~~~~~~~~~~~[m[K
+[6.447s] In file included from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Atlas.h:27[m[K,
+[6.447s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/FrameDrawer.h:25[m[K,
+[6.447s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Viewer.h:23[m[K,
+[6.447s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Tracking.h:26[m[K,
+[6.447s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/System.h:31[m[K,
+[6.447s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:50[m[K,
+[6.447s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[6.447s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/CameraModels/KannalaBrandt8.h:47:9:[m[K [01;35m[Kwarning: [m[K  when initialized here [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wreorder-Wreorder]8;;[m[K]
+[6.447s]    47 |         [01;35m[KKannalaBrandt8[m[K(const std::vector<float> _vParameters) : GeometricCamera(_vParameters), precision(1e-6), mvLappingArea(2,0) ,tvr(nullptr) {
+[6.447s]       |         [01;35m[K^~~~~~~~~~~~~~[m[K
+[6.447s] In file included from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Atlas.h:27[m[K,
+[6.447s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/FrameDrawer.h:25[m[K,
+[6.447s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Viewer.h:23[m[K,
+[6.447s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Tracking.h:26[m[K,
+[6.447s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/System.h:31[m[K,
+[6.447s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp:50[m[K,
+[6.447s]                  from [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:14[m[K:
+[6.447s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/CameraModels/KannalaBrandt8.h:[m[K In constructor ‘[01m[KORB_SLAM3::KannalaBrandt8::KannalaBrandt8(std::vector<float>, float)[m[K’:
+[6.447s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/CameraModels/KannalaBrandt8.h:102:21:[m[K [01;35m[Kwarning: [m[K‘[01m[KORB_SLAM3::KannalaBrandt8::precision[m[K’ will be initialized after [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wreorder-Wreorder]8;;[m[K]
+[6.447s]   102 |         const float [01;35m[Kprecision[m[K;
+[6.447s]       |                     [01;35m[K^~~~~~~~~[m[K
+[6.447s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/CameraModels/KannalaBrandt8.h:88:26:[m[K [01;35m[Kwarning: [m[K  ‘[01m[Kstd::vector<int> ORB_SLAM3::KannalaBrandt8::mvLappingArea[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wreorder-Wreorder]8;;[m[K]
+[6.447s]    88 |         std::vector<int> [01;35m[KmvLappingArea[m[K;
+[6.447s]       |                          [01;35m[K^~~~~~~~~~~~~[m[K
+[6.447s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/CameraModels/KannalaBrandt8.h:53:9:[m[K [01;35m[Kwarning: [m[K  when initialized here [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wreorder-Wreorder]8;;[m[K]
+[6.448s]    53 |         [01;35m[KKannalaBrandt8[m[K(const std::vector<float> _vParameters, const float _precision) : GeometricCamera(_vParameters),
+[6.448s]       |         [01;35m[K^~~~~~~~~~~~~~[m[K
+[6.448s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/CameraModels/KannalaBrandt8.h:[m[K In constructor ‘[01m[KORB_SLAM3::KannalaBrandt8::KannalaBrandt8(ORB_SLAM3::KannalaBrandt8*)[m[K’:
+[6.448s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/CameraModels/KannalaBrandt8.h:102:21:[m[K [01;35m[Kwarning: [m[K‘[01m[KORB_SLAM3::KannalaBrandt8::precision[m[K’ will be initialized after [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wreorder-Wreorder]8;;[m[K]
+[6.448s]   102 |         const float [01;35m[Kprecision[m[K;
+[6.448s]       |                     [01;35m[K^~~~~~~~~[m[K
+[6.448s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/CameraModels/KannalaBrandt8.h:88:26:[m[K [01;35m[Kwarning: [m[K  ‘[01m[Kstd::vector<int> ORB_SLAM3::KannalaBrandt8::mvLappingArea[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wreorder-Wreorder]8;;[m[K]
+[6.448s]    88 |         std::vector<int> [01;35m[KmvLappingArea[m[K;
+[6.448s]       |                          [01;35m[K^~~~~~~~~~~~~[m[K
+[6.448s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/CameraModels/KannalaBrandt8.h:59:9:[m[K [01;35m[Kwarning: [m[K  when initialized here [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wreorder-Wreorder]8;;[m[K]
+[6.448s]    59 |         [01;35m[KKannalaBrandt8[m[K(KannalaBrandt8* pKannala) : GeometricCamera(pKannala->mvParameters), precision(pKannala->precision), mvLappingArea(2,0) ,tvr(nullptr) {
+[6.448s]       |         [01;35m[K^~~~~~~~~~~~~~[m[K
+[6.711s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:[m[K In member function ‘[01m[Kvoid MonocularMode::Img_callback(const Image&)[m[K’:
+[6.711s] [01m[K/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/src/common.cpp:221:18:[m[K [01;35m[Kwarning: [m[Kvariable ‘[01m[KTcw[m[K’ set but not used [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-but-set-variable-Wunused-but-set-variable]8;;[m[K]
+[6.711s]   221 |     Sophus::SE3f [01;35m[KTcw[m[K = pAgent->TrackMonocular(cv_ptr->image, timeStep);
+[6.712s]       |                  [01;35m[K^~~[m[K
+[23.050s] [ 96%] [32m[1mLinking CXX executable mono_node_cpp[0m
+[24.210s] [100%] Built target mono_node_cpp
+[24.247s] [100%] Built target ament_cmake_python_copy_ros2_orb_slam3
+[24.774s] running egg_info
+[24.774s] writing ros2_orb_slam3.egg-info/PKG-INFO
+[24.774s] writing dependency_links to ros2_orb_slam3.egg-info/dependency_links.txt
+[24.775s] writing top-level names to ros2_orb_slam3.egg-info/top_level.txt
+[24.778s] reading manifest file 'ros2_orb_slam3.egg-info/SOURCES.txt'
+[24.778s] writing manifest file 'ros2_orb_slam3.egg-info/SOURCES.txt'
+[24.802s] [100%] Built target ament_cmake_python_build_ros2_orb_slam3_egg
+[24.816s] Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3
+[24.828s] Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3
+[24.836s] -- Install configuration: ""
+[24.836s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/lib/libDBoW2.so
+[24.836s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/lib/libg2o.so
+[24.837s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/include
+[24.838s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/include/ros2_orb_slam3
+[24.838s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp
+[24.839s] -- Installing: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/lib/ros2_orb_slam3/mono_node_cpp
+[24.842s] -- Set runtime path of "/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/lib/ros2_orb_slam3/mono_node_cpp" to ""
+[24.843s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/lib/liborb_slam3_lib.so.
+[24.843s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/lib/liborb_slam3_lib.so
+[24.844s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/environment/pythonpath.sh
+[24.844s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/environment/pythonpath.dsv
+[24.845s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/local/lib/python3.10/dist-packages/ros2_orb_slam3-1.5.0-py3.10.egg-info
+[24.845s] -- Installing: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/local/lib/python3.10/dist-packages/ros2_orb_slam3-1.5.0-py3.10.egg-info/top_level.txt
+[24.845s] -- Installing: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/local/lib/python3.10/dist-packages/ros2_orb_slam3-1.5.0-py3.10.egg-info/PKG-INFO
+[24.845s] -- Installing: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/local/lib/python3.10/dist-packages/ros2_orb_slam3-1.5.0-py3.10.egg-info/dependency_links.txt
+[24.845s] -- Installing: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/local/lib/python3.10/dist-packages/ros2_orb_slam3-1.5.0-py3.10.egg-info/SOURCES.txt
+[24.846s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/local/lib/python3.10/dist-packages/ros2_orb_slam3
+[24.846s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/local/lib/python3.10/dist-packages/ros2_orb_slam3/__init__.py
+[24.876s] Listing '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/local/lib/python3.10/dist-packages/ros2_orb_slam3'...
+[24.880s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/lib/ros2_orb_slam3/mono_driver_node.py
+[24.880s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ament_index/resource_index/package_run_dependencies/ros2_orb_slam3
+[24.880s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ament_index/resource_index/parent_prefix_path/ros2_orb_slam3
+[24.881s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/environment/ament_prefix_path.sh
+[24.881s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/environment/ament_prefix_path.dsv
+[24.881s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/environment/path.sh
+[24.881s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/environment/path.dsv
+[24.882s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/local_setup.bash
+[24.882s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/local_setup.sh
+[24.882s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/local_setup.zsh
+[24.882s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/local_setup.dsv
+[24.882s] -- Installing: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/package.dsv
+[24.882s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ament_index/resource_index/packages/ros2_orb_slam3
+[24.883s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/cmake/ament_cmake_export_include_directories-extras.cmake
+[24.883s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/cmake/ament_cmake_export_dependencies-extras.cmake
+[24.883s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/cmake/ros2_orb_slam3Config.cmake
+[24.883s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/cmake/ros2_orb_slam3Config-version.cmake
+[24.883s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/package.xml
+[24.885s] Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3

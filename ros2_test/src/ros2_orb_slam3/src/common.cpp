@@ -71,12 +71,27 @@ MonocularMode::MonocularMode() :Node("mono_node_cpp")
     subTimestepMsgName = "/mono_py_driver/timestep_msg"; // topic to receive RGB image messages
     pubKeyframeTimestampsName = "/mono_py_driver/keyframe_timestamps"; //ADDED (Hamdan)
     pubMapTopologyChangedName = "/mono_py_driver/map_topology_changed"; //Added (Hamdan)
+    //Added: (Hamdan)
+    pubCurrentPoseRawName = "/tello_autonomy/current_pose_raw";
+    pubCurrentPointsRawName = "/tello_autonomy/current_points_raw";
+    pubKeyframePointsName = "/tello_autonomy/keyframe_points";
+    pubTrajectoryName = "/tello_autonomy/trajectory";
 
-    //* subscribe to python node to receive settings
-    expConfig_subscription_ = this->create_subscription<std_msgs::msg::String>(subexperimentconfigName, 1, std::bind(&MonocularMode::experimentSetting_callback, this, _1));
+    // ADDED: handshake QoS must match middleware/topic_manager.py's (Hamdan)
+    // HANDSHAKE_QOS exactly (RELIABLE + TRANSIENT_LOCAL + depth 1) on
+    // BOTH ends of both handshake topics. QoS durability is negotiated -
+    // a TRANSIENT_LOCAL requester can't match a VOLATILE-publishing
+    // offerer, so this side must declare the same durability the Python
+    // side already does, or the ack subscription can never match at all.
+    rclcpp::QoS handshake_qos(1);
+    handshake_qos.reliable();
+    handshake_qos.transient_local();
 
-    //* publisher to send out acknowledgement
-    configAck_publisher_ = this->create_publisher<std_msgs::msg::String>(pubconfigackName, 10);
+//* subscribe to python node to receive settings
+expConfig_subscription_ = this->create_subscription<std_msgs::msg::String>(subexperimentconfigName, handshake_qos, std::bind(&MonocularMode::experimentSetting_callback, this, _1));
+
+//* publisher to send out acknowledgement
+configAck_publisher_ = this->create_publisher<std_msgs::msg::String>(pubconfigackName, handshake_qos);
 
     //* subscrbite to the image messages coming from the Python driver node
     subImgMsg_subscription_= this->create_subscription<sensor_msgs::msg::Image>(subImgMsgName, 1, std::bind(&MonocularMode::Img_callback, this, _1));
@@ -89,6 +104,12 @@ MonocularMode::MonocularMode() :Node("mono_node_cpp")
 
     //Added: Publisher when map changes (Hamdan)
     mapTopologyChanged_publisher_ = this->create_publisher<std_msgs::msg::Bool>(pubMapTopologyChangedName, 10);
+
+    //Added: (Hamdan)
+    currentPoseRaw_publisher_ = this->create_publisher<geometry_msgs::msg::PoseStamped>(pubCurrentPoseRawName, 10);
+    currentPointsRaw_publisher_ = this->create_publisher<sensor_msgs::msg::PointCloud2>(pubCurrentPointsRawName, 10);
+    keyframePoints_publisher_ = this->create_publisher<sensor_msgs::msg::PointCloud2>(pubKeyframePointsName, 10);
+    trajectory_publisher_ = this->create_publisher<nav_msgs::msg::Path>(pubTrajectoryName, 10);
 
 
     
@@ -166,8 +187,7 @@ void MonocularMode::initializeVSLAM(std::string& configString){
     //ADDED: live csv path + start the periodic rewrite timer, now that pAgent exists.
 //Created here (not in the constructor) so it can never fire before pAgent is valid.
 
-liveFilePath = homeDir + "/live_sparse_map_points.csv";
-liveCsvTimer_ = this->create_wall_timer(
+    liveCsvTimer_ = this->create_wall_timer(
 	std::chrono::seconds(1),
 	std::bind(&MonocularMode::LiveCsvTimer_callback,this)
 );
@@ -209,6 +229,7 @@ void MonocularMode::Img_callback(const sensor_msgs::msg::Image& msg)
     //* Perform all ORB-SLAM3 operations in Monocular mode
     //! Pose with respect to the camera coordinate frame not the world coordinate frame
     Sophus::SE3f Tcw = pAgent->TrackMonocular(cv_ptr->image, timeStep); 
+    PublishCurrentPoseAndPoints(Tcw);   // ADDED: (Hamdan)
     
     //* An example of what can be done after the pose w.r.t camera coordinate frame is computed by ORB SLAM3
     //Sophus::SE3f Twc = Tcw.inverse(); //* Pose with respect to global image coordinate, reserved for future use
@@ -231,7 +252,15 @@ void MonocularMode::WriteKeyframeDataToFile(const std::string& filepath, std::ve
     f << std::fixed << std::setprecision(6);
     f << "keyframe_id,timestamp,map_id,pixel_u,pixel_v,depth_camera_frame\n";
 
-    std::vector<ORB_SLAM3::KeyFrame*> keyframes = pAgent->GetAllKeyFrames();
+    std::vector<ORB_SLAM3::KeyFrame*> keyframes;
+    std::vector<ORB_SLAM3::Map*> allMaps = pAgent->GetAtlas()->GetAllMaps();
+
+    for (auto* pMap : allMaps){
+        if(!pMap) continue;
+
+        std::vector<ORB_SLAM3::KeyFrame*> mapKFs = pMap->GetAllKeyFrames();
+        keyframes.insert(keyframes.end(),mapKFs.begin(),mapKFs.end());
+    }
 
     outTimestamps.clear();
     outTimestamps.reserve(keyframes.size());
@@ -268,28 +297,191 @@ void MonocularMode::WriteKeyframeDataToFile(const std::string& filepath, std::ve
     f.close();
 }
 
-// ADDED: fires every ~1s once VSLAM is running. Full rewrite each tick, so a
-// loop-closure correction to an earlier keyframe's pose is reflected on the
-// very next tick instead of leaving a stale row behind. (Hamdan)
+// ADDED: 
 void MonocularMode::LiveCsvTimer_callback()
 {
-    if (pAgent == nullptr) return; // watchdog - shouldn't fire before init, but safe to check
+    if (pAgent == nullptr) return;
 
     std::vector<double> timestamps;
     std::set<long unsigned int> currentMapIds;
-    WriteKeyframeDataToFile(liveFilePath, timestamps,currentMapIds);
+    WriteKeyframeDataToFile("/dev/null", timestamps, currentMapIds);  // CHANGED: only used now to collect timestamps/map_ids for the checks below - no longer writes a real file. See note below.
+
+    PublishLiveMapData();  // ADDED - replaces what used to be the CSV write
 
     auto msg = std_msgs::msg::Float64MultiArray();
     msg.data = timestamps;
     keyframeTimestamps_publisher_->publish(msg);
 
-    //Detect any change in the set of active maps_ids since last tick
-    if (currentMapIds != prevMapIds_){
+    if (currentMapIds != prevMapIds_) {
         auto topologyMsg = std_msgs::msg::Bool();
         topologyMsg.data = true;
         mapTopologyChanged_publisher_->publish(topologyMsg);
-        RCLCPP_INFO(this->get_logger(),"Map topology changed: now %zu distinct map_id(s)",currentMapIds.size());
+        RCLCPP_INFO(this->get_logger(), "Map topology changed: now %zu distinct map_id(s)", currentMapIds.size());
         prevMapIds_ = currentMapIds;
+    }
+}
+
+
+//Added:
+void MonocularMode::PublishCurrentPoseAndPoints(const Sophus::SE3f& Tcw)
+{
+    if (pAgent == nullptr) return;
+
+    long unsigned int mapId = pAgent->GetAtlas()->GetCurrentMap()->GetId();
+    std::string frameIdStr = "slam_map_" + std::to_string(mapId);  // must match config.constants.SLAM_MAP_FRAME_ID_PREFIX
+
+    // ---- Pose: Twc (camera position/orientation in world frame) ----
+    Sophus::SE3f Twc = Tcw.inverse();
+    Eigen::Vector3f t = Twc.translation();
+    Eigen::Quaternionf q = Twc.unit_quaternion();
+
+    geometry_msgs::msg::PoseStamped poseMsg;
+    poseMsg.header.stamp = this->now();
+    poseMsg.header.frame_id = frameIdStr;
+    poseMsg.pose.position.x = t.x();
+    poseMsg.pose.position.y = t.y();
+    poseMsg.pose.position.z = t.z();
+    poseMsg.pose.orientation.x = q.x();
+    poseMsg.pose.orientation.y = q.y();
+    poseMsg.pose.orientation.z = q.z();
+    poseMsg.pose.orientation.w = q.w();
+    currentPoseRaw_publisher_->publish(poseMsg);
+
+    // ---- Currently tracked map points, camera-frame 3D (arbitrary SLAM units) ----
+    std::vector<ORB_SLAM3::MapPoint*> trackedPoints = pAgent->GetTrackedMapPoints();
+    std::vector<Eigen::Vector3f> camPoints;
+    camPoints.reserve(trackedPoints.size());
+    for (auto* mp : trackedPoints)
+    {
+        if (!mp || mp->isBad()) continue;
+        Eigen::Vector3f camPos = Tcw * mp->GetWorldPos();
+        if (camPos.z() <= 0) continue;  // behind camera - invalid
+        camPoints.push_back(camPos);
+    }
+
+    sensor_msgs::msg::PointCloud2 cloudMsg;
+    cloudMsg.header.stamp = this->now();
+    cloudMsg.header.frame_id = frameIdStr;
+    cloudMsg.height = 1;
+    cloudMsg.is_dense = true;
+    cloudMsg.is_bigendian = false;
+
+    sensor_msgs::PointCloud2Modifier modifier(cloudMsg);
+    modifier.setPointCloud2FieldsByString(1, "xyz");
+    modifier.resize(camPoints.size());
+
+    sensor_msgs::PointCloud2Iterator<float> iter_x(cloudMsg, "x");
+    sensor_msgs::PointCloud2Iterator<float> iter_y(cloudMsg, "y");
+    sensor_msgs::PointCloud2Iterator<float> iter_z(cloudMsg, "z");
+    for (const auto& p : camPoints)
+    {
+        *iter_x = p.x(); *iter_y = p.y(); *iter_z = p.z();
+        ++iter_x; ++iter_y; ++iter_z;
+    }
+    currentPointsRaw_publisher_->publish(cloudMsg);
+}
+
+
+//Added
+void MonocularMode::PublishLiveMapData()
+{
+    if (pAgent == nullptr) return;
+
+    // CRITICAL: loop every map in the Atlas, NOT GetAllKeyframePoses()/
+    // Atlas::GetAllKeyFrames() - both of those silently only return the
+    // CURRENTLY ACTIVE map, the exact bug already found and fixed once
+    // before in WriteKeyframeDataToFile(). Do not reintroduce it here.
+    std::vector<ORB_SLAM3::Map*> allMaps = pAgent->GetAtlas()->GetAllMaps();
+
+    for (auto* pMap : allMaps)
+    {
+        if (!pMap) continue;
+        long unsigned int mapId = pMap->GetId();
+        std::string frameIdStr = "slam_map_" + std::to_string(mapId);
+
+        std::vector<ORB_SLAM3::KeyFrame*> keyframes = pMap->GetAllKeyFrames();
+        std::sort(keyframes.begin(), keyframes.end(), ORB_SLAM3::KeyFrame::lId);
+
+        // ---- keyframe_points: (keyframe_id, keyframe_timestamp, pixel_u, pixel_v, depth) per valid map point ----
+        std::vector<std::array<double,5>> rows;
+        for (auto* kf : keyframes)
+        {
+            if (kf->isBad()) continue;
+            Sophus::SE3f Tcw = kf->GetPose();
+            std::vector<ORB_SLAM3::MapPoint*> mapPoints = kf->GetMapPointMatches();
+
+            for (size_t i = 0; i < mapPoints.size() && i < kf->mvKeysUn.size(); i++)
+            {
+                ORB_SLAM3::MapPoint* mp = mapPoints[i];
+                if (!mp || mp->isBad()) continue;
+                Eigen::Vector3f camPos = Tcw * mp->GetWorldPos();
+                float depth = camPos.z();
+                if (depth <= 0) continue;
+
+                rows.push_back({
+                    static_cast<double>(kf->mnId),
+                    kf->mTimeStamp,
+                    static_cast<double>(kf->mvKeysUn[i].pt.x),
+                    static_cast<double>(kf->mvKeysUn[i].pt.y),
+                    static_cast<double>(depth)
+                });
+            }
+        }
+
+        sensor_msgs::msg::PointCloud2 cloudMsg;
+        cloudMsg.header.stamp = this->now();
+        cloudMsg.header.frame_id = frameIdStr;
+        cloudMsg.height = 1;
+        cloudMsg.is_dense = true;
+        cloudMsg.is_bigendian = false;
+
+        sensor_msgs::PointCloud2Modifier modifier(cloudMsg);
+        modifier.setPointCloud2Fields(5,
+            "keyframe_id", 1, sensor_msgs::msg::PointField::FLOAT64,
+            "keyframe_timestamp", 1, sensor_msgs::msg::PointField::FLOAT64,
+            "pixel_u", 1, sensor_msgs::msg::PointField::FLOAT64,
+            "pixel_v", 1, sensor_msgs::msg::PointField::FLOAT64,
+            "depth", 1, sensor_msgs::msg::PointField::FLOAT64);
+        modifier.resize(rows.size());
+
+        sensor_msgs::PointCloud2Iterator<double> it_kfid(cloudMsg, "keyframe_id");
+        sensor_msgs::PointCloud2Iterator<double> it_ts(cloudMsg, "keyframe_timestamp");
+        sensor_msgs::PointCloud2Iterator<double> it_u(cloudMsg, "pixel_u");
+        sensor_msgs::PointCloud2Iterator<double> it_v(cloudMsg, "pixel_v");
+        sensor_msgs::PointCloud2Iterator<double> it_depth(cloudMsg, "depth");
+
+        for (const auto& row : rows)
+        {
+            *it_kfid = row[0]; *it_ts = row[1]; *it_u = row[2]; *it_v = row[3]; *it_depth = row[4];
+            ++it_kfid; ++it_ts; ++it_u; ++it_v; ++it_depth;
+        }
+        keyframePoints_publisher_->publish(cloudMsg);
+
+        // ---- trajectory: nav_msgs/Path, fixes the GetAllKeyframePoses() single-map bug ----
+        nav_msgs::msg::Path pathMsg;
+        pathMsg.header.stamp = this->now();
+        pathMsg.header.frame_id = frameIdStr;
+
+        for (auto* kf : keyframes)
+        {
+            if (kf->isBad()) continue;
+            Sophus::SE3f Twc = kf->GetPoseInverse();
+            Eigen::Vector3f t = Twc.translation();
+            Eigen::Quaternionf q = Twc.unit_quaternion();
+
+            geometry_msgs::msg::PoseStamped ps;
+            ps.header.stamp = rclcpp::Time(static_cast<int64_t>(kf->mTimeStamp * 1e9));
+            ps.header.frame_id = frameIdStr;
+            ps.pose.position.x = t.x();
+            ps.pose.position.y = t.y();
+            ps.pose.position.z = t.z();
+            ps.pose.orientation.x = q.x();
+            ps.pose.orientation.y = q.y();
+            ps.pose.orientation.z = q.z();
+            ps.pose.orientation.w = q.w();
+            pathMsg.poses.push_back(ps);
+        }
+        trajectory_publisher_->publish(pathMsg);
     }
 }
 
