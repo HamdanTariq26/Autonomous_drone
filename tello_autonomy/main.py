@@ -15,6 +15,7 @@ manual-flight-with-live-SLAM-and-scale-factor session:
   perception (ROS2, depends on middleware's topics):
     ScaleFactorManager (computes per-map_id scale factors)
     LiveScaler         (multiplies live pose/points by the current scale factor)
+    PoseSubscriberNode (caches latest metric pose for autonomous test mode)
 
 The C++ SLAM node (ros2_orb_slam3 / mono_node_cpp) is a SEPARATE
 process, started independently before or after this script - it is not
@@ -48,6 +49,8 @@ if _TELLO_AUTONOMY_ROOT not in sys.path:
 
 import rclpy
 from rclpy.executors import SingleThreadedExecutor
+from rclpy.node import Node
+from geometry_msgs.msg import PoseStamped
 
 from config import constants
 from drone_interface.tello_driver import TelloDriver
@@ -59,6 +62,33 @@ from middleware.ros_bridge import RosBridge
 from middleware.frame_cleanup import FrameCleanupNode
 from perception.scale_factor_manager import ScaleFactorManager
 from perception.live_scaler import LiveScaler
+
+
+class PoseSubscriberNode(Node):
+    """
+        Lightweight ROS2 node whose only job is to cache the latest
+        metric-scale pose from LiveScaler, so the ManualControl loop can
+        read it without touching ROS2 internals directly.
+    """
+    def __init__(self):
+        super().__init__("pose_subscriber_node")
+        self.latest_pose = None  # geometry_msgs/PoseStamped, or None until first message
+        self._lock = threading.Lock()
+        self.create_subscription(
+            PoseStamped,
+            constants.TOPIC_CURRENT_POSE_METRIC,
+            self._on_pose,
+            10,
+        )
+
+    def _on_pose(self, msg: PoseStamped):
+        with self._lock:
+            self.latest_pose = msg
+
+    def get_pose(self):
+        """Thread-safe read. Returns latest PoseStamped or None."""
+        with self._lock:
+            return self.latest_pose
 
 
 class NodeRunner:
@@ -90,8 +120,6 @@ def main():
     frame_receiver = FrameReceiver(driver)
     telemetry = TelemetryMonitor(driver, enabled=True)  # default fields: battery, height, flight_time
     command_handler = CommandHandler(driver)
-    manual_control = ManualControl(command_handler, frame_receiver, manual_speed=constants.DEFAULT_MANUAL_SPEED_CMS)
-
     # ---- ROS2 layer: middleware + perception ----
     rclpy.init()
 
@@ -99,12 +127,26 @@ def main():
     frame_cleanup = FrameCleanupNode(node_name="frame_cleanup_node")
     scale_factor_manager = ScaleFactorManager(node_name="scale_factor_manager")
     live_scaler = LiveScaler(scale_factor_manager, node_name="live_scaler")
+    pose_subscriber = PoseSubscriberNode()
+
+    # ManualControl gets references to scale_factor_manager (so it knows when
+    # a scale factor is ready) and pose_subscriber (to read metric position
+    # during autonomous test mode). Neither creates a ROS2 dependency inside
+    # drone_interface - they're just plain Python objects read by value.
+    manual_control = ManualControl(
+        command_handler,
+        frame_receiver,
+        manual_speed=constants.DEFAULT_MANUAL_SPEED_CMS,
+        scale_factor_manager=scale_factor_manager,
+        pose_subscriber=pose_subscriber,
+    )
 
     runners = [
         NodeRunner(ros_bridge),
         NodeRunner(frame_cleanup),
         NodeRunner(scale_factor_manager),
         NodeRunner(live_scaler),
+        NodeRunner(pose_subscriber),
     ]
     for runner in runners:
         runner.start()
@@ -120,17 +162,16 @@ def main():
     manual_control.on_quit_requested = on_quit
     command_handler.start_keepalive()
     telemetry.enable()
-    manual_control.start(window_name="Tello SLAM View")
-
     print("Pipeline running. Fly manually (t=takeoff, q=land+quit). "
           "SLAM handshake, scale-factor computation, and live scaling "
           "run automatically once the C++ SLAM node ACKs.")
 
     try:
-        while not shutdown_event.is_set():
-            shutdown_event.wait(timeout=0.5)
+        # Run in main thread! This handles OpenCV UI and blocks until shutdown.
+        manual_control.start(window_name="Tello SLAM View", blocking=True)
     except KeyboardInterrupt:
         print("\nCtrl+C received - shutting down.")
+        shutdown_event.set()
     finally:
         print("Shutting down drone_interface...")
         manual_control.stop()

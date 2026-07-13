@@ -150,8 +150,7 @@ class CommandHandler:
         if self._takeoff_in_progress.is_set() or self._landing_in_progress.is_set():
             return False
         try:
-            with self._tello_driver.cmd_lock:
-                self._tello_driver.tello.send_rc_control(left_right, forward_back, up_down, yaw)
+            self._tello_driver.tello.send_rc_control(left_right, forward_back, up_down, yaw)
             return True
         except Exception as e:
             print(f"send_rc_control failed (non-fatal): {e}")

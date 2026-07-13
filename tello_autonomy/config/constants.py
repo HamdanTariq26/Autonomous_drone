@@ -173,3 +173,15 @@ TOPIC_TRAJECTORY = "/tello_autonomy/trajectory"
 # away - generous margin (3x) over the expected ~1s cadence to absorb
 # normal jitter without false-pruning an active map.
 MAP_DATA_STALE_AFTER_SEC = 3.0
+
+
+# NEW - the depth-inference worker process's niceness (relative to the
+# default 0). Positive = lower OS scheduling priority, so the kernel
+# favors flight control / ROS2 callbacks over this process whenever
+# both want the CPU at the same time.
+DEPTH_WORKER_NICE_VALUE = 10
+
+# NEW - how often scale_factor_manager's result-poll timer checks the
+# worker process's result queue. Cheap non-blocking drain, so this can
+# be fairly frequent without any real cost.
+DEPTH_WORKER_RESULT_POLL_INTERVAL_SEC = 0.5
