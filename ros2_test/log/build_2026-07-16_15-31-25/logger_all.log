@@ -1,0 +1,548 @@
+[0.257s] DEBUG:colcon:Command line arguments: ['/usr/bin/colcon', 'build', '--executor', 'sequential']
+[0.257s] DEBUG:colcon:Parsed command line arguments: Namespace(log_base=None, log_level=None, verb_name='build', build_base='build', install_base='install', merge_install=False, symlink_install=False, test_result_base=None, continue_on_error=False, executor='sequential', parallel_workers=12, event_handlers=None, ignore_user_meta=False, metas=['./colcon.meta'], base_paths=['.'], packages_ignore=None, packages_ignore_regex=None, paths=None, packages_up_to=None, packages_up_to_regex=None, packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_select_by_dep=None, packages_skip_by_dep=None, packages_skip_up_to=None, packages_select_build_failed=False, packages_skip_build_finished=False, packages_select_test_failures=False, packages_skip_test_passed=False, packages_select=None, packages_skip=None, packages_select_regex=None, packages_skip_regex=None, packages_start=None, packages_end=None, allow_overriding=[], cmake_args=None, cmake_target=None, cmake_target_skip_unavailable=False, cmake_clean_cache=False, cmake_clean_first=False, cmake_force_configure=False, ament_cmake_args=None, catkin_cmake_args=None, catkin_skip_building_tests=False, verb_parser=<colcon_defaults.argument_parser.defaults.DefaultArgumentsDecorator object at 0x76905d528580>, verb_extension=<colcon_core.verb.build.BuildVerb object at 0x76905d665cf0>, main=<bound method BuildVerb.main of <colcon_core.verb.build.BuildVerb object at 0x76905d665cf0>>)
+[0.704s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[0.705s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[0.705s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[0.705s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[0.705s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) discover
+[0.705s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[0.705s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/home/hamdan/autonomous_drone/ros2_test'
+[0.705s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ignore', 'ignore_ament_install']
+[0.705s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore'
+[0.706s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore_ament_install'
+[0.706s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_pkg']
+[0.706s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_pkg'
+[0.706s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_meta']
+[0.706s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_meta'
+[0.706s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ros']
+[0.706s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ros'
+[0.729s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['cmake', 'python']
+[0.730s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'cmake'
+[0.730s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python'
+[0.730s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['python_setup_py']
+[0.730s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python_setup_py'
+[0.730s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extensions ['ignore', 'ignore_ament_install']
+[0.730s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extension 'ignore'
+[0.731s] Level 1:colcon.colcon_core.package_identification:_identify(build) ignored
+[0.731s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extensions ['ignore', 'ignore_ament_install']
+[0.731s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extension 'ignore'
+[0.731s] Level 1:colcon.colcon_core.package_identification:_identify(install) ignored
+[0.731s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extensions ['ignore', 'ignore_ament_install']
+[0.731s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extension 'ignore'
+[0.732s] Level 1:colcon.colcon_core.package_identification:_identify(log) ignored
+[0.732s] Level 1:colcon.colcon_core.package_identification:_identify(logic) by extensions ['ignore', 'ignore_ament_install']
+[0.732s] Level 1:colcon.colcon_core.package_identification:_identify(logic) by extension 'ignore'
+[0.732s] Level 1:colcon.colcon_core.package_identification:_identify(logic) by extension 'ignore_ament_install'
+[0.732s] Level 1:colcon.colcon_core.package_identification:_identify(logic) by extensions ['colcon_pkg']
+[0.732s] Level 1:colcon.colcon_core.package_identification:_identify(logic) by extension 'colcon_pkg'
+[0.732s] Level 1:colcon.colcon_core.package_identification:_identify(logic) by extensions ['colcon_meta']
+[0.732s] Level 1:colcon.colcon_core.package_identification:_identify(logic) by extension 'colcon_meta'
+[0.733s] Level 1:colcon.colcon_core.package_identification:_identify(logic) by extensions ['ros']
+[0.733s] Level 1:colcon.colcon_core.package_identification:_identify(logic) by extension 'ros'
+[0.733s] Level 1:colcon.colcon_core.package_identification:_identify(logic) by extensions ['cmake', 'python']
+[0.733s] Level 1:colcon.colcon_core.package_identification:_identify(logic) by extension 'cmake'
+[0.733s] Level 1:colcon.colcon_core.package_identification:_identify(logic) by extension 'python'
+[0.733s] Level 1:colcon.colcon_core.package_identification:_identify(logic) by extensions ['python_setup_py']
+[0.733s] Level 1:colcon.colcon_core.package_identification:_identify(logic) by extension 'python_setup_py'
+[0.733s] Level 1:colcon.colcon_core.package_identification:_identify(logic/__pycache__) by extensions ['ignore', 'ignore_ament_install']
+[0.734s] Level 1:colcon.colcon_core.package_identification:_identify(logic/__pycache__) by extension 'ignore'
+[0.734s] Level 1:colcon.colcon_core.package_identification:_identify(logic/__pycache__) by extension 'ignore_ament_install'
+[0.734s] Level 1:colcon.colcon_core.package_identification:_identify(logic/__pycache__) by extensions ['colcon_pkg']
+[0.734s] Level 1:colcon.colcon_core.package_identification:_identify(logic/__pycache__) by extension 'colcon_pkg'
+[0.734s] Level 1:colcon.colcon_core.package_identification:_identify(logic/__pycache__) by extensions ['colcon_meta']
+[0.734s] Level 1:colcon.colcon_core.package_identification:_identify(logic/__pycache__) by extension 'colcon_meta'
+[0.734s] Level 1:colcon.colcon_core.package_identification:_identify(logic/__pycache__) by extensions ['ros']
+[0.734s] Level 1:colcon.colcon_core.package_identification:_identify(logic/__pycache__) by extension 'ros'
+[0.734s] Level 1:colcon.colcon_core.package_identification:_identify(logic/__pycache__) by extensions ['cmake', 'python']
+[0.734s] Level 1:colcon.colcon_core.package_identification:_identify(logic/__pycache__) by extension 'cmake'
+[0.735s] Level 1:colcon.colcon_core.package_identification:_identify(logic/__pycache__) by extension 'python'
+[0.735s] Level 1:colcon.colcon_core.package_identification:_identify(logic/__pycache__) by extensions ['python_setup_py']
+[0.735s] Level 1:colcon.colcon_core.package_identification:_identify(logic/__pycache__) by extension 'python_setup_py'
+[0.735s] Level 1:colcon.colcon_core.package_identification:_identify(logic/frame_images) by extensions ['ignore', 'ignore_ament_install']
+[0.735s] Level 1:colcon.colcon_core.package_identification:_identify(logic/frame_images) by extension 'ignore'
+[0.736s] Level 1:colcon.colcon_core.package_identification:_identify(logic/frame_images) by extension 'ignore_ament_install'
+[0.736s] Level 1:colcon.colcon_core.package_identification:_identify(logic/frame_images) by extensions ['colcon_pkg']
+[0.736s] Level 1:colcon.colcon_core.package_identification:_identify(logic/frame_images) by extension 'colcon_pkg'
+[0.736s] Level 1:colcon.colcon_core.package_identification:_identify(logic/frame_images) by extensions ['colcon_meta']
+[0.736s] Level 1:colcon.colcon_core.package_identification:_identify(logic/frame_images) by extension 'colcon_meta'
+[0.736s] Level 1:colcon.colcon_core.package_identification:_identify(logic/frame_images) by extensions ['ros']
+[0.736s] Level 1:colcon.colcon_core.package_identification:_identify(logic/frame_images) by extension 'ros'
+[0.737s] Level 1:colcon.colcon_core.package_identification:_identify(logic/frame_images) by extensions ['cmake', 'python']
+[0.737s] Level 1:colcon.colcon_core.package_identification:_identify(logic/frame_images) by extension 'cmake'
+[0.737s] Level 1:colcon.colcon_core.package_identification:_identify(logic/frame_images) by extension 'python'
+[0.737s] Level 1:colcon.colcon_core.package_identification:_identify(logic/frame_images) by extensions ['python_setup_py']
+[0.737s] Level 1:colcon.colcon_core.package_identification:_identify(logic/frame_images) by extension 'python_setup_py'
+[0.737s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['ignore', 'ignore_ament_install']
+[0.737s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ignore'
+[0.737s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ignore_ament_install'
+[0.738s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['colcon_pkg']
+[0.738s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'colcon_pkg'
+[0.738s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['colcon_meta']
+[0.738s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'colcon_meta'
+[0.738s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['ros']
+[0.738s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ros'
+[0.738s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['cmake', 'python']
+[0.738s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'cmake'
+[0.738s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'python'
+[0.738s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['python_setup_py']
+[0.739s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'python_setup_py'
+[0.739s] Level 1:colcon.colcon_core.package_identification:_identify(src/exploration_cpp) by extensions ['ignore', 'ignore_ament_install']
+[0.739s] Level 1:colcon.colcon_core.package_identification:_identify(src/exploration_cpp) by extension 'ignore'
+[0.739s] Level 1:colcon.colcon_core.package_identification:_identify(src/exploration_cpp) by extension 'ignore_ament_install'
+[0.739s] Level 1:colcon.colcon_core.package_identification:_identify(src/exploration_cpp) by extensions ['colcon_pkg']
+[0.739s] Level 1:colcon.colcon_core.package_identification:_identify(src/exploration_cpp) by extension 'colcon_pkg'
+[0.739s] Level 1:colcon.colcon_core.package_identification:_identify(src/exploration_cpp) by extensions ['colcon_meta']
+[0.739s] Level 1:colcon.colcon_core.package_identification:_identify(src/exploration_cpp) by extension 'colcon_meta'
+[0.740s] Level 1:colcon.colcon_core.package_identification:_identify(src/exploration_cpp) by extensions ['ros']
+[0.740s] Level 1:colcon.colcon_core.package_identification:_identify(src/exploration_cpp) by extension 'ros'
+[0.748s] DEBUG:colcon.colcon_core.package_identification:Package 'src/exploration_cpp' with type 'ros.ament_cmake' and name 'exploration_cpp'
+[0.748s] Level 1:colcon.colcon_core.package_identification:_identify(src/occupancy_map_cpp) by extensions ['ignore', 'ignore_ament_install']
+[0.748s] Level 1:colcon.colcon_core.package_identification:_identify(src/occupancy_map_cpp) by extension 'ignore'
+[0.748s] Level 1:colcon.colcon_core.package_identification:_identify(src/occupancy_map_cpp) by extension 'ignore_ament_install'
+[0.748s] Level 1:colcon.colcon_core.package_identification:_identify(src/occupancy_map_cpp) by extensions ['colcon_pkg']
+[0.748s] Level 1:colcon.colcon_core.package_identification:_identify(src/occupancy_map_cpp) by extension 'colcon_pkg'
+[0.749s] Level 1:colcon.colcon_core.package_identification:_identify(src/occupancy_map_cpp) by extensions ['colcon_meta']
+[0.749s] Level 1:colcon.colcon_core.package_identification:_identify(src/occupancy_map_cpp) by extension 'colcon_meta'
+[0.749s] Level 1:colcon.colcon_core.package_identification:_identify(src/occupancy_map_cpp) by extensions ['ros']
+[0.749s] Level 1:colcon.colcon_core.package_identification:_identify(src/occupancy_map_cpp) by extension 'ros'
+[0.751s] DEBUG:colcon.colcon_core.package_identification:Package 'src/occupancy_map_cpp' with type 'ros.ament_cmake' and name 'occupancy_map_cpp'
+[0.752s] Level 1:colcon.colcon_core.package_identification:_identify(src/octomap_manager_shim) by extensions ['ignore', 'ignore_ament_install']
+[0.752s] Level 1:colcon.colcon_core.package_identification:_identify(src/octomap_manager_shim) by extension 'ignore'
+[0.752s] Level 1:colcon.colcon_core.package_identification:_identify(src/octomap_manager_shim) by extension 'ignore_ament_install'
+[0.752s] Level 1:colcon.colcon_core.package_identification:_identify(src/octomap_manager_shim) by extensions ['colcon_pkg']
+[0.752s] Level 1:colcon.colcon_core.package_identification:_identify(src/octomap_manager_shim) by extension 'colcon_pkg'
+[0.752s] Level 1:colcon.colcon_core.package_identification:_identify(src/octomap_manager_shim) by extensions ['colcon_meta']
+[0.752s] Level 1:colcon.colcon_core.package_identification:_identify(src/octomap_manager_shim) by extension 'colcon_meta'
+[0.752s] Level 1:colcon.colcon_core.package_identification:_identify(src/octomap_manager_shim) by extensions ['ros']
+[0.752s] Level 1:colcon.colcon_core.package_identification:_identify(src/octomap_manager_shim) by extension 'ros'
+[0.769s] DEBUG:colcon.colcon_core.package_identification:Package 'src/octomap_manager_shim' with type 'ros.ament_cmake' and name 'octomap_manager_shim'
+[0.770s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros2_orb_slam3) by extensions ['ignore', 'ignore_ament_install']
+[0.770s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros2_orb_slam3) by extension 'ignore'
+[0.770s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros2_orb_slam3) by extension 'ignore_ament_install'
+[0.770s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros2_orb_slam3) by extensions ['colcon_pkg']
+[0.770s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros2_orb_slam3) by extension 'colcon_pkg'
+[0.770s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros2_orb_slam3) by extensions ['colcon_meta']
+[0.770s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros2_orb_slam3) by extension 'colcon_meta'
+[0.771s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros2_orb_slam3) by extensions ['ros']
+[0.771s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros2_orb_slam3) by extension 'ros'
+[0.773s] DEBUG:colcon.colcon_core.package_identification:Package 'src/ros2_orb_slam3' with type 'ros.ament_cmake' and name 'ros2_orb_slam3'
+[0.773s] Level 1:colcon.colcon_core.package_identification:_identify(src/search_cpp) by extensions ['ignore', 'ignore_ament_install']
+[0.773s] Level 1:colcon.colcon_core.package_identification:_identify(src/search_cpp) by extension 'ignore'
+[0.773s] Level 1:colcon.colcon_core.package_identification:_identify(src/search_cpp) by extension 'ignore_ament_install'
+[0.774s] Level 1:colcon.colcon_core.package_identification:_identify(src/search_cpp) by extensions ['colcon_pkg']
+[0.774s] Level 1:colcon.colcon_core.package_identification:_identify(src/search_cpp) by extension 'colcon_pkg'
+[0.774s] Level 1:colcon.colcon_core.package_identification:_identify(src/search_cpp) by extensions ['colcon_meta']
+[0.774s] Level 1:colcon.colcon_core.package_identification:_identify(src/search_cpp) by extension 'colcon_meta'
+[0.774s] Level 1:colcon.colcon_core.package_identification:_identify(src/search_cpp) by extensions ['ros']
+[0.774s] Level 1:colcon.colcon_core.package_identification:_identify(src/search_cpp) by extension 'ros'
+[0.776s] DEBUG:colcon.colcon_core.package_identification:Package 'src/search_cpp' with type 'ros.ament_cmake' and name 'search_cpp'
+[0.777s] Level 1:colcon.colcon_core.package_identification:_identify(src/tello_autonomy_msgs) by extensions ['ignore', 'ignore_ament_install']
+[0.777s] Level 1:colcon.colcon_core.package_identification:_identify(src/tello_autonomy_msgs) by extension 'ignore'
+[0.777s] Level 1:colcon.colcon_core.package_identification:_identify(src/tello_autonomy_msgs) by extension 'ignore_ament_install'
+[0.777s] Level 1:colcon.colcon_core.package_identification:_identify(src/tello_autonomy_msgs) by extensions ['colcon_pkg']
+[0.777s] Level 1:colcon.colcon_core.package_identification:_identify(src/tello_autonomy_msgs) by extension 'colcon_pkg'
+[0.777s] Level 1:colcon.colcon_core.package_identification:_identify(src/tello_autonomy_msgs) by extensions ['colcon_meta']
+[0.777s] Level 1:colcon.colcon_core.package_identification:_identify(src/tello_autonomy_msgs) by extension 'colcon_meta'
+[0.777s] Level 1:colcon.colcon_core.package_identification:_identify(src/tello_autonomy_msgs) by extensions ['ros']
+[0.778s] Level 1:colcon.colcon_core.package_identification:_identify(src/tello_autonomy_msgs) by extension 'ros'
+[0.779s] DEBUG:colcon.colcon_core.package_identification:Package 'src/tello_autonomy_msgs' with type 'ros.ament_cmake' and name 'tello_autonomy_msgs'
+[0.779s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
+[0.779s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) discover
+[0.779s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) using defaults
+[0.779s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) discover
+[0.779s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) using defaults
+[0.827s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) check parameters
+[0.827s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) discover
+[0.833s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 278 installed packages in /opt/ros/humble
+[0.836s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) using defaults
+[0.920s] Level 5:colcon.colcon_core.verb:set package 'occupancy_map_cpp' build argument 'cmake_args' from command line to 'None'
+[0.920s] Level 5:colcon.colcon_core.verb:set package 'occupancy_map_cpp' build argument 'cmake_target' from command line to 'None'
+[0.920s] Level 5:colcon.colcon_core.verb:set package 'occupancy_map_cpp' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.920s] Level 5:colcon.colcon_core.verb:set package 'occupancy_map_cpp' build argument 'cmake_clean_cache' from command line to 'False'
+[0.920s] Level 5:colcon.colcon_core.verb:set package 'occupancy_map_cpp' build argument 'cmake_clean_first' from command line to 'False'
+[0.920s] Level 5:colcon.colcon_core.verb:set package 'occupancy_map_cpp' build argument 'cmake_force_configure' from command line to 'False'
+[0.920s] Level 5:colcon.colcon_core.verb:set package 'occupancy_map_cpp' build argument 'ament_cmake_args' from command line to 'None'
+[0.921s] Level 5:colcon.colcon_core.verb:set package 'occupancy_map_cpp' build argument 'catkin_cmake_args' from command line to 'None'
+[0.921s] Level 5:colcon.colcon_core.verb:set package 'occupancy_map_cpp' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.921s] DEBUG:colcon.colcon_core.verb:Building package 'occupancy_map_cpp' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/hamdan/autonomous_drone/ros2_test/build/occupancy_map_cpp', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp', 'merge_install': False, 'path': '/home/hamdan/autonomous_drone/ros2_test/src/occupancy_map_cpp', 'symlink_install': False, 'test_result_base': None}
+[0.921s] Level 5:colcon.colcon_core.verb:set package 'octomap_manager_shim' build argument 'cmake_args' from command line to 'None'
+[0.922s] Level 5:colcon.colcon_core.verb:set package 'octomap_manager_shim' build argument 'cmake_target' from command line to 'None'
+[0.922s] Level 5:colcon.colcon_core.verb:set package 'octomap_manager_shim' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.922s] Level 5:colcon.colcon_core.verb:set package 'octomap_manager_shim' build argument 'cmake_clean_cache' from command line to 'False'
+[0.922s] Level 5:colcon.colcon_core.verb:set package 'octomap_manager_shim' build argument 'cmake_clean_first' from command line to 'False'
+[0.922s] Level 5:colcon.colcon_core.verb:set package 'octomap_manager_shim' build argument 'cmake_force_configure' from command line to 'False'
+[0.922s] Level 5:colcon.colcon_core.verb:set package 'octomap_manager_shim' build argument 'ament_cmake_args' from command line to 'None'
+[0.922s] Level 5:colcon.colcon_core.verb:set package 'octomap_manager_shim' build argument 'catkin_cmake_args' from command line to 'None'
+[0.922s] Level 5:colcon.colcon_core.verb:set package 'octomap_manager_shim' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.922s] DEBUG:colcon.colcon_core.verb:Building package 'octomap_manager_shim' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/hamdan/autonomous_drone/ros2_test/build/octomap_manager_shim', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim', 'merge_install': False, 'path': '/home/hamdan/autonomous_drone/ros2_test/src/octomap_manager_shim', 'symlink_install': False, 'test_result_base': None}
+[0.923s] Level 5:colcon.colcon_core.verb:set package 'ros2_orb_slam3' build argument 'cmake_args' from command line to 'None'
+[0.923s] Level 5:colcon.colcon_core.verb:set package 'ros2_orb_slam3' build argument 'cmake_target' from command line to 'None'
+[0.923s] Level 5:colcon.colcon_core.verb:set package 'ros2_orb_slam3' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.923s] Level 5:colcon.colcon_core.verb:set package 'ros2_orb_slam3' build argument 'cmake_clean_cache' from command line to 'False'
+[0.923s] Level 5:colcon.colcon_core.verb:set package 'ros2_orb_slam3' build argument 'cmake_clean_first' from command line to 'False'
+[0.923s] Level 5:colcon.colcon_core.verb:set package 'ros2_orb_slam3' build argument 'cmake_force_configure' from command line to 'False'
+[0.923s] Level 5:colcon.colcon_core.verb:set package 'ros2_orb_slam3' build argument 'ament_cmake_args' from command line to 'None'
+[0.923s] Level 5:colcon.colcon_core.verb:set package 'ros2_orb_slam3' build argument 'catkin_cmake_args' from command line to 'None'
+[0.923s] Level 5:colcon.colcon_core.verb:set package 'ros2_orb_slam3' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.923s] DEBUG:colcon.colcon_core.verb:Building package 'ros2_orb_slam3' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3', 'merge_install': False, 'path': '/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3', 'symlink_install': False, 'test_result_base': None}
+[0.924s] Level 5:colcon.colcon_core.verb:set package 'tello_autonomy_msgs' build argument 'cmake_args' from command line to 'None'
+[0.924s] Level 5:colcon.colcon_core.verb:set package 'tello_autonomy_msgs' build argument 'cmake_target' from command line to 'None'
+[0.924s] Level 5:colcon.colcon_core.verb:set package 'tello_autonomy_msgs' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.924s] Level 5:colcon.colcon_core.verb:set package 'tello_autonomy_msgs' build argument 'cmake_clean_cache' from command line to 'False'
+[0.924s] Level 5:colcon.colcon_core.verb:set package 'tello_autonomy_msgs' build argument 'cmake_clean_first' from command line to 'False'
+[0.924s] Level 5:colcon.colcon_core.verb:set package 'tello_autonomy_msgs' build argument 'cmake_force_configure' from command line to 'False'
+[0.924s] Level 5:colcon.colcon_core.verb:set package 'tello_autonomy_msgs' build argument 'ament_cmake_args' from command line to 'None'
+[0.925s] Level 5:colcon.colcon_core.verb:set package 'tello_autonomy_msgs' build argument 'catkin_cmake_args' from command line to 'None'
+[0.925s] Level 5:colcon.colcon_core.verb:set package 'tello_autonomy_msgs' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.925s] DEBUG:colcon.colcon_core.verb:Building package 'tello_autonomy_msgs' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs', 'merge_install': False, 'path': '/home/hamdan/autonomous_drone/ros2_test/src/tello_autonomy_msgs', 'symlink_install': False, 'test_result_base': None}
+[0.925s] Level 5:colcon.colcon_core.verb:set package 'exploration_cpp' build argument 'cmake_args' from command line to 'None'
+[0.925s] Level 5:colcon.colcon_core.verb:set package 'exploration_cpp' build argument 'cmake_target' from command line to 'None'
+[0.925s] Level 5:colcon.colcon_core.verb:set package 'exploration_cpp' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.925s] Level 5:colcon.colcon_core.verb:set package 'exploration_cpp' build argument 'cmake_clean_cache' from command line to 'False'
+[0.926s] Level 5:colcon.colcon_core.verb:set package 'exploration_cpp' build argument 'cmake_clean_first' from command line to 'False'
+[0.926s] Level 5:colcon.colcon_core.verb:set package 'exploration_cpp' build argument 'cmake_force_configure' from command line to 'False'
+[0.926s] Level 5:colcon.colcon_core.verb:set package 'exploration_cpp' build argument 'ament_cmake_args' from command line to 'None'
+[0.926s] Level 5:colcon.colcon_core.verb:set package 'exploration_cpp' build argument 'catkin_cmake_args' from command line to 'None'
+[0.926s] Level 5:colcon.colcon_core.verb:set package 'exploration_cpp' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.926s] DEBUG:colcon.colcon_core.verb:Building package 'exploration_cpp' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/hamdan/autonomous_drone/ros2_test/build/exploration_cpp', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp', 'merge_install': False, 'path': '/home/hamdan/autonomous_drone/ros2_test/src/exploration_cpp', 'symlink_install': False, 'test_result_base': None}
+[0.926s] Level 5:colcon.colcon_core.verb:set package 'search_cpp' build argument 'cmake_args' from command line to 'None'
+[0.927s] Level 5:colcon.colcon_core.verb:set package 'search_cpp' build argument 'cmake_target' from command line to 'None'
+[0.927s] Level 5:colcon.colcon_core.verb:set package 'search_cpp' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.927s] Level 5:colcon.colcon_core.verb:set package 'search_cpp' build argument 'cmake_clean_cache' from command line to 'False'
+[0.927s] Level 5:colcon.colcon_core.verb:set package 'search_cpp' build argument 'cmake_clean_first' from command line to 'False'
+[0.927s] Level 5:colcon.colcon_core.verb:set package 'search_cpp' build argument 'cmake_force_configure' from command line to 'False'
+[0.927s] Level 5:colcon.colcon_core.verb:set package 'search_cpp' build argument 'ament_cmake_args' from command line to 'None'
+[0.927s] Level 5:colcon.colcon_core.verb:set package 'search_cpp' build argument 'catkin_cmake_args' from command line to 'None'
+[0.927s] Level 5:colcon.colcon_core.verb:set package 'search_cpp' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.927s] DEBUG:colcon.colcon_core.verb:Building package 'search_cpp' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/hamdan/autonomous_drone/ros2_test/build/search_cpp', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/hamdan/autonomous_drone/ros2_test/install/search_cpp', 'merge_install': False, 'path': '/home/hamdan/autonomous_drone/ros2_test/src/search_cpp', 'symlink_install': False, 'test_result_base': None}
+[0.927s] INFO:colcon.colcon_core.executor:Executing jobs using 'sequential' executor
+[0.929s] DEBUG:colcon.colcon_core.executor.sequential:run_until_complete 'occupancy_map_cpp'
+[0.930s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/hamdan/autonomous_drone/ros2_test/src/occupancy_map_cpp' with build type 'ament_cmake'
+[0.930s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/hamdan/autonomous_drone/ros2_test/src/occupancy_map_cpp'
+[0.935s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_core.shell.bat': Not used on non-Windows systems
+[0.935s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.936s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.957s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/occupancy_map_cpp': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/hamdan/autonomous_drone/ros2_test/src/occupancy_map_cpp -DCMAKE_INSTALL_PREFIX=/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp
+[5.408s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/occupancy_map_cpp' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/hamdan/autonomous_drone/ros2_test/src/occupancy_map_cpp -DCMAKE_INSTALL_PREFIX=/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp
+[5.413s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/occupancy_map_cpp': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/hamdan/autonomous_drone/ros2_test/build/occupancy_map_cpp
+[5.605s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/occupancy_map_cpp' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/hamdan/autonomous_drone/ros2_test/build/occupancy_map_cpp
+[5.629s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/occupancy_map_cpp': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/hamdan/autonomous_drone/ros2_test/build/occupancy_map_cpp
+[5.680s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(occupancy_map_cpp)
+[5.681s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/occupancy_map_cpp' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/hamdan/autonomous_drone/ros2_test/build/occupancy_map_cpp
+[5.686s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp' for CMake module files
+[5.687s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp' for CMake config files
+[5.688s] Level 1:colcon.colcon_core.shell:create_environment_hook('occupancy_map_cpp', 'cmake_prefix_path')
+[5.688s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/hook/cmake_prefix_path.ps1'
+[5.690s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/hook/cmake_prefix_path.dsv'
+[5.691s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/hook/cmake_prefix_path.sh'
+[5.693s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/lib'
+[5.693s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/bin'
+[5.693s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/lib/pkgconfig/occupancy_map_cpp.pc'
+[5.693s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/lib/python3.10/site-packages'
+[5.694s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/bin'
+[5.695s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/package.ps1'
+[5.697s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/package.dsv'
+[5.698s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/package.sh'
+[5.700s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/package.bash'
+[5.701s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/package.zsh'
+[5.703s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/colcon-core/packages/occupancy_map_cpp)
+[5.704s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(occupancy_map_cpp)
+[5.704s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp' for CMake module files
+[5.705s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp' for CMake config files
+[5.706s] Level 1:colcon.colcon_core.shell:create_environment_hook('occupancy_map_cpp', 'cmake_prefix_path')
+[5.706s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/hook/cmake_prefix_path.ps1'
+[5.707s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/hook/cmake_prefix_path.dsv'
+[5.708s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/hook/cmake_prefix_path.sh'
+[5.709s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/lib'
+[5.709s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/bin'
+[5.710s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/lib/pkgconfig/occupancy_map_cpp.pc'
+[5.710s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/lib/python3.10/site-packages'
+[5.711s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/bin'
+[5.711s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/package.ps1'
+[5.713s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/package.dsv'
+[5.714s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/package.sh'
+[5.715s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/package.bash'
+[5.716s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/package.zsh'
+[5.717s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/colcon-core/packages/occupancy_map_cpp)
+[5.717s] DEBUG:colcon.colcon_core.executor.sequential:run_until_complete 'occupancy_map_cpp' finished with '0'
+[5.717s] DEBUG:colcon.colcon_core.executor.sequential:run_until_complete 'octomap_manager_shim'
+[5.717s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/hamdan/autonomous_drone/ros2_test/src/octomap_manager_shim' with build type 'ament_cmake'
+[5.718s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/hamdan/autonomous_drone/ros2_test/src/octomap_manager_shim'
+[5.718s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[5.718s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[5.734s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/octomap_manager_shim': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/hamdan/autonomous_drone/ros2_test/src/octomap_manager_shim -DCMAKE_INSTALL_PREFIX=/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim
+[6.264s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/octomap_manager_shim' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/hamdan/autonomous_drone/ros2_test/src/octomap_manager_shim -DCMAKE_INSTALL_PREFIX=/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim
+[6.267s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/octomap_manager_shim': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/hamdan/autonomous_drone/ros2_test/build/octomap_manager_shim
+[6.414s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/octomap_manager_shim' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/hamdan/autonomous_drone/ros2_test/build/octomap_manager_shim
+[6.418s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/octomap_manager_shim': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/hamdan/autonomous_drone/ros2_test/build/octomap_manager_shim
+[6.470s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(octomap_manager_shim)
+[6.470s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim' for CMake module files
+[6.471s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/octomap_manager_shim' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/hamdan/autonomous_drone/ros2_test/build/octomap_manager_shim
+[6.472s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim' for CMake config files
+[6.473s] Level 1:colcon.colcon_core.shell:create_environment_hook('octomap_manager_shim', 'cmake_prefix_path')
+[6.474s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/hook/cmake_prefix_path.ps1'
+[6.475s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/hook/cmake_prefix_path.dsv'
+[6.475s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/hook/cmake_prefix_path.sh'
+[6.477s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/lib'
+[6.477s] Level 1:colcon.colcon_core.shell:create_environment_hook('octomap_manager_shim', 'ld_library_path_lib')
+[6.477s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/hook/ld_library_path_lib.ps1'
+[6.478s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/hook/ld_library_path_lib.dsv'
+[6.479s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/hook/ld_library_path_lib.sh'
+[6.480s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/bin'
+[6.480s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/lib/pkgconfig/octomap_manager_shim.pc'
+[6.481s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/lib/python3.10/site-packages'
+[6.481s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/bin'
+[6.482s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/package.ps1'
+[6.483s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/package.dsv'
+[6.484s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/package.sh'
+[6.485s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/package.bash'
+[6.486s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/package.zsh'
+[6.487s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/colcon-core/packages/octomap_manager_shim)
+[6.488s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(octomap_manager_shim)
+[6.489s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim' for CMake module files
+[6.490s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim' for CMake config files
+[6.490s] Level 1:colcon.colcon_core.shell:create_environment_hook('octomap_manager_shim', 'cmake_prefix_path')
+[6.491s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/hook/cmake_prefix_path.ps1'
+[6.492s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/hook/cmake_prefix_path.dsv'
+[6.492s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/hook/cmake_prefix_path.sh'
+[6.494s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/lib'
+[6.494s] Level 1:colcon.colcon_core.shell:create_environment_hook('octomap_manager_shim', 'ld_library_path_lib')
+[6.494s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/hook/ld_library_path_lib.ps1'
+[6.495s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/hook/ld_library_path_lib.dsv'
+[6.496s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/hook/ld_library_path_lib.sh'
+[6.497s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/bin'
+[6.497s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/lib/pkgconfig/octomap_manager_shim.pc'
+[6.497s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/lib/python3.10/site-packages'
+[6.498s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/bin'
+[6.499s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/package.ps1'
+[6.500s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/package.dsv'
+[6.501s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/package.sh'
+[6.502s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/package.bash'
+[6.503s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/package.zsh'
+[6.504s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/colcon-core/packages/octomap_manager_shim)
+[6.504s] DEBUG:colcon.colcon_core.executor.sequential:run_until_complete 'octomap_manager_shim' finished with '0'
+[6.505s] DEBUG:colcon.colcon_core.executor.sequential:run_until_complete 'ros2_orb_slam3'
+[6.505s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3' with build type 'ament_cmake'
+[6.505s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3'
+[6.506s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[6.506s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[6.522s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3 -DCMAKE_INSTALL_PREFIX=/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3
+[8.087s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3 -DCMAKE_INSTALL_PREFIX=/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3
+[8.090s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3
+[9.395s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3
+[9.399s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3
+[9.534s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(ros2_orb_slam3)
+[9.535s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3' for CMake module files
+[9.536s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3
+[9.537s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3' for CMake config files
+[9.538s] Level 1:colcon.colcon_core.shell:create_environment_hook('ros2_orb_slam3', 'cmake_prefix_path')
+[9.539s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/hook/cmake_prefix_path.ps1'
+[9.540s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/hook/cmake_prefix_path.dsv'
+[9.540s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/hook/cmake_prefix_path.sh'
+[9.542s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/lib'
+[9.542s] Level 1:colcon.colcon_core.shell:create_environment_hook('ros2_orb_slam3', 'ld_library_path_lib')
+[9.542s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/hook/ld_library_path_lib.ps1'
+[9.543s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/hook/ld_library_path_lib.dsv'
+[9.544s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/hook/ld_library_path_lib.sh'
+[9.545s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/bin'
+[9.545s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/lib/pkgconfig/ros2_orb_slam3.pc'
+[9.546s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/lib/python3.10/site-packages'
+[9.546s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/bin'
+[9.547s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/package.ps1'
+[9.548s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/package.dsv'
+[9.549s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/package.sh'
+[9.551s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/package.bash'
+[9.551s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/package.zsh'
+[9.552s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/colcon-core/packages/ros2_orb_slam3)
+[9.554s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(ros2_orb_slam3)
+[9.554s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3' for CMake module files
+[9.555s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3' for CMake config files
+[9.556s] Level 1:colcon.colcon_core.shell:create_environment_hook('ros2_orb_slam3', 'cmake_prefix_path')
+[9.557s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/hook/cmake_prefix_path.ps1'
+[9.558s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/hook/cmake_prefix_path.dsv'
+[9.559s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/hook/cmake_prefix_path.sh'
+[9.560s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/lib'
+[9.560s] Level 1:colcon.colcon_core.shell:create_environment_hook('ros2_orb_slam3', 'ld_library_path_lib')
+[9.561s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/hook/ld_library_path_lib.ps1'
+[9.561s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/hook/ld_library_path_lib.dsv'
+[9.562s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/hook/ld_library_path_lib.sh'
+[9.563s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/bin'
+[9.563s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/lib/pkgconfig/ros2_orb_slam3.pc'
+[9.564s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/lib/python3.10/site-packages'
+[9.564s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/bin'
+[9.565s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/package.ps1'
+[9.567s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/package.dsv'
+[9.568s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/package.sh'
+[9.569s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/package.bash'
+[9.570s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/package.zsh'
+[9.570s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/colcon-core/packages/ros2_orb_slam3)
+[9.571s] DEBUG:colcon.colcon_core.executor.sequential:run_until_complete 'ros2_orb_slam3' finished with '0'
+[9.571s] DEBUG:colcon.colcon_core.executor.sequential:run_until_complete 'tello_autonomy_msgs'
+[9.572s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/hamdan/autonomous_drone/ros2_test/src/tello_autonomy_msgs' with build type 'ament_cmake'
+[9.572s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/hamdan/autonomous_drone/ros2_test/src/tello_autonomy_msgs'
+[9.572s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[9.573s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[9.589s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/hamdan/autonomous_drone/ros2_test/src/tello_autonomy_msgs -DCMAKE_INSTALL_PREFIX=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs
+[12.619s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/hamdan/autonomous_drone/ros2_test/src/tello_autonomy_msgs -DCMAKE_INSTALL_PREFIX=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs
+[12.622s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs
+[13.887s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs
+[13.890s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs
+[14.018s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(tello_autonomy_msgs)
+[14.019s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs' for CMake module files
+[14.020s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs
+[14.020s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs' for CMake config files
+[14.022s] Level 1:colcon.colcon_core.shell:create_environment_hook('tello_autonomy_msgs', 'cmake_prefix_path')
+[14.022s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/hook/cmake_prefix_path.ps1'
+[14.023s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/hook/cmake_prefix_path.dsv'
+[14.024s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/hook/cmake_prefix_path.sh'
+[14.025s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib'
+[14.025s] Level 1:colcon.colcon_core.shell:create_environment_hook('tello_autonomy_msgs', 'ld_library_path_lib')
+[14.025s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/hook/ld_library_path_lib.ps1'
+[14.026s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/hook/ld_library_path_lib.dsv'
+[14.026s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/hook/ld_library_path_lib.sh'
+[14.027s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/bin'
+[14.027s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib/pkgconfig/tello_autonomy_msgs.pc'
+[14.027s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib/python3.10/site-packages'
+[14.028s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/bin'
+[14.028s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/package.ps1'
+[14.029s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/package.dsv'
+[14.030s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/package.sh'
+[14.030s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/package.bash'
+[14.031s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/package.zsh'
+[14.031s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/colcon-core/packages/tello_autonomy_msgs)
+[14.032s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(tello_autonomy_msgs)
+[14.033s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs' for CMake module files
+[14.034s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs' for CMake config files
+[14.035s] Level 1:colcon.colcon_core.shell:create_environment_hook('tello_autonomy_msgs', 'cmake_prefix_path')
+[14.035s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/hook/cmake_prefix_path.ps1'
+[14.036s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/hook/cmake_prefix_path.dsv'
+[14.037s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/hook/cmake_prefix_path.sh'
+[14.037s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib'
+[14.038s] Level 1:colcon.colcon_core.shell:create_environment_hook('tello_autonomy_msgs', 'ld_library_path_lib')
+[14.038s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/hook/ld_library_path_lib.ps1'
+[14.038s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/hook/ld_library_path_lib.dsv'
+[14.039s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/hook/ld_library_path_lib.sh'
+[14.040s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/bin'
+[14.040s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib/pkgconfig/tello_autonomy_msgs.pc'
+[14.040s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib/python3.10/site-packages'
+[14.040s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/bin'
+[14.041s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/package.ps1'
+[14.042s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/package.dsv'
+[14.043s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/package.sh'
+[14.043s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/package.bash'
+[14.044s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/package.zsh'
+[14.044s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/colcon-core/packages/tello_autonomy_msgs)
+[14.045s] DEBUG:colcon.colcon_core.executor.sequential:run_until_complete 'tello_autonomy_msgs' finished with '0'
+[14.045s] DEBUG:colcon.colcon_core.executor.sequential:run_until_complete 'exploration_cpp'
+[14.045s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/hamdan/autonomous_drone/ros2_test/src/exploration_cpp' with build type 'ament_cmake'
+[14.045s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/hamdan/autonomous_drone/ros2_test/src/exploration_cpp'
+[14.045s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[14.045s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[14.068s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/exploration_cpp': AMENT_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:/opt/ros/humble LD_LIBRARY_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake /home/hamdan/autonomous_drone/ros2_test/src/exploration_cpp -DCMAKE_INSTALL_PREFIX=/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp
+[15.150s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/exploration_cpp' returned '0': AMENT_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:/opt/ros/humble LD_LIBRARY_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake /home/hamdan/autonomous_drone/ros2_test/src/exploration_cpp -DCMAKE_INSTALL_PREFIX=/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp
+[15.152s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/exploration_cpp': AMENT_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:/opt/ros/humble LD_LIBRARY_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake --build /home/hamdan/autonomous_drone/ros2_test/build/exploration_cpp
+[15.292s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/exploration_cpp' returned '0': AMENT_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:/opt/ros/humble LD_LIBRARY_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake --build /home/hamdan/autonomous_drone/ros2_test/build/exploration_cpp
+[15.294s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/exploration_cpp': AMENT_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:/opt/ros/humble LD_LIBRARY_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake --install /home/hamdan/autonomous_drone/ros2_test/build/exploration_cpp
+[15.329s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(exploration_cpp)
+[15.329s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp' for CMake module files
+[15.330s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/exploration_cpp' returned '0': AMENT_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:/opt/ros/humble LD_LIBRARY_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake --install /home/hamdan/autonomous_drone/ros2_test/build/exploration_cpp
+[15.331s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp' for CMake config files
+[15.331s] Level 1:colcon.colcon_core.shell:create_environment_hook('exploration_cpp', 'cmake_prefix_path')
+[15.332s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/hook/cmake_prefix_path.ps1'
+[15.332s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/hook/cmake_prefix_path.dsv'
+[15.333s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/hook/cmake_prefix_path.sh'
+[15.333s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/lib'
+[15.334s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/bin'
+[15.334s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/lib/pkgconfig/exploration_cpp.pc'
+[15.334s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/lib/python3.10/site-packages'
+[15.334s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/bin'
+[15.335s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/package.ps1'
+[15.337s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/package.dsv'
+[15.338s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/package.sh'
+[15.338s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/package.bash'
+[15.339s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/package.zsh'
+[15.339s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/colcon-core/packages/exploration_cpp)
+[15.340s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(exploration_cpp)
+[15.340s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp' for CMake module files
+[15.341s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp' for CMake config files
+[15.341s] Level 1:colcon.colcon_core.shell:create_environment_hook('exploration_cpp', 'cmake_prefix_path')
+[15.342s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/hook/cmake_prefix_path.ps1'
+[15.342s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/hook/cmake_prefix_path.dsv'
+[15.343s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/hook/cmake_prefix_path.sh'
+[15.343s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/lib'
+[15.344s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/bin'
+[15.344s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/lib/pkgconfig/exploration_cpp.pc'
+[15.344s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/lib/python3.10/site-packages'
+[15.344s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/bin'
+[15.345s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/package.ps1'
+[15.346s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/package.dsv'
+[15.346s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/package.sh'
+[15.347s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/package.bash'
+[15.347s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/package.zsh'
+[15.348s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/colcon-core/packages/exploration_cpp)
+[15.348s] DEBUG:colcon.colcon_core.executor.sequential:run_until_complete 'exploration_cpp' finished with '0'
+[15.348s] DEBUG:colcon.colcon_core.executor.sequential:run_until_complete 'search_cpp'
+[15.348s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/hamdan/autonomous_drone/ros2_test/src/search_cpp' with build type 'ament_cmake'
+[15.349s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/hamdan/autonomous_drone/ros2_test/src/search_cpp'
+[15.349s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[15.349s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[15.368s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/search_cpp': AMENT_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:/opt/ros/humble LD_LIBRARY_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake /home/hamdan/autonomous_drone/ros2_test/src/search_cpp -DCMAKE_INSTALL_PREFIX=/home/hamdan/autonomous_drone/ros2_test/install/search_cpp
+[16.201s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/search_cpp' returned '0': AMENT_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:/opt/ros/humble LD_LIBRARY_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake /home/hamdan/autonomous_drone/ros2_test/src/search_cpp -DCMAKE_INSTALL_PREFIX=/home/hamdan/autonomous_drone/ros2_test/install/search_cpp
+[16.204s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/search_cpp': AMENT_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:/opt/ros/humble LD_LIBRARY_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake --build /home/hamdan/autonomous_drone/ros2_test/build/search_cpp
+[28.268s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/search_cpp' returned '0': AMENT_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:/opt/ros/humble LD_LIBRARY_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake --build /home/hamdan/autonomous_drone/ros2_test/build/search_cpp
+[28.270s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/search_cpp': AMENT_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:/opt/ros/humble LD_LIBRARY_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake --install /home/hamdan/autonomous_drone/ros2_test/build/search_cpp
+[28.291s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(search_cpp)
+[28.292s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/search_cpp' for CMake module files
+[28.292s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/search_cpp' returned '0': AMENT_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:/opt/ros/humble LD_LIBRARY_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake --install /home/hamdan/autonomous_drone/ros2_test/build/search_cpp
+[28.292s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/search_cpp' for CMake config files
+[28.293s] Level 1:colcon.colcon_core.shell:create_environment_hook('search_cpp', 'cmake_prefix_path')
+[28.293s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/search_cpp/hook/cmake_prefix_path.ps1'
+[28.293s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/search_cpp/hook/cmake_prefix_path.dsv'
+[28.294s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/search_cpp/hook/cmake_prefix_path.sh'
+[28.294s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/search_cpp/lib'
+[28.294s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/search_cpp/bin'
+[28.294s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/search_cpp/lib/pkgconfig/search_cpp.pc'
+[28.295s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/search_cpp/lib/python3.10/site-packages'
+[28.295s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/search_cpp/bin'
+[28.295s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/search_cpp/package.ps1'
+[28.295s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/search_cpp/package.dsv'
+[28.296s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/search_cpp/package.sh'
+[28.296s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/search_cpp/package.bash'
+[28.297s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/search_cpp/package.zsh'
+[28.297s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/colcon-core/packages/search_cpp)
+[28.297s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(search_cpp)
+[28.298s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/search_cpp' for CMake module files
+[28.298s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/search_cpp' for CMake config files
+[28.298s] Level 1:colcon.colcon_core.shell:create_environment_hook('search_cpp', 'cmake_prefix_path')
+[28.299s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/search_cpp/hook/cmake_prefix_path.ps1'
+[28.299s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/search_cpp/hook/cmake_prefix_path.dsv'
+[28.299s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/search_cpp/hook/cmake_prefix_path.sh'
+[28.300s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/search_cpp/lib'
+[28.300s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/search_cpp/bin'
+[28.300s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/search_cpp/lib/pkgconfig/search_cpp.pc'
+[28.300s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/search_cpp/lib/python3.10/site-packages'
+[28.300s] Level 1:colcon.colcon_core.environment:checking '/home/hamdan/autonomous_drone/ros2_test/install/search_cpp/bin'
+[28.301s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/search_cpp/package.ps1'
+[28.301s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/search_cpp/package.dsv'
+[28.301s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/search_cpp/package.sh'
+[28.302s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/search_cpp/package.bash'
+[28.302s] INFO:colcon.colcon_core.shell:Creating package script '/home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/search_cpp/package.zsh'
+[28.302s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/colcon-core/packages/search_cpp)
+[28.303s] DEBUG:colcon.colcon_core.executor.sequential:run_until_complete 'search_cpp' finished with '0'
+[28.303s] DEBUG:colcon.colcon_core.executor.sequential:closing loop
+[28.303s] DEBUG:colcon.colcon_core.executor.sequential:loop closed
+[28.303s] DEBUG:colcon.colcon_core.event_reactor:joining thread
+[28.308s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.terminal_notifier': Not used on non-Darwin systems
+[28.308s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.win32': Not used on non-Windows systems
+[28.308s] INFO:colcon.colcon_notification.desktop_notification:Sending desktop notification using 'notify2'
+[28.319s] DEBUG:colcon.colcon_core.event_reactor:joined thread
+[28.319s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/hamdan/autonomous_drone/ros2_test/install/local_setup.ps1'
+[28.320s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/hamdan/autonomous_drone/ros2_test/install/_local_setup_util_ps1.py'
+[28.321s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/hamdan/autonomous_drone/ros2_test/install/setup.ps1'
+[28.322s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/hamdan/autonomous_drone/ros2_test/install/local_setup.sh'
+[28.322s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/hamdan/autonomous_drone/ros2_test/install/_local_setup_util_sh.py'
+[28.323s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/hamdan/autonomous_drone/ros2_test/install/setup.sh'
+[28.323s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/hamdan/autonomous_drone/ros2_test/install/local_setup.bash'
+[28.324s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/hamdan/autonomous_drone/ros2_test/install/setup.bash'
+[28.325s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/hamdan/autonomous_drone/ros2_test/install/local_setup.zsh'
+[28.325s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/hamdan/autonomous_drone/ros2_test/install/setup.zsh'

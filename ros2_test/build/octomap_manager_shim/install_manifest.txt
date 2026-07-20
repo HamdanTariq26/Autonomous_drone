@@ -1,0 +1,3 @@
+/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/lib/liboctomap_manager_shim.so
+/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/cmake/export_octomap_manager_shimExport.cmake
+/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/cmake/export_octomap_manager_shimExport-noconfig.cmake

@@ -1,0 +1,63 @@
+-- Found ament_cmake: 1.3.14 (/opt/ros/humble/share/ament_cmake/cmake)
+-- Override CMake install command with custom implementation using symlinks instead of copying resources
+-- Found rclcpp: 16.0.19 (/opt/ros/humble/share/rclcpp/cmake)
+-- Found rosidl_generator_c: 3.1.9 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+-- Found rosidl_adapter: 3.1.9 (/opt/ros/humble/share/rosidl_adapter/cmake)
+-- Found rosidl_generator_cpp: 3.1.9 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+-- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+-- Found rmw_fastrtps_cpp: 6.2.10 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)
+-- Using RMW implementation 'rmw_fastrtps_cpp' as default
+-- Found tello_autonomy_msgs: 0.0.0 (/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/cmake)
+-- Found octomap_manager_shim: 0.0.1 (/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/cmake)
+-- Found visualization_msgs: 4.9.1 (/opt/ros/humble/share/visualization_msgs/cmake)
+-- Found octomap_msgs: 2.0.1 (/opt/ros/humble/share/octomap_msgs/cmake)
+-- Found tf2_ros: 0.25.20 (/opt/ros/humble/share/tf2_ros/cmake)
+-- Found tf2_eigen: 0.25.20 (/opt/ros/humble/share/tf2_eigen/cmake)
+-- Found tf2_geometry_msgs: 0.25.20 (/opt/ros/humble/share/tf2_geometry_msgs/cmake)
+-- Found eigen3_cmake_module: 0.1.1 (/opt/ros/humble/share/eigen3_cmake_module/cmake)
+-- Ensuring Eigen3 include directory is part of orocos-kdl CMake target
+-- Found nav_msgs: 4.9.1 (/opt/ros/humble/share/nav_msgs/cmake)
+-- Found ament_lint_auto: 0.12.15 (/opt/ros/humble/share/ament_lint_auto/cmake)
+-- Added test 'cppcheck' to perform static code analysis on C / C++ code
+-- Configured cppcheck include dirs: /home/hamdan/autonomous_drone/ros2_test/src/exploration_cpp/include;$<BUILD_INTERFACE:/home/hamdan/autonomous_drone/ros2_test/src/exploration_cpp/include>
+-- Configured cppcheck exclude dirs and/or files: 
+-- Added test 'lint_cmake' to check CMake code style
+-- Added test 'uncrustify' to check C / C++ code style
+-- Configured uncrustify additional arguments: 
+-- Added test 'xmllint' to check XML markup files
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/hamdan/autonomous_drone/ros2_test/build/exploration_cpp
+[35m[1mConsolidate compiler generated dependencies of target nbv_planner_node[0m
+[ 33%] [32mBuilding CXX object CMakeFiles/nbv_planner_node.dir/src/nbv_planner_node.cpp.o[0m
+[ 33%] [32mBuilding CXX object CMakeFiles/nbv_planner_node.dir/src/rrt.cpp.o[0m
+[ 50%] [32m[1mLinking CXX executable nbv_planner_node[0m
+[100%] Built target nbv_planner_node
+-- Install configuration: ""
+-- Execute custom install script
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/lib/exploration_cpp/nbv_planner_node
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/include/exploration_cpp/mesh_structure.h
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/include/exploration_cpp/multiagent_collision_checker.h
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/include/exploration_cpp/nbvp.h
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/include/exploration_cpp/nbvp.hpp
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/include/exploration_cpp/rrt.h
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/include/exploration_cpp/tree.h
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/include/exploration_cpp/tree.hpp
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/include/kdtree/kdtree.h
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/ament_index/resource_index/package_run_dependencies/exploration_cpp
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/ament_index/resource_index/parent_prefix_path/exploration_cpp
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/environment/ament_prefix_path.sh
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/environment/ament_prefix_path.dsv
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/environment/path.sh
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/environment/path.dsv
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/local_setup.bash
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/local_setup.sh
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/local_setup.zsh
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/local_setup.dsv
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/package.dsv
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/ament_index/resource_index/packages/exploration_cpp
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/cmake/exploration_cppConfig.cmake
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/cmake/exploration_cppConfig-version.cmake
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/package.xml

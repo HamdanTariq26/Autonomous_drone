@@ -1,0 +1,21 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/tello_autonomy_msgs__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/tello_autonomy_msgs/msg/detail/dds_fastrtps/segment__type_support.cpp.o"
+  "CMakeFiles/tello_autonomy_msgs__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/tello_autonomy_msgs/msg/detail/dds_fastrtps/segment__type_support.cpp.o.d"
+  "CMakeFiles/tello_autonomy_msgs__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/tello_autonomy_msgs/srv/detail/dds_fastrtps/nbv_plan__type_support.cpp.o"
+  "CMakeFiles/tello_autonomy_msgs__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/tello_autonomy_msgs/srv/detail/dds_fastrtps/nbv_plan__type_support.cpp.o.d"
+  "CMakeFiles/tello_autonomy_msgs__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/tello_autonomy_msgs/srv/detail/dds_fastrtps/search_plan__type_support.cpp.o"
+  "CMakeFiles/tello_autonomy_msgs__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/tello_autonomy_msgs/srv/detail/dds_fastrtps/search_plan__type_support.cpp.o.d"
+  "libtello_autonomy_msgs__rosidl_typesupport_fastrtps_cpp.pdb"
+  "libtello_autonomy_msgs__rosidl_typesupport_fastrtps_cpp.so"
+  "rosidl_typesupport_fastrtps_cpp/tello_autonomy_msgs/msg/detail/dds_fastrtps/segment__type_support.cpp"
+  "rosidl_typesupport_fastrtps_cpp/tello_autonomy_msgs/msg/detail/segment__rosidl_typesupport_fastrtps_cpp.hpp"
+  "rosidl_typesupport_fastrtps_cpp/tello_autonomy_msgs/srv/detail/dds_fastrtps/nbv_plan__type_support.cpp"
+  "rosidl_typesupport_fastrtps_cpp/tello_autonomy_msgs/srv/detail/dds_fastrtps/search_plan__type_support.cpp"
+  "rosidl_typesupport_fastrtps_cpp/tello_autonomy_msgs/srv/detail/nbv_plan__rosidl_typesupport_fastrtps_cpp.hpp"
+  "rosidl_typesupport_fastrtps_cpp/tello_autonomy_msgs/srv/detail/search_plan__rosidl_typesupport_fastrtps_cpp.hpp"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang CXX)
+  include(CMakeFiles/tello_autonomy_msgs__rosidl_typesupport_fastrtps_cpp.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

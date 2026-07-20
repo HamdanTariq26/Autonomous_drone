@@ -1,6 +1,0 @@
-[ 90%] Built target orb_slam3_lib
-[35m[1mConsolidate compiler generated dependencies of target mono_node_cpp[0m
-[ 93%] [32mBuilding CXX object CMakeFiles/mono_node_cpp.dir/src/common.cpp.o[0m
-gmake[2]: *** [CMakeFiles/mono_node_cpp.dir/build.make:90: CMakeFiles/mono_node_cpp.dir/src/common.cpp.o] Interrupt
-gmake[1]: *** [CMakeFiles/Makefile2:168: CMakeFiles/mono_node_cpp.dir/all] Interrupt
-gmake: *** [Makefile:146: all] Interrupt

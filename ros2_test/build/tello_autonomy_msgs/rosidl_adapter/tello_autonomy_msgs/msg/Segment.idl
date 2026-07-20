@@ -1,0 +1,16 @@
+// generated from rosidl_adapter/resource/msg.idl.em
+// with input from tello_autonomy_msgs/msg/Segment.msg
+// generated code does not contain a copyright notice
+
+#include "geometry_msgs/msg/Pose.idl"
+#include "std_msgs/msg/Header.idl"
+
+module tello_autonomy_msgs {
+  module msg {
+    struct Segment {
+      std_msgs::msg::Header header;
+
+      sequence<geometry_msgs::msg::Pose> poses;
+    };
+  };
+};

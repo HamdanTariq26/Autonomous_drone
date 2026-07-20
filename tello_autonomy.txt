@@ -1,0 +1,2122 @@
+
+================================================================================
+FILE: config/constants.py
+================================================================================
+
+"""
+config/constants.py
+
+Every ROS2 topic/node name, filesystem path, and shared numeric
+constant used across the tello_autonomy package, in one place. YAML
+files in this same folder (tello_cam.yaml, ros_params.yaml,
+planner_params.yaml) hold config that's naturally data - camera
+intrinsics, per-node ROS params, planner tuning values. This file holds
+what code actually imports and references directly by name.
+
+Nothing outside this file should hardcode a topic name string or a
+path. If a topic name or path ever needs to change, it changes here
+once.
+"""
+
+import os
+
+# ----------------------------------------------------------------------
+# Filesystem paths
+# ----------------------------------------------------------------------
+HOME_DIR = os.path.expanduser("~")
+
+# CSV/trajectory files written by the C++ SLAM node.
+LIVE_KEYFRAME_CSV = os.path.join(HOME_DIR, "live_sparse_map_points.csv")
+FINAL_KEYFRAME_CSV = os.path.join(HOME_DIR, "SparseMapPoints.csv")
+KEYFRAME_TRAJECTORY_TXT = os.path.join(HOME_DIR, "KeyFrameTrajectory.txt")
+
+# Where drone_interface saves every frame (for later depth/scale
+# matching by timestamp), and where any cleanup logic deletes from.
+SAVE_FRAMES_DIR = "frame_images"
+
+
+# ----------------------------------------------------------------------
+# ROS2 topic names - must match whatever the C++ SLAM node and any
+# ROS2 nodes in this package actually publish/subscribe to.
+# ----------------------------------------------------------------------
+TOPIC_EXPERIMENT_SETTINGS = "/mono_py_driver/experiment_settings"
+TOPIC_EXP_SETTINGS_ACK = "/mono_py_driver/exp_settings_ack"
+TOPIC_IMG_MSG = "/mono_py_driver/img_msg"
+TOPIC_TIMESTEP_MSG = "/mono_py_driver/timestep_msg"
+TOPIC_KEYFRAME_TIMESTAMPS = "/mono_py_driver/keyframe_timestamps"
+TOPIC_MAP_TOPOLOGY_CHANGED = "/mono_py_driver/map_topology_changed"
+
+# Reserved for future layers (occupancy_map / exploration / search /
+# goals) - not yet published by anything, named here ahead of time so
+# there's one place to look when those layers get built.
+TOPIC_OCCUPANCY_GRID = "/tello_autonomy/occupancy_grid"
+TOPIC_FRONTIER_GOALS = "/tello_autonomy/frontier_goals"
+TOPIC_PLANNED_PATH = "/tello_autonomy/planned_path"
+TOPIC_MISSION_STATUS = "/tello_autonomy/mission_status"
+
+
+# ----------------------------------------------------------------------
+# ROS2 node / package names
+# ----------------------------------------------------------------------
+ROS2_PACKAGE_NAME = "ros2_orb_slam3"
+ROS2_SLAM_NODE_EXECUTABLE = "mono_node_cpp"
+ROS2_SLAM_NODE_NAME_ARG = "mono_slam_cpp"
+
+
+# ----------------------------------------------------------------------
+# Drone / camera constants
+# ----------------------------------------------------------------------
+DEFAULT_SETTINGS_NAME = "TelloCam"     # matches tello_cam.yaml
+DEFAULT_MAX_PUB_RATE_HZ = 15.0
+DEFAULT_MANUAL_SPEED_CMS = 50
+TELLO_VIDEO_BITRATE = "BITRATE_5MBPS"  # matches Tello.BITRATE_5MBPS in djitellopy
+
+CAMERA_WIDTH = 960
+CAMERA_HEIGHT = 720
+
+
+# ----------------------------------------------------------------------
+# Frame cleanup constants
+# ----------------------------------------------------------------------
+KEYFRAME_MATCH_TOLERANCE_SEC = 0.01
+DELETION_GRACE_PERIOD_SEC = 3.0
+CLEANUP_INTERVAL_SEC = 2.0
+
+
+# ----------------------------------------------------------------------
+# SLAM / scale-factor constants
+# ----------------------------------------------------------------------
+MIN_KEYFRAMES_FOR_SCALE_FACTOR = 15
+PERIODIC_RECALIBRATION_SECONDS = 15
+
+# --- NEW (added for perception/scale_factor_manager.py) ---
+# How many of the MOST RECENT keyframes (by keyframe_id) for a given
+# map_id to use on each (re)computation - both the first computation
+# and every periodic one after it. Deliberately NOT "every keyframe
+# from the last PERIODIC_RECALIBRATION_SECONDS seconds" - a keyframe
+# count is used instead of a time window, so behavior doesn't change
+# based on how fast keyframes happen to be arriving at the moment.
+# Should generally be >= MIN_KEYFRAMES_FOR_SCALE_FACTOR.
+SCALE_FACTOR_RECENT_KEYFRAME_COUNT = 30
+ 
+# Points with SLAM depth below this are skipped when computing ratios -
+# avoids divide-by-near-zero ratio blowups (ported from the old
+# compute_scale_factor.py CLI script's --min_slam_depth default).
+MIN_SLAM_DEPTH = 1e-3
+ 
+ 
+# ----------------------------------------------------------------------
+# Depth Anything V2 (metric depth model) constants
+# ----------------------------------------------------------------------
+# NEW - the Depth-Anything-V2 repo lives outside this package and is
+# added to sys.path (see perception/depth/depth_anything_v2.py) rather
+# than pip-installed. This is the metric_depth subfolder specifically -
+# that's where the `depth_anything_v2` importable package lives for
+# the metric-depth variant of the repo.
+# NEW - the Depth-Anything-V2 repo lives outside this package and is
+# added to sys.path (see perception/depth/depth_anything_v2.py) rather
+# than pip-installed. This is the metric_depth subfolder specifically -
+# that's where the `depth_anything_v2` importable package lives for
+# the metric-depth variant of the repo.
+#
+# CHANGED: computed relative to this file's own location instead of a
+# hardcoded absolute path. The previous version was hardcoded to
+# /home/hamdan/autonomous_drone/... which (a) breaks on any other
+# machine/username, and (b) was already missing the ros2_test path
+# segment, pointing at a directory that doesn't exist. Computing this
+# from __file__ means it survives the whole project folder being
+# renamed or moved again, the same class of bug that broke
+# common.hpp's packagePath earlier in this project.
+_TELLO_AUTONOMY_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DEPTH_ANYTHING_V2_REPO_PATH = os.path.join(
+    _TELLO_AUTONOMY_ROOT, "perception", "depth", "Depth-Anything-V2", "metric_depth"
+)
+ 
+# NEW - adjust the filename here if your checkpoint differs; this
+# matches the old CLI script's example invocation (vits encoder,
+# hypersim/indoor-trained checkpoint).
+DEPTH_ANYTHING_V2_CHECKPOINT_PATH = os.path.join(
+    DEPTH_ANYTHING_V2_REPO_PATH, "checkpoints", "depth_anything_v2_metric_hypersim_vits.pth"
+)
+ 
+DEPTH_ANYTHING_V2_ENCODER = "vits"     # NEW - "vits" for CPU-practical inference
+DEPTH_ANYTHING_V2_MAX_DEPTH = 20.0     # NEW - meters; 20.0 for indoor/hypersim, 80.0 for outdoor/vkitti
+DEPTH_ANYTHING_V2_DEVICE = "cpu"       # NEW - "cuda" if/when this runs on a GPU-equipped machine
+
+# NEW - per-frame pose + tracked-points stream, published by the C++
+# SLAM node every tracked frame (not just at keyframe rate like the
+# CSV). Values on these topics are in ORB-SLAM3's arbitrary SLAM units,
+# NOT metric - see perception/live_scaler.py, which subscribes to
+# these, multiplies by the current per-map_id scale factor, and
+# republishes the _METRIC versions below. Nothing outside
+# live_scaler.py should ever subscribe to these RAW topics directly.
+TOPIC_CURRENT_POSE_RAW = "/tello_autonomy/current_pose_raw"
+TOPIC_CURRENT_POINTS_RAW = "/tello_autonomy/current_points_raw"
+
+# NEW - metric-scale versions of the above, republished by
+# perception/live_scaler.py once a scale factor exists for the
+# relevant map_id. These are what occupancy_map/ and later layers
+# should actually subscribe to - never the _RAW topics.
+TOPIC_CURRENT_POSE_METRIC = "/tello_autonomy/current_pose_metric"
+TOPIC_CURRENT_POINTS_METRIC = "/tello_autonomy/current_points_metric"
+
+# NEW - both PoseStamped and PointCloud2 messages on the topics above
+# carry their map_id by setting header.frame_id to this prefix + the
+# map_id (e.g. "slam_map_3"), rather than via a custom message field -
+# avoids needing a new custom .msg/interfaces package. live_scaler.py
+# parses map_id back out using this same prefix - keep both in sync.
+SLAM_MAP_FRAME_ID_PREFIX = "slam_map_"
+
+# NEW - topics published by PublishLiveMapData() (C++ side), replacing
+# the old live CSV. One message per active map_id, per periodic tick.
+TOPIC_KEYFRAME_POINTS = "/tello_autonomy/keyframe_points"
+TOPIC_TRAJECTORY = "/tello_autonomy/trajectory"
+
+# NEW - the C++ node's periodic publish timer runs every ~1s
+# (LiveCsvTimer_callback). If no keyframe_points message has been
+# received for a map_id in longer than this, treat it as stale/merged
+# away - generous margin (3x) over the expected ~1s cadence to absorb
+# normal jitter without false-pruning an active map.
+MAP_DATA_STALE_AFTER_SEC = 3.0
+
+
+# NEW - the depth-inference worker process's niceness (relative to the
+# default 0). Positive = lower OS scheduling priority, so the kernel
+# favors flight control / ROS2 callbacks over this process whenever
+# both want the CPU at the same time.
+DEPTH_WORKER_NICE_VALUE = 10
+
+# NEW - how often scale_factor_manager's result-poll timer checks the
+# worker process's result queue. Cheap non-blocking drain, so this can
+# be fairly frequent without any real cost.
+DEPTH_WORKER_RESULT_POLL_INTERVAL_SEC = 0.5
+
+
+# ----------------------------------------------------------------------
+# Goals Layer / Autonomous Navigation constants
+# ----------------------------------------------------------------------
+# Rate at which the mission controller checks trajectory error and 
+# sends velocity commands to the drone.
+GOALS_LOOP_RATE_HZ = 10.0
+
+# Acceptable distance to a waypoint to consider it "reached" and pop
+# it from the path queue.
+WAYPOINT_ACCEPTANCE_RADIUS_M = 0.2
+
+# Maximum allowable velocities (0-100) for autonomous flight to ensure 
+# it stays conservative and stable.
+MAX_AUTO_SPEED_XY = 30
+MAX_AUTO_SPEED_Z = 30
+MAX_AUTO_SPEED_YAW = 40
+
+# Proportional gain for the position P-controller.
+# Velocity command = error_in_meters * XY_P_GAIN.
+# E.g., if error is 0.5m, and gain is 60, speed sent is 30.
+XY_P_GAIN = 60.0
+Z_P_GAIN = 60.0
+YAW_P_GAIN = 40.0
+
+
+
+================================================================================
+FILE: config/planner_params.yaml
+================================================================================
+
+exploration_cpp:
+  ros__parameters:
+    bbx:
+      minX: -5.0
+      minY: -5.0
+      minZ: -1.0
+      maxX: 5.0
+      maxY: 5.0
+      maxZ: 3.0
+
+
+
+================================================================================
+FILE: drone_interface/command_handler.py
+================================================================================
+
+"""
+drone_interface/command_handler.py
+
+The ONLY module in drone_interface allowed to actually send flight
+commands. manual_control.py, and any future autonomous flight logic,
+must go through this - never call tello_driver.tello.<command>()
+directly from anywhere else.
+
+Depends only on drone_interface.tello_driver (for the shared Tello
+instance and cmd_lock). No frame reading, no keyboard/UI code - that
+belongs to frame_receiver.py and manual_control.py respectively.
+
+Design notes carried over from earlier prototyping, still true here:
+  - takeoff()/land() can block up to ~21s worst case (djitellopy:
+    RESPONSE_TIMEOUT=7s x RETRY_COUNT=3). They're dispatched onto their
+    own short-lived worker threads (takeoff_async/land_async) so
+    calling code (a UI loop, a ROS2 callback) never freezes waiting on
+    their ACK.
+  - send_rc_control() is fire-and-forget (no ACK wait) by design -
+    intended for continuous manual/velocity control, not queried for
+    success.
+  - run_command() is a generic, lock-guarded dispatcher for any other
+    djitellopy method (move_forward, rotate_clockwise, go_xyz_speed,
+    etc.) by name - avoids hand-writing a wrapper for every command
+    before we know which ones autonomous flight logic will actually
+    need. It's a BLOCKING call (same as the underlying djitellopy
+    method) - callers running it from a UI/ROS2 loop are responsible
+    for dispatching it onto their own thread if that matters to them.
+"""
+
+import threading
+
+KEEPALIVE_INTERVAL_SEC = 10.0
+
+
+class CommandHandler:
+    def __init__(self, tello_driver):
+        """
+            tello_driver: a drone_interface.tello_driver.TelloDriver
+                          instance, already connected.
+        """
+        self._tello_driver = tello_driver
+
+        self._takeoff_in_progress = threading.Event()
+        self._landing_in_progress = threading.Event()
+
+        self._keepalive_thread = None
+        self._keepalive_shutdown = threading.Event()
+
+    # ****************************************************************************************
+    @property
+    def is_flying(self):
+        return self._tello_driver.tello.is_flying
+
+    def is_takeoff_in_progress(self):
+        return self._takeoff_in_progress.is_set()
+
+    def is_landing_in_progress(self):
+        return self._landing_in_progress.is_set()
+    # ****************************************************************************************
+
+    # ****************************************************************************************
+    def takeoff_async(self, on_complete=None):
+        """
+            Dispatches takeoff() on its own thread and returns
+            immediately. is_takeoff_in_progress() stays True for the
+            whole call, so callers can avoid dispatching a second
+            takeoff while this one is still waiting on its ACK.
+
+            on_complete: optional callable(success: bool, error: Exception | None),
+                         invoked from the worker thread once takeoff() returns/fails.
+            Returns False without doing anything if a takeoff or landing
+            is already in progress.
+        """
+        if self._takeoff_in_progress.is_set() or self._landing_in_progress.is_set():
+            return False
+
+        self._takeoff_in_progress.set()
+        threading.Thread(target=self._run_takeoff, args=(on_complete,), daemon=True).start()
+        return True
+
+    def _run_takeoff(self, on_complete):
+        error = None
+        try:
+            with self._tello_driver.cmd_lock:
+                self._tello_driver.tello.takeoff()
+        except Exception as e:
+            error = e
+            print(f"Takeoff failed: {e}")
+        finally:
+            self._takeoff_in_progress.clear()
+        if on_complete is not None:
+            on_complete(error is None, error)
+    # ****************************************************************************************
+
+    # ****************************************************************************************
+    def land_async(self, on_complete=None):
+        """
+            Dispatches land() on its own thread and returns immediately.
+            Also zeroes RC control first (fast, fire-and-forget) so the
+            drone stops drifting the instant land is requested, rather
+            than waiting for land()'s own ACK cycle.
+
+            on_complete: optional callable(success: bool, error: Exception | None).
+            Returns False without doing anything if a landing is already
+            in progress.
+        """
+        if self._landing_in_progress.is_set():
+            return False
+
+        self._landing_in_progress.set()
+        try:
+            self.send_rc_control(0, 0, 0, 0)
+        except Exception as e:
+            print(f"Zeroing RC control before landing failed (non-fatal): {e}")
+
+        threading.Thread(target=self._run_land, args=(on_complete,), daemon=True).start()
+        return True
+
+    def _run_land(self, on_complete):
+        error = None
+        try:
+            with self._tello_driver.cmd_lock:
+                self._tello_driver.tello.land()
+        except Exception as e:
+            error = e
+            print(f"Landing failed: {e}")
+        finally:
+            self._landing_in_progress.clear()
+        if on_complete is not None:
+            on_complete(error is None, error)
+    # ****************************************************************************************
+
+    # ****************************************************************************************
+    def send_rc_control(self, left_right, forward_back, up_down, yaw):
+        """
+            Fire-and-forget continuous velocity control - no ACK wait,
+            so this never triggers djitellopy's RESPONSE_TIMEOUT/RETRY_COUNT
+            retry warnings the way discrete move_*() commands would if
+            spammed. Intended to be called repeatedly (e.g. every loop
+            iteration of a manual control or autonomous velocity
+            controller), not once.
+
+            Silently refuses (returns False) while a takeoff or landing
+            is in progress, to avoid conflicting commands mid-sequence.
+            Any djitellopy-level failure is caught and printed rather
+            than raised - a single dropped RC packet should never crash
+            whatever loop is calling this every frame.
+        """
+        if self._takeoff_in_progress.is_set() or self._landing_in_progress.is_set():
+            return False
+        try:
+            self._tello_driver.tello.send_rc_control(left_right, forward_back, up_down, yaw)
+            return True
+        except Exception as e:
+            print(f"send_rc_control failed (non-fatal): {e}")
+            return False
+    # ****************************************************************************************
+
+    # ****************************************************************************************
+    def run_command(self, command_name, *args, **kwargs):
+        """
+            Generic, lock-guarded dispatch of any other djitellopy Tello
+            method by name - e.g. run_command("move_forward", 100),
+            run_command("rotate_clockwise", 90), run_command("go_xyz_speed", 100, 0, 0, 50).
+
+            BLOCKING - waits for the underlying djitellopy call to
+            return (which itself waits for the command's ACK). Callers
+            running this from a UI or ROS2 callback loop are responsible
+            for dispatching it onto their own thread if blocking there
+            would be a problem, the same way takeoff_async/land_async
+            do internally.
+
+            Raises AttributeError if command_name isn't a real method on
+            djitellopy's Tello class - deliberately not swallowed, since
+            a typo'd command name during autonomous flight logic should
+            fail loudly during development, not silently do nothing.
+        """
+        method = getattr(self._tello_driver.tello, command_name)
+        with self._tello_driver.cmd_lock:
+            return method(*args, **kwargs)
+    # ****************************************************************************************
+
+    # ****************************************************************************************
+    def start_keepalive(self):
+        """
+            Starts the keepalive loop on its own background thread. Safe
+            to call once, after the TelloDriver is connected.
+        """
+        self._keepalive_shutdown.clear()
+        self._keepalive_thread = threading.Thread(target=self._keepalive_loop, daemon=True)
+        self._keepalive_thread.start()
+
+    def stop_keepalive(self, join_timeout=2.0):
+        self._keepalive_shutdown.set()
+        if self._keepalive_thread is not None:
+            self._keepalive_thread.join(timeout=join_timeout)
+
+    def _keepalive_loop(self):
+        """
+            Runs on its own background thread, never on whatever thread
+            is responsible for publishing frames or handling manual
+            control. Uses a non-blocking lock acquire so it skips a
+            cycle rather than colliding with an in-progress command
+            (safe to skip: an in-progress command already reset the
+            drone's own auto-land timer).
+        """
+        while not self._keepalive_shutdown.is_set():
+            if self._tello_driver.cmd_lock.acquire(blocking=False):
+                try:
+                    self._tello_driver.tello.send_keepalive()
+                except Exception as e:
+                    print(f"keepalive failed (non-fatal): {e}")
+                finally:
+                    self._tello_driver.cmd_lock.release()
+            self._keepalive_shutdown.wait(timeout=KEEPALIVE_INTERVAL_SEC)
+    # ****************************************************************************************
+
+
+================================================================================
+FILE: drone_interface/frame_receiver.py
+================================================================================
+
+"""
+drone_interface/frame_receiver.py
+
+Single job: hand back the latest camera frame as a BGR numpy array.
+Depends only on drone_interface.tello_driver.TelloDriver (specifically
+its frame_reader, set up during connect()). No commands sent, no lock
+needed - reading frame_reader.frame is safe from any thread since
+djitellopy's background thread overwrites it in place rather than
+queueing.
+
+djitellopy hands back frames in RGB order (via PyAV -> PIL), but
+OpenCV/cv_bridge/ORB-SLAM3 all expect BGR. The conversion happens once,
+here, so every caller downstream gets correct BGR without needing to
+remember to convert it themselves.
+"""
+
+import cv2
+
+
+class FrameReceiver:
+    """
+        Wraps a TelloDriver's frame_reader. Ask it for frames with
+        get_frame_bgr() - that's the only method callers should use.
+    """
+
+    def __init__(self, tello_driver):
+        """
+            tello_driver: a drone_interface.tello_driver.TelloDriver
+                          instance that has already had connect() called
+                          on it (so tello_driver.frame_reader is set).
+        """
+        self._tello_driver = tello_driver
+
+    # ****************************************************************************************
+    def get_frame_bgr(self):
+        """
+            Returns the latest camera frame as a BGR numpy array, or
+            None if no frame has arrived yet (e.g. connect() hasn't
+            been called on the TelloDriver, or the stream hasn't
+            produced a first frame yet).
+        """
+        frame_reader = self._tello_driver.frame_reader
+        if frame_reader is None:
+            return None
+        frame_rgb = frame_reader.frame
+        if frame_rgb is None:
+            return None
+        return cv2.cvtColor(frame_rgb, cv2.COLOR_RGB2BGR)
+    # ****************************************************************************************
+
+
+================================================================================
+FILE: drone_interface/manual_control.py
+================================================================================
+
+"""
+drone_interface/manual_control.py
+
+Manual keyboard flight control: preview window + keyboard-to-RC-values
+mapping. Depends on command_handler.py (to actually move the drone) and
+frame_receiver.py (to show the live preview) - never touches
+tello_driver or djitellopy directly. This is the only drone_interface
+module that owns a UI window or a keyboard listener.
+
+Input capture uses pynput.keyboard.Listener - real OS-level key
+press/release events on their own dedicated thread - rather than
+cv2.waitKey() polling. This matters for responsiveness: waitKey()-based
+control only samples key state once per preview-window redraw and has
+to guess whether a key is "still held" from OS auto-repeat timing,
+which is exactly what made manual control feel wonky/delayed before.
+pynput gives true key-down/key-up state instead, decoupled entirely
+from how fast the preview window is redrawing.
+
+Requires: pip install pynput
+"""
+
+import threading
+import time
+
+import cv2
+from pynput import keyboard
+
+
+# Movement keys: w/s pitch, a/d roll, i/k throttle, j/l yaw, t takeoff, q land+quit.
+MOVE_KEYS = list("wsadikjl")
+CONTROL_LOOP_HZ = 30  # how often the loop reads held keys + sends RC control / redraws preview
+
+
+class ManualControl:
+    def __init__(self, command_handler, frame_receiver, manual_speed=50):
+        """
+            command_handler: a drone_interface.command_handler.CommandHandler instance
+            frame_receiver: a drone_interface.frame_receiver.FrameReceiver instance
+            manual_speed: cm/s used for all manual RC movement
+        """
+        self._command_handler = command_handler
+        self._frame_receiver = frame_receiver
+        self.manual_speed = manual_speed
+
+        self._held_keys = set()
+        self._kb_listener = None
+        self._loop_thread = None
+        self._shutdown = threading.Event()
+
+        # Called (if set) once landing completes and this loop is about
+        # to stop - lets the owning program (e.g. a ROS2 node) shut
+        # itself down too, without this module needing to know anything
+        # about ROS2.
+        self.on_quit_requested = None
+
+        # Called when any flight-control key is pressed. Used to notify
+        # autonomous layers to yield control to the human pilot.
+        self.on_manual_override = None
+
+    # ****************************************************************************************
+    def start(self, window_name="Tello Manual Control", blocking=False):
+        """
+            Starts the pynput keyboard listener and the control loop.
+            If blocking=True, the control loop runs in the current thread (required for OpenCV UI on many OSes).
+            Otherwise, it runs on its own background thread.
+        """
+        self._shutdown.clear()
+
+        self._kb_listener = keyboard.Listener(
+            on_press=self._on_key_press,
+            on_release=self._on_key_release,
+        )
+        self._kb_listener.start()
+
+        if blocking:
+            self._control_loop(window_name)
+            return None
+        else:
+            self._loop_thread = threading.Thread(
+                target=self._control_loop, args=(window_name,), daemon=True
+            )
+            self._loop_thread.start()
+            return self._loop_thread
+
+    def stop(self, join_timeout=2.0):
+        self._shutdown.set()
+        if self._kb_listener is not None:
+            self._kb_listener.stop()
+        if self._loop_thread is not None:
+            self._loop_thread.join(timeout=join_timeout)
+    # ****************************************************************************************
+
+    # ****************************************************************************************
+    def _on_key_press(self, key):
+        try:
+            if key.char in MOVE_KEYS or key.char in ("q", "t"):
+                self._held_keys.add(key.char)
+                if self.on_manual_override is not None:
+                    self.on_manual_override()
+        except AttributeError:
+            pass  # special keys (ctrl, shift, alt, etc) - not used, ignore
+
+    def _on_key_release(self, key):
+        try:
+            self._held_keys.discard(key.char)
+        except AttributeError:
+            pass
+    # ****************************************************************************************
+
+    # ****************************************************************************************
+    def _control_loop(self, window_name):
+        """
+            Runs on its own thread. Owns the preview window. Reads key
+            state from self._held_keys (kept current by the pynput
+            listener's own thread) every iteration and sends RC control
+            accordingly - never uses cv2.waitKey() for key state, only
+            to let the preview window paint/refresh and process its own
+            window events.
+        """
+        cv2.namedWindow(window_name)
+        print("\n" + "=" * 40)
+        print("MANUAL FLIGHT CONTROLS (keep this window focused):")
+        print("  t: Takeoff   q: Land + Quit")
+        print("  w/s: Pitch Fwd/Back   a/d: Roll Left/Right")
+        print("  i/k: Throttle Up/Down   j/l: Yaw Left/Right")
+        print("=" * 40 + "\n")
+
+        took_off = False  # edge-detect guard so holding 't' doesn't spam takeoff
+        loop_period = 1.0 / CONTROL_LOOP_HZ
+
+        def _on_land_complete(success, error):
+            # Runs on command_handler's worker thread, not this loop's
+            # thread - only touches thread-safe primitives.
+            self._shutdown.set()
+            if self.on_quit_requested is not None:
+                self.on_quit_requested()
+
+        while not self._shutdown.is_set():
+            frame = self._frame_receiver.get_frame_bgr()
+            if frame is not None:
+                cv2.imshow(window_name, cv2.resize(frame, (640, 480)))
+            cv2.waitKey(1)  # only paints/refreshes the window - not used for key state
+
+            if "q" in self._held_keys and not self._command_handler.is_landing_in_progress():
+                self._command_handler.land_async(on_complete=_on_land_complete)
+
+            if ("t" in self._held_keys and not self._command_handler.is_flying and not took_off
+                    and not self._command_handler.is_takeoff_in_progress()
+                    and not self._command_handler.is_landing_in_progress()):
+                took_off = True
+                self._command_handler.takeoff_async()
+            elif "t" not in self._held_keys:
+                took_off = False
+
+            if (self._command_handler.is_flying
+                    and not self._command_handler.is_landing_in_progress()
+                    and not self._command_handler.is_takeoff_in_progress()):
+                lr = fb = ud = yv = 0
+                if "w" in self._held_keys: fb = self.manual_speed
+                if "s" in self._held_keys: fb = -self.manual_speed
+                if "a" in self._held_keys: lr = self.manual_speed
+                if "d" in self._held_keys: lr = -self.manual_speed
+                if "i" in self._held_keys: ud = self.manual_speed
+                if "k" in self._held_keys: ud = -self.manual_speed
+                if "j" in self._held_keys: yv = -self.manual_speed
+                if "l" in self._held_keys: yv = self.manual_speed
+
+                current_rc = (lr, fb, ud, yv)
+                last_rc = getattr(self, '_last_rc', None)
+                last_rc_time = getattr(self, '_last_rc_time', 0)
+                current_time = time.time()
+                
+                # Only send RC command if the command CHANGED, OR if we are actively 
+                # moving and it has been > 0.1s since we last sent it (10Hz).
+                # We do NOT spam 0,0,0,0 while hovering.
+                if current_rc != last_rc or (current_rc != (0, 0, 0, 0) and current_time - last_rc_time > 0.1):
+                    self._command_handler.send_rc_control(lr, fb, ud, yv)
+                    self._last_rc = current_rc
+                    self._last_rc_time = current_time
+
+            self._shutdown.wait(timeout=loop_period)
+
+        cv2.destroyAllWindows()
+    # ****************************************************************************************
+
+
+================================================================================
+FILE: drone_interface/telemetry.py
+================================================================================
+
+"""
+drone_interface/telemetry.py
+
+Read-only observer of drone state (battery, height, temperature,
+flight time, ...). Depends only on drone_interface.tello_driver -
+never sends a command, so it never needs tello_driver.cmd_lock. All
+reads here come from djitellopy's cached state (populated by the
+drone's continuous background state broadcast), not from actively
+querying the drone.
+
+Telemetry is opt-in, both as a whole and per-field:
+  - `enabled=False` (whole monitor off) - read() returns {}, no field
+    reads happen at all. Useful when telemetry logging isn't wanted
+    for a given run and shouldn't add any overhead.
+  - `fields=[...]` - choose exactly which fields matter. Defaults to a
+    minimal, generally-useful set (battery, height, flight_time) rather
+    than reading everything djitellopy exposes - extra fields nobody
+    asked for are just noise. Pass ALL_FIELDS to enable everything.
+
+This is deliberately a plain read() method rather than a background
+logging thread - callers (a ROS2 node, a manual-flight script, a
+future battery_watchdog in safety/) decide their own polling cadence
+and what to do with the values. Keeping this passive/stateless makes
+it trivial to reuse in different contexts without dragging along
+threading or logging-format decisions it shouldn't be making.
+"""
+
+
+def _read_battery(tello):
+    return tello.get_battery()
+
+
+def _read_height(tello):
+    return tello.get_height()
+
+
+def _read_temperature(tello):
+    return tello.get_temperature()
+
+
+def _read_flight_time(tello):
+    return tello.get_flight_time()
+
+
+def _read_barometer(tello):
+    return tello.get_barometer()
+
+
+def _read_speed(tello):
+    return {
+        "speed_x": tello.get_speed_x(),
+        "speed_y": tello.get_speed_y(),
+        "speed_z": tello.get_speed_z(),
+    }
+
+
+# Maps field name -> reader function. Add new fields here as djitellopy
+# exposes them; nothing else needs to change to support a new field.
+_FIELD_READERS = {
+    "battery": _read_battery,
+    "height": _read_height,
+    "temperature": _read_temperature,
+    "flight_time": _read_flight_time,
+    "barometer": _read_barometer,
+    "speed": _read_speed,
+}
+
+ALL_FIELDS = list(_FIELD_READERS.keys())
+DEFAULT_FIELDS = ["battery", "height", "flight_time"]
+
+
+class TelemetryMonitor:
+    """
+        Read-only telemetry. enable()/disable() can flip this on or off
+        at runtime; read() returns {} whenever disabled, so callers
+        don't need to check enabled themselves before calling read().
+    """
+
+    def __init__(self, tello_driver, enabled=True, fields=None):
+        """
+            tello_driver: a drone_interface.tello_driver.TelloDriver
+                          instance, already connected.
+            enabled: whether read() does anything at all.
+            fields: list of field names from ALL_FIELDS to read.
+                    Defaults to DEFAULT_FIELDS if not given.
+        """
+        self._tello_driver = tello_driver
+        self.enabled = enabled
+
+        fields = fields if fields is not None else DEFAULT_FIELDS
+        unknown = set(fields) - set(ALL_FIELDS)
+        if unknown:
+            raise ValueError(f"Unknown telemetry field(s): {unknown}. Valid fields: {ALL_FIELDS}")
+        self.fields = list(fields)
+
+    # ****************************************************************************************
+    def enable(self):
+        self.enabled = True
+
+    def disable(self):
+        self.enabled = False
+    # ****************************************************************************************
+
+    # ****************************************************************************************
+    def read(self):
+        """
+            Returns a dict of {field_name: value} for every enabled
+            field. Returns {} if this monitor is disabled. A field that
+            fails to read (e.g. not supported by this firmware/SDK
+            version) is silently omitted rather than raising - a
+            telemetry hiccup should never be able to crash a flight.
+        """
+        if not self.enabled:
+            return {}
+
+        tello = self._tello_driver.tello
+        result = {}
+        for field in self.fields:
+            reader = _FIELD_READERS[field]
+            try:
+                value = reader(tello)
+            except Exception:
+                continue  # field unsupported or transient read error - skip, don't crash
+            if isinstance(value, dict):
+                result.update(value)
+            else:
+                result[field] = value
+        return result
+    # ****************************************************************************************
+
+
+================================================================================
+FILE: drone_interface/tello_driver.py
+================================================================================
+
+"""
+drone_interface/tello_driver.py
+
+Owns ONLY the connection lifecycle to the physical Tello drone:
+connecting, video stream setup (resolution/fps/bitrate), and shutdown.
+Nothing about sending flight commands, reading frames, or reading
+telemetry lives here - those are frame_receiver.py, command_handler.py,
+and telemetry.py, all of which depend on this module rather than the
+other way around.
+
+This module exposes two things every other drone_interface module needs:
+  - self.tello       : the underlying djitellopy Tello instance
+  - self.cmd_lock     : a shared lock guarding djitellopy's command
+                         channel (djitellopy does NOT serialize this
+                         itself - concurrent command calls from
+                         different threads can corrupt in-flight state)
+
+Modules that only READ state that arrives via the drone's continuous
+state broadcast (e.g. telemetry.py's battery/height reads, and
+frame_receiver.py's frame reads) do NOT need cmd_lock - only code that
+actively SENDS a command over the command channel does.
+"""
+
+import threading
+
+from djitellopy import Tello
+
+from config import constants
+
+
+class TelloDriver:
+    """
+        Owns the Tello connection itself. Call connect() once at
+        startup, hand this instance to frame_receiver / telemetry /
+        command_handler, and call disconnect() once at shutdown.
+    """
+
+    def __init__(self, resolution="", fps="", bitrate=constants.TELLO_VIDEO_BITRATE):
+        """
+            resolution: "high" (720p) / "low" (480p) / "" for drone default
+            fps: "high"/"middle"/"low" (30/15/5fps) / "" for drone default
+            bitrate: name of a Tello.BITRATE_* constant (e.g. "BITRATE_5MBPS"),
+                     matching config.constants.TELLO_VIDEO_BITRATE
+        """
+        self.resolution = resolution
+        self.fps = fps
+        self.bitrate = bitrate
+
+        # Shared across drone_interface modules - guards every direct
+        # call into djitellopy's command channel.
+        self.cmd_lock = threading.Lock()
+
+        self.tello = Tello()
+        self.frame_reader = None  # set once connected, in connect()
+
+        self._connected = False
+
+    # ****************************************************************************************
+    def connect(self):
+        """
+            Connects to the drone, applies video resolution/fps/bitrate
+            settings, and starts the video stream. Call this once
+            before handing this instance to any other drone_interface
+            module.
+        """
+        with self.cmd_lock:
+            self.tello.connect()
+        print(f"Battery: {self.tello.get_battery()}%")
+
+        if self.resolution:
+            try:
+                with self.cmd_lock:
+                    self.tello.set_video_resolution(self.resolution)
+            except Exception as e:
+                print(f"Could not set video resolution: {e}")
+
+        if self.fps:
+            try:
+                with self.cmd_lock:
+                    self.tello.set_video_fps(self.fps)
+            except Exception as e:
+                print(f"Could not set video fps: {e}")
+
+        if self.bitrate:
+            try:
+                bitrate_value = getattr(Tello, self.bitrate)
+                with self.cmd_lock:
+                    self.tello.set_video_bitrate(bitrate_value)
+            except AttributeError:
+                print(f"Unknown bitrate constant '{self.bitrate}' on djitellopy.Tello - skipping")
+            except Exception as e:
+                print(f"Could not set video bitrate: {e}")
+
+        with self.cmd_lock:
+            self.tello.streamon()
+
+        # Background thread (owned by djitellopy) keeps exactly ONE
+        # decoded frame around, overwriting rather than queueing - so
+        # reading it from multiple threads (frame_receiver.py) is safe
+        # without needing cmd_lock.
+        self.frame_reader = self.tello.get_frame_read()
+
+        self._connected = True
+
+    # ****************************************************************************************
+    def is_connected(self):
+        return self._connected
+
+    # ****************************************************************************************
+    def disconnect(self):
+        """
+            Stops the video stream and ends the connection. Safe to call
+            multiple times. Does NOT land the drone - that's
+            command_handler.py's responsibility, and must happen before
+            this is called.
+        """
+        try:
+            with self.cmd_lock:
+                self.tello.streamoff()
+        except Exception:
+            pass
+        try:
+            with self.cmd_lock:
+                self.tello.end()
+        except Exception:
+            pass
+        self._connected = False
+    # ****************************************************************************************
+
+
+================================================================================
+FILE: goals/mission_controller.py
+================================================================================
+
+"""
+goals/mission_controller.py
+
+High-level ROS2 node for managing autonomous flight states.
+Subscribes to live metric poses. Uses TrajectoryTracker to compute
+velocities and sends them to the drone via CommandHandler.
+"""
+
+import rclpy
+from rclpy.node import Node
+from geometry_msgs.msg import PoseStamped
+from tello_autonomy_msgs.srv import SearchPlan
+from config import constants
+from goals.trajectory_tracker import TrajectoryTracker
+import math
+
+class MissionState:
+    IDLE = 0
+    NAVIGATING = 1
+    EXPLORING = 2
+
+class MissionControllerNode(Node):
+    def __init__(self, command_handler, node_name="mission_controller"):
+        super().__init__(node_name)
+        self._command_handler = command_handler
+        self._tracker = TrajectoryTracker()
+        self._state = MissionState.IDLE
+
+        self._current_x = 0.0
+        self._current_y = 0.0
+        self._current_z = 0.0
+        self._current_yaw = 0.0
+        self._has_pose = False
+
+        # Subscriber for live pose
+        self.create_subscription(
+            PoseStamped,
+            constants.TOPIC_CURRENT_POSE_METRIC,
+            self._pose_callback,
+            10
+        )
+
+        # Subscriber for goal pose (allows triggering missions from terminal)
+        self.create_subscription(
+            PoseStamped,
+            '/goal_pose',
+            self._goal_callback,
+            10
+        )
+
+        # Clients for planning services
+        self._search_client = self.create_client(SearchPlan, '/tello_autonomy/search_plan')
+        
+        # Import and add the NbvPlan client
+        from tello_autonomy_msgs.srv import NbvPlan
+        self._nbv_client = self.create_client(NbvPlan, '/tello_autonomy/nbv_plan')
+
+        # Subscriber to trigger exploration mode
+        from std_msgs.msg import Empty
+        self.create_subscription(Empty, '/explore', self._explore_callback, 10)
+
+        # Control loop timer
+        timer_period = 1.0 / constants.GOALS_LOOP_RATE_HZ
+        self._timer = self.create_timer(timer_period, self._control_loop)
+
+        self.get_logger().info("MissionController initialized.")
+
+    def _explore_callback(self, msg):
+        self.get_logger().info("Triggering exploration mode...")
+        self.start_exploration()
+
+    def start_exploration(self):
+        """
+        Request the next best view from exploration_cpp and navigate to it.
+        """
+        if not self._has_pose:
+            self.get_logger().error("Cannot start exploration: no live pose received yet.")
+            return
+
+        from tello_autonomy_msgs.srv import NbvPlan
+        if not self._nbv_client.wait_for_service(timeout_sec=1.0):
+            self.get_logger().error("NbvPlan service not available!")
+            return
+
+        req = NbvPlan.Request()
+        req.header.frame_id = "map"
+        
+        self.get_logger().info("Requesting Next-Best-View path...")
+        future = self._nbv_client.call_async(req)
+        future.add_done_callback(self._on_nbv_plan_received)
+
+    def _on_nbv_plan_received(self, future):
+        try:
+            response = future.result()
+            if not response.path:
+                self.get_logger().info("Exploration finished or no path found.")
+                self.cancel_mission()
+                return
+
+            # Convert PoseStamped[] path to dict format for tracker
+            waypoints = []
+            for pose_stamped in response.path:
+                waypoints.append({
+                    'x': pose_stamped.pose.position.x,
+                    'y': pose_stamped.pose.position.y,
+                    'z': pose_stamped.pose.position.z
+                })
+            
+            if len(waypoints) > 1:
+                waypoints.pop(0)
+
+            self._tracker.set_path(waypoints)
+            self._state = MissionState.EXPLORING
+            self.get_logger().info(f"Exploration path received ({len(waypoints)} waypoints). Moving.")
+        except Exception as e:
+            self.get_logger().error(f"NbvPlan Service call failed: {e}")
+            self.cancel_mission()
+
+    def _pose_callback(self, msg: PoseStamped):
+        self._current_x = msg.pose.position.x
+        self._current_y = msg.pose.position.y
+        self._current_z = msg.pose.position.z
+
+        # Extract yaw from quaternion
+        q = msg.pose.orientation
+        siny_cosp = 2.0 * (q.w * q.z + q.x * q.y)
+        cosy_cosp = 1.0 - 2.0 * (q.y * q.y + q.z * q.z)
+        self._current_yaw = math.atan2(siny_cosp, cosy_cosp)
+        
+        self._has_pose = True
+
+    def _goal_callback(self, msg: PoseStamped):
+        """
+        Triggered when a user publishes to /goal_pose
+        """
+        target_x = msg.pose.position.x
+        target_y = msg.pose.position.y
+        target_z = msg.pose.position.z
+        self.get_logger().info(f"Received external goal command: {target_x}, {target_y}, {target_z}")
+        self.start_mission_to_goal(target_x, target_y, target_z)
+
+    def start_mission_to_goal(self, target_x, target_y, target_z):
+        """
+        Request a path from search_cpp and start navigating to it.
+        """
+        if not self._has_pose:
+            self.get_logger().error("Cannot start mission: no live pose received yet.")
+            return
+
+        if not self._search_client.wait_for_service(timeout_sec=1.0):
+            self.get_logger().error("SearchPlan service not available!")
+            return
+
+        req = SearchPlan.Request()
+        req.start.header.frame_id = "map"
+        req.start.pose.position.x = self._current_x
+        req.start.pose.position.y = self._current_y
+        req.start.pose.position.z = self._current_z
+        
+        req.goal.header.frame_id = "map"
+        req.goal.pose.position.x = float(target_x)
+        req.goal.pose.position.y = float(target_y)
+        req.goal.pose.position.z = float(target_z)
+
+        self.get_logger().info(f"Requesting path to ({target_x}, {target_y}, {target_z})...")
+        future = self._search_client.call_async(req)
+        future.add_done_callback(self._on_search_plan_received)
+
+    def _on_search_plan_received(self, future):
+        try:
+            response = future.result()
+            if not response.success or not response.path:
+                self.get_logger().error("Path planning failed or returned empty path.")
+                self.cancel_mission()
+                return
+
+            # Convert PoseStamped[] path to dict format for tracker
+            waypoints = []
+            for pose_stamped in response.path:
+                waypoints.append({
+                    'x': pose_stamped.pose.position.x,
+                    'y': pose_stamped.pose.position.y,
+                    'z': pose_stamped.pose.position.z
+                })
+            
+            # The first point is usually the current position, pop it to avoid standing still
+            if len(waypoints) > 1:
+                waypoints.pop(0)
+
+            self._tracker.set_path(waypoints)
+            self._state = MissionState.NAVIGATING
+            self.get_logger().info(f"Path received with {len(waypoints)} waypoints. Starting navigation.")
+        except Exception as e:
+            self.get_logger().error(f"Service call failed: {e}")
+            self.cancel_mission()
+
+    def cancel_mission(self):
+        if self._state != MissionState.IDLE:
+            self.get_logger().info("Mission canceled. Hovering.")
+            self._tracker.clear_path()
+            self._state = MissionState.IDLE
+            # Send zero velocity to stop immediately
+            self._command_handler.send_rc_control(0, 0, 0, 0)
+
+    def _control_loop(self):
+        """
+        Runs at GOALS_LOOP_RATE_HZ. Checks state and sends velocities.
+        """
+        if self._state == MissionState.IDLE:
+            return
+
+        if not self._has_pose:
+            self.get_logger().warn("Lost pose while navigating! Hovering.")
+            self._command_handler.send_rc_control(0, 0, 0, 0)
+            return
+
+        if self._tracker.is_done():
+            if self._state == MissionState.EXPLORING:
+                self.get_logger().info("Reached end of exploration path. Requesting next view...")
+                # Temporarily hover while waiting for next path
+                self._command_handler.send_rc_control(0, 0, 0, 0)
+                self.start_exploration()
+            else:
+                self.get_logger().info("Mission complete! Hovering.")
+                self._state = MissionState.IDLE
+                self._command_handler.send_rc_control(0, 0, 0, 0)
+            return
+
+        cmd_lr, cmd_fb, cmd_ud, cmd_yaw = self._tracker.compute_velocity_commands(
+            self._current_x, self._current_y, self._current_z, self._current_yaw
+        )
+
+        # Send to drone
+        # send_rc_control silently fails (returns False) if a takeoff/land is in progress,
+        # which is exactly the safety behavior we want.
+        self._command_handler.send_rc_control(cmd_lr, cmd_fb, cmd_ud, cmd_yaw)
+
+
+
+================================================================================
+FILE: goals/trajectory_tracker.py
+================================================================================
+
+"""
+goals/trajectory_tracker.py
+
+Pure Python (no ROS2 dependencies) logic for tracking a sequence of waypoints.
+Uses a Proportional (P) controller to compute velocity commands based on the
+error between the drone's current pose and the target waypoint.
+Converts world-frame X/Y errors into body-frame Left/Right and Forward/Back commands.
+"""
+
+import math
+from config import constants
+
+class TrajectoryTracker:
+    def __init__(self):
+        self.path = []  # List of dicts: {'x': float, 'y': float, 'z': float}
+        # In our case, we don't have explicit yaw targets from search_cpp yet, 
+        # so we will just maintain the current yaw or look towards the goal if needed.
+        # For simplicity and safety indoors, we will just hold the current yaw or zero yaw command.
+    
+    def set_path(self, path_poses):
+        """
+        Receives a list of dicts with 'x', 'y', 'z' keys (from PoseStamped messages).
+        """
+        self.path = path_poses
+
+    def clear_path(self):
+        self.path = []
+
+    def is_done(self):
+        return len(self.path) == 0
+
+    def compute_velocity_commands(self, current_x, current_y, current_z, current_yaw_rad):
+        """
+        Returns (left_right, forward_back, up_down, yaw_velocity) to send to the drone.
+        Returns (0, 0, 0, 0) if no path is set or if the path is complete.
+        """
+        if self.is_done():
+            return 0, 0, 0, 0
+
+        target = self.path[0]
+        dx = target['x'] - current_x
+        dy = target['y'] - current_y
+        dz = target['z'] - current_z
+
+        distance_to_target = math.sqrt(dx**2 + dy**2 + dz**2)
+
+        # If we reached the waypoint, pop it and return 0s for this tick.
+        # Next tick will compute for the next waypoint.
+        if distance_to_target < constants.WAYPOINT_ACCEPTANCE_RADIUS_M:
+            self.path.pop(0)
+            return 0, 0, 0, 0
+
+        # World-frame velocity commands (P-controller)
+        v_x_world = dx * constants.XY_P_GAIN
+        v_y_world = dy * constants.XY_P_GAIN
+        v_z = dz * constants.Z_P_GAIN
+
+        # Transform World (v_x, v_y) -> Body (forward/back, left/right)
+        # Assuming World X is Forward at yaw=0, Y is Left at yaw=0
+        # Tello send_rc_control: left_right (+ right, - left), forward_back (+ forward, - back)
+        
+        # Standard 2D rotation matrix to convert world vector to body frame vector:
+        # body_x = world_x * cos(yaw) + world_y * sin(yaw)
+        # body_y = -world_x * sin(yaw) + world_y * cos(yaw)
+        cos_yaw = math.cos(current_yaw_rad)
+        sin_yaw = math.sin(current_yaw_rad)
+
+        v_forward = v_x_world * cos_yaw + v_y_world * sin_yaw
+        v_left = -v_x_world * sin_yaw + v_y_world * cos_yaw
+
+        # Tello expects 'right' as positive, so right = -left
+        v_right = -v_left
+
+        # Clamp to max speeds
+        cmd_fb = self._clamp(v_forward, constants.MAX_AUTO_SPEED_XY)
+        cmd_lr = self._clamp(v_right, constants.MAX_AUTO_SPEED_XY)
+        cmd_ud = self._clamp(v_z, constants.MAX_AUTO_SPEED_Z)
+        cmd_yaw = 0  # We will just hold yaw steady for now for safety
+
+        return int(cmd_lr), int(cmd_fb), int(cmd_ud), int(cmd_yaw)
+
+    def _clamp(self, value, max_abs):
+        if value > max_abs:
+            return max_abs
+        if value < -max_abs:
+            return -max_abs
+        return value
+
+
+
+================================================================================
+FILE: main.py
+================================================================================
+
+#!/usr/bin/env python3
+"""
+scripts/main.py
+
+THE entry point that wires every built layer together and runs a full
+manual-flight-with-live-SLAM-and-scale-factor session:
+
+  drone_interface (no ROS2):
+    TelloDriver -> FrameReceiver, TelemetryMonitor, CommandHandler -> ManualControl
+
+  middleware (ROS2):
+    RosBridge          (publishes frames+handshake to the C++ SLAM node)
+    FrameCleanupNode   (deletes non-keyframe saved frame images)
+
+  perception (ROS2, depends on middleware's topics):
+    ScaleFactorManager (computes per-map_id scale factors)
+    LiveScaler         (multiplies live pose/points by the current scale factor)
+
+The C++ SLAM node (ros2_orb_slam3 / mono_node_cpp) is a SEPARATE
+process, started independently before or after this script - it is not
+launched from here. Run it with:
+    ros2 run ros2_orb_slam3 mono_node_cpp --ros-args -p node_name_arg:=mono_slam_cpp
+
+Each ROS2 node gets its OWN SingleThreadedExecutor on its own thread -
+this is deliberate (see architecture doc / earlier debugging): driving
+multiple nodes' callbacks from a single shared executor across threads
+risks "ValueError: generator already executing".
+
+drone_interface's ManualControl loop is NOT tied to any ROS2 executor -
+it runs independently (drone_interface never depends on middleware),
+so manual flight control works immediately after connecting, regardless
+of whether the SLAM handshake has completed yet.
+
+Usage:
+    cd ~/Autonomous_Drone/ros2_test
+    source /opt/ros/humble/setup.bash
+    source install/setup.bash    # once this is a proper colcon package
+    python3 tello_autonomy/scripts/main.py
+"""
+
+import os
+import sys
+import threading
+
+_TELLO_AUTONOMY_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if _TELLO_AUTONOMY_ROOT not in sys.path:
+    sys.path.insert(0, _TELLO_AUTONOMY_ROOT)
+
+import rclpy
+from rclpy.executors import SingleThreadedExecutor
+
+from config import constants
+from drone_interface.tello_driver import TelloDriver
+from drone_interface.frame_receiver import FrameReceiver
+from drone_interface.telemetry import TelemetryMonitor
+from drone_interface.command_handler import CommandHandler
+from drone_interface.manual_control import ManualControl
+from middleware.ros_bridge import RosBridge
+from middleware.frame_cleanup import FrameCleanupNode
+from perception.scale_factor_manager import ScaleFactorManager
+from perception.live_scaler import LiveScaler
+from goals.mission_controller import MissionControllerNode
+
+
+class NodeRunner:
+    """
+        Tiny helper: owns one ROS2 node + its own SingleThreadedExecutor
+        + its own spin thread. Exists so main() doesn't repeat this
+        three/four times with copy-pasted thread/executor boilerplate.
+    """
+    def __init__(self, node):
+        self.node = node
+        self._executor = SingleThreadedExecutor()
+        self._executor.add_node(node)
+        self._thread = threading.Thread(target=self._executor.spin, daemon=True)
+
+    def start(self):
+        self._thread.start()
+
+    def shutdown(self, join_timeout=2.0):
+        self._executor.shutdown()
+        self._thread.join(timeout=join_timeout)
+        self.node.destroy_node()
+
+
+def main():
+    # ---- drone_interface layer: no ROS2 involved yet ----
+    driver = TelloDriver(resolution="", fps="", bitrate=constants.TELLO_VIDEO_BITRATE)
+    driver.connect()
+
+    frame_receiver = FrameReceiver(driver)
+    telemetry = TelemetryMonitor(driver, enabled=True)  # default fields: battery, height, flight_time
+    command_handler = CommandHandler(driver)
+    manual_control = ManualControl(command_handler, frame_receiver, manual_speed=constants.DEFAULT_MANUAL_SPEED_CMS)
+
+    # ---- ROS2 layer: middleware + perception + goals ----
+    rclpy.init()
+
+    ros_bridge = RosBridge(frame_receiver, node_name="tello_ros_bridge")
+    frame_cleanup = FrameCleanupNode(node_name="frame_cleanup_node")
+    scale_factor_manager = ScaleFactorManager(node_name="scale_factor_manager")
+    live_scaler = LiveScaler(scale_factor_manager, node_name="live_scaler")
+    mission_controller = MissionControllerNode(command_handler, node_name="mission_controller")
+
+    runners = [
+        NodeRunner(ros_bridge),
+        NodeRunner(frame_cleanup),
+        NodeRunner(scale_factor_manager),
+        NodeRunner(live_scaler),
+        NodeRunner(mission_controller),
+    ]
+    for runner in runners:
+        runner.start()
+
+    # ---- Wire manual_control's quit -> full shutdown, and start it.
+    # ManualControl runs independent of ROS2 entirely - it doesn't wait
+    # for the SLAM handshake to complete before allowing takeoff. ----
+    shutdown_event = threading.Event()
+
+    def on_quit():
+        shutdown_event.set()
+
+    manual_control.on_quit_requested = on_quit
+    manual_control.on_manual_override = mission_controller.cancel_mission
+    
+    command_handler.start_keepalive()
+    telemetry.enable()
+    print("Pipeline running. Fly manually (t=takeoff, q=land+quit). "
+          "SLAM handshake, scale-factor computation, and live scaling "
+          "run automatically once the C++ SLAM node ACKs.")
+
+    try:
+        # Run in main thread! This handles OpenCV UI and blocks until shutdown.
+        manual_control.start(window_name="Tello SLAM View", blocking=True)
+    except KeyboardInterrupt:
+        print("\nCtrl+C received - shutting down.")
+        shutdown_event.set()
+    finally:
+        print("Shutting down drone_interface...")
+        manual_control.stop()
+        command_handler.stop_keepalive()
+        driver.disconnect()
+
+        print("Shutting down ROS2 nodes...")
+        for runner in runners:
+            runner.shutdown()
+
+        rclpy.shutdown()
+        print("Clean shutdown complete.")
+
+
+if __name__ == "__main__":
+    main()
+
+
+
+================================================================================
+FILE: middleware/frame_cleanup.py
+================================================================================
+
+"""
+middleware/frame_cleanup.py
+
+Standalone ROS2 node, separate from RosBridge. Its only job: watch
+constants.TOPIC_KEYFRAME_TIMESTAMPS (published live by the C++ SLAM
+node, ~1Hz) and delete saved frame images from constants.SAVE_FRAMES_DIR
+once we're confident they did NOT become a keyframe.
+
+Ported from the old flat-file frame_cleanup_node.py - logic is
+unchanged, only the wiring changed: topic name, save-frames dir, and
+the three tuning constants (match tolerance / grace period / cleanup
+interval) now come from config.constants instead of constructor
+defaults, and the subscription goes through middleware.topic_manager
+like everything else in this layer.
+
+Deletion logic, and why the grace period matters:
+ORB-SLAM3 decides whether a frame becomes a keyframe on a separate
+thread (LocalMapping), with some delay after the frame is first
+processed. If we delete a frame the instant it's absent from the
+current keyframe list, we might delete one that's still mid-pipeline
+and about to be promoted to a keyframe a moment later. So a frame is
+only ever considered "safe to delete" once BOTH are true:
+  1. Its timestamp doesn't match any timestamp in the most recent
+     keyframe list from the C++ node (within KEYFRAME_MATCH_TOLERANCE_SEC)
+  2. It's older than DELETION_GRACE_PERIOD_SEC (giving LocalMapping
+     time to catch up before we give up on it)
+
+Runs as its own ROS2 node, on its own executor/thread - see the
+two-executor pattern used in the old main.py (one SingleThreadedExecutor
+per node) to avoid driving two nodes' callbacks from one shared
+executor across threads.
+"""
+
+import glob
+import os
+import re
+import time
+
+from std_msgs.msg import Float64MultiArray
+from rclpy.node import Node
+
+from config import constants
+from middleware.topic_manager import TopicManager
+
+
+class FrameCleanupNode(Node):
+    """
+        Subscribes to the live keyframe-timestamp list and periodically
+        deletes saved frame images that are old enough, and were never
+        matched to a keyframe timestamp, to be considered safe to
+        discard. Never deletes anything before the first keyframe list
+        has been received - an empty/unset list must never be treated
+        as "nothing is a keyframe, delete everything".
+    """
+
+    def __init__(self, node_name="frame_cleanup_node",
+                 save_frames_dir=None,
+                 keyframe_match_tolerance=None,
+                 deletion_grace_period=None,
+                 cleanup_interval=None):
+        """
+            All four tuning parameters default to config.constants
+            values - pass an override only if a specific run genuinely
+            needs different behavior (e.g. a test harness).
+        """
+        super().__init__(node_name)
+
+        self.save_frames_dir = save_frames_dir or constants.SAVE_FRAMES_DIR
+        self.keyframe_match_tolerance = (
+            keyframe_match_tolerance
+            if keyframe_match_tolerance is not None
+            else constants.KEYFRAME_MATCH_TOLERANCE_SEC
+        )
+        self.deletion_grace_period = (
+            deletion_grace_period
+            if deletion_grace_period is not None
+            else constants.DELETION_GRACE_PERIOD_SEC
+        )
+        self.cleanup_interval = (
+            cleanup_interval
+            if cleanup_interval is not None
+            else constants.CLEANUP_INTERVAL_SEC
+        )
+
+        self.current_keyframe_timestamps = []     # latest list received from C++ node
+        self.have_received_keyframe_list = False  # gate: don't delete anything until we've heard from C++ at least once
+
+        # filenames look like: frame_1783539824.595438_000123.png
+        self._frame_filename_re = re.compile(r"frame_(\d+\.\d+)_(\d+)\.png$")
+
+        self._topics = TopicManager(self)
+        self._topics.get_subscription(
+            constants.TOPIC_KEYFRAME_TIMESTAMPS,
+            Float64MultiArray,
+            self._on_keyframe_timestamps,
+        )
+
+        self.cleanup_timer = self.create_timer(self.cleanup_interval, self._cleanup_tick)
+
+        self.total_deleted = 0
+
+        self.get_logger().info(
+            f"FrameCleanupNode: save_frames_dir={self.save_frames_dir}, "
+            f"keyframe_match_tolerance={self.keyframe_match_tolerance}s, "
+            f"deletion_grace_period={self.deletion_grace_period}s, "
+            f"cleanup_interval={self.cleanup_interval}s. "
+            f"Waiting for first keyframe timestamp list before deleting anything..."
+        )
+
+    # ****************************************************************************************
+    def _on_keyframe_timestamps(self, msg):
+        self.current_keyframe_timestamps = list(msg.data)
+        if not self.have_received_keyframe_list:
+            self.have_received_keyframe_list = True
+            self.get_logger().info(
+                f"First keyframe list received ({len(self.current_keyframe_timestamps)} "
+                f"keyframes) - cleanup is now active."
+            )
+
+    # ****************************************************************************************
+    def _is_keyframe_timestamp(self, frame_ts):
+        """True if frame_ts is within tolerance of any current keyframe timestamp."""
+        for kf_ts in self.current_keyframe_timestamps:
+            if abs(frame_ts - kf_ts) <= self.keyframe_match_tolerance:
+                return True
+        return False
+
+    # ****************************************************************************************
+    def _cleanup_tick(self):
+        # Watchdog: never delete anything before we've heard from the
+        # C++ node at least once.
+        if not self.have_received_keyframe_list:
+            return
+
+        now = time.time()
+        pattern = os.path.join(self.save_frames_dir, "frame_*.png")
+        deleted_this_pass = 0
+
+        for filepath in glob.glob(pattern):
+            filename = os.path.basename(filepath)
+            match = self._frame_filename_re.match(filename)
+            if not match:
+                continue  # unexpected filename, leave it alone rather than guess
+
+            frame_ts = float(match.group(1))
+            age = now - frame_ts
+
+            if age < self.deletion_grace_period:
+                continue  # too young, LocalMapping might still promote it - leave it
+
+            if self._is_keyframe_timestamp(frame_ts):
+                continue  # this one IS a keyframe - keep it
+
+            try:
+                os.remove(filepath)
+                deleted_this_pass += 1
+            except OSError as e:
+                self.get_logger().warn(f"Failed to delete {filepath}: {e}")
+
+        if deleted_this_pass > 0:
+            self.total_deleted += deleted_this_pass
+            self.get_logger().info(
+                f"Cleanup pass: deleted {deleted_this_pass} non-keyframe images "
+                f"(total deleted so far: {self.total_deleted})"
+            )
+
+    # ****************************************************************************************
+    def destroy_node(self):
+        """Cancels the cleanup timer and cleans up the subscription before shutdown."""
+        if self.cleanup_timer is not None:
+            self.cleanup_timer.cancel()
+        self._topics.destroy_all()
+        super().destroy_node()
+    # ****************************************************************************************
+
+
+================================================================================
+FILE: middleware/message_types.py
+================================================================================
+
+"""
+middleware/message_types.py
+
+Pure conversion functions between plain Python/numpy data and ROS2
+message types. No Node, no publishers/subscribers, no I/O - every
+function here takes plain data in and hands a ROS2 message (or plain
+data) back out. This means these conversions can be unit-tested without
+rclpy.init() ever being called, and reused by any node that needs them
+without inheriting ros_bridge.py's handshake/timer logic.
+"""
+
+import time
+
+from cv_bridge import CvBridge, CvBridgeError
+from sensor_msgs.msg import Image
+from std_msgs.msg import Float64, Float64MultiArray, String
+
+_br = CvBridge()
+
+
+def bgr_frame_to_image_msg(frame_bgr):
+    """
+        Converts a BGR numpy array (as returned by
+        drone_interface.frame_receiver.FrameReceiver.get_frame_bgr())
+        into a sensor_msgs/Image message.
+
+        Returns None if the conversion fails (logged, not raised) -
+        callers publishing on a timer should treat None as "skip this
+        tick" rather than crash a publish loop over one bad frame.
+    """
+    try:
+        return _br.cv2_to_imgmsg(frame_bgr, encoding="bgr8")
+    except CvBridgeError as e:
+        print(f"bgr_frame_to_image_msg conversion failed: {e}")
+        return None
+
+
+def current_timestamp_msg():
+    """
+        Returns (Float64 message wrapping time.time(), the raw float
+        value used). The raw value is also returned because callers
+        that save frame images to disk (see drone_interface /
+        middleware wiring) need the exact same numeric value used in
+        the filename, so keyframe-matching-by-timestamp later lines up
+        exactly - returning both avoids two separate time.time() calls
+        drifting apart by microseconds.
+    """
+    now = time.time()
+    msg = Float64()
+    msg.data = now
+    return msg, now
+
+
+def string_msg(text):
+    msg = String()
+    msg.data = text
+    return msg
+
+
+def is_ack(msg, expected="ACK"):
+    """True if a received std_msgs/String message's data matches expected."""
+    return msg.data == expected
+
+
+def float_list_msg(values):
+    """Wraps a plain list/iterable of floats into a Float64MultiArray message."""
+    msg = Float64MultiArray()
+    msg.data = list(values)
+    return msg
+
+
+def float_list_from_msg(msg):
+    """Unwraps a Float64MultiArray message back into a plain Python list."""
+    return list(msg.data)
+
+
+================================================================================
+FILE: middleware/ros_bridge.py
+================================================================================
+
+"""
+middleware/ros_bridge.py
+
+The actual ROS2 Node for this package - bridges drone_interface's
+camera frames to the C++ ORB-SLAM3 node over ROS2 topics, and performs
+the startup handshake required before the C++ side will start
+processing frames.
+
+Depends on:
+  - middleware.topic_manager   (publisher/subscriber creation + QoS)
+  - middleware.message_types   (data <-> ROS2 message conversions)
+  - drone_interface.frame_receiver.FrameReceiver (frame source)
+
+Does NOT depend on tello_driver.py or command_handler.py directly -
+this node only reads frames via FrameReceiver, it never sends flight
+commands. Whatever wires this node together (scripts/main.py, not yet
+built) is responsible for constructing TelloDriver + FrameReceiver
+first and handing the FrameReceiver in here.
+"""
+
+import os
+
+import cv2
+import rclpy
+from rclpy.node import Node
+from sensor_msgs.msg import Image
+from std_msgs.msg import Float64, String
+
+from config import constants
+from middleware import message_types
+from middleware.topic_manager import TopicManager
+
+# How often to re-publish the handshake settings message while waiting
+# for the C++ node's ack. Independent of DEFAULT_MAX_PUB_RATE_HZ - the
+# handshake is a startup-only concern, not the steady-state frame rate.
+HANDSHAKE_RETRY_INTERVAL_SEC = 1.0
+
+
+class RosBridge(Node):
+    """
+        ROS2 node that performs the SLAM handshake, then publishes
+        camera frames + timestamps on a fixed-rate timer, saving each
+        published frame to disk under a timestamp-matched filename for
+        later keyframe/depth matching (see perception/, Section 7).
+    """
+
+    def __init__(self, frame_receiver, node_name="tello_ros_bridge"):
+        """
+            frame_receiver: a drone_interface.frame_receiver.FrameReceiver
+                            instance, already wired to a connected
+                            TelloDriver. This node never touches
+                            TelloDriver directly - it only reads frames
+                            through frame_receiver.
+        """
+        super().__init__(node_name)
+
+        self._frame_receiver = frame_receiver
+        self._topics = TopicManager(self)
+
+        self._frame_id = 0
+        self._handshake_acked = False
+        self._handshake_timer = None
+        self._publish_timer = None
+
+        os.makedirs(constants.SAVE_FRAMES_DIR, exist_ok=True)
+
+        # Handshake pub/sub.
+        self._settings_pub = self._topics.get_publisher(
+            constants.TOPIC_EXPERIMENT_SETTINGS, String
+        )
+        self._topics.get_subscription(
+            constants.TOPIC_EXP_SETTINGS_ACK, String, self._on_ack
+        )
+
+        # Steady-state frame publishers.
+        self._img_pub = self._topics.get_publisher(constants.TOPIC_IMG_MSG, Image)
+        self._timestep_pub = self._topics.get_publisher(constants.TOPIC_TIMESTEP_MSG, Float64)
+
+        self._start_handshake()
+
+    # ****************************************************************************************
+    def _start_handshake(self):
+        """
+            Publishes the experiment-settings string once immediately,
+            then on a repeating timer, until _on_ack() fires.
+
+            TRANSIENT_LOCAL QoS (set in topic_manager.HANDSHAKE_QOS)
+            means even a late-discovered subscriber on the C++ side
+            receives the most recent publish - this is the fix for the
+            "works on 2nd ros2 run, not the 1st" discovery-race issue
+            documented in the handoff doc, Section 7. The retry timer
+            here is a second layer of robustness in case the C++ node
+            isn't even running yet when this node starts.
+        """
+        self._publish_settings()
+        self._handshake_timer = self.create_timer(
+            HANDSHAKE_RETRY_INTERVAL_SEC, self._publish_settings
+        )
+
+    # ****************************************************************************************
+    def _publish_settings(self):
+        if self._handshake_acked:
+            return
+        msg = message_types.string_msg(constants.DEFAULT_SETTINGS_NAME)
+        self._settings_pub.publish(msg)
+
+    # ****************************************************************************************
+    def _on_ack(self, msg):
+        """
+            Subscriber callback for TOPIC_EXP_SETTINGS_ACK. Stops the
+            handshake retry timer and starts the frame-publish timer,
+            exactly once - repeated/late acks after the first are
+            ignored.
+        """
+        if self._handshake_acked:
+            return
+        if not message_types.is_ack(msg):
+            return
+
+        self._handshake_acked = True
+        if self._handshake_timer is not None:
+            self._handshake_timer.cancel()
+            self._handshake_timer = None
+
+        self.get_logger().info("SLAM handshake acked - starting frame publish loop.")
+        self._publish_timer = self.create_timer(
+            1.0 / constants.DEFAULT_MAX_PUB_RATE_HZ, self._publish_frame_tick
+        )
+
+    # ****************************************************************************************
+    def _publish_frame_tick(self):
+        """
+            Timer callback: grabs the latest frame, publishes it plus a
+            matching timestamp, and saves the same frame to disk under
+            a filename containing the identical raw timestamp float -
+            required for perception/'s keyframe-to-image matching to
+            line up exactly (see message_types.current_timestamp_msg
+            and handoff doc Section 7).
+
+            Any missing piece (no frame yet, conversion failure) skips
+            this tick rather than raising - a single dropped tick must
+            never crash the publish timer.
+        """
+        frame_bgr = self._frame_receiver.get_frame_bgr()
+        if frame_bgr is None:
+            return
+
+        img_msg = message_types.bgr_frame_to_image_msg(frame_bgr)
+        if img_msg is None:
+            return
+
+        timestep_msg, raw_timestamp = message_types.current_timestamp_msg()
+
+        self._img_pub.publish(img_msg)
+        self._timestep_pub.publish(timestep_msg)
+
+        filename = f"frame_{raw_timestamp:.6f}_{self._frame_id:06d}.png"
+        filepath = os.path.join(constants.SAVE_FRAMES_DIR, filename)
+        try:
+            cv2.imwrite(filepath, frame_bgr)
+        except Exception as e:
+            self.get_logger().warn(f"Failed to save frame {filepath}: {e}")
+
+        self._frame_id += 1
+
+    # ****************************************************************************************
+    def destroy_node(self):
+        """
+            Cancels any live timers and cleans up every publisher/
+            subscription created via TopicManager before deferring to
+            Node.destroy_node().
+        """
+        if self._handshake_timer is not None:
+            self._handshake_timer.cancel()
+        if self._publish_timer is not None:
+            self._publish_timer.cancel()
+        self._topics.destroy_all()
+        super().destroy_node()
+    # ****************************************************************************************
+
+
+================================================================================
+FILE: middleware/service_manager.py
+================================================================================
+
+"""
+middleware/service_manager.py
+
+STUB - no real logic yet.
+
+Nothing in this project currently uses ROS2 services - every
+interaction with the C++ SLAM node is topic-based (see topic_manager.py
+and ros_bridge.py). This file is reserved for when a genuine
+request/response need shows up, e.g.:
+
+  - "give me the current scale factor for this map_id" (perception/
+    layer asking something for an on-demand value rather than waiting
+    on a topic)
+  - "save the map now" (an explicit one-shot command with a
+    success/failure reply, as opposed to fire-and-forget)
+
+Per the handoff doc (Section 7): don't invent service definitions
+speculatively. Leave this as a stub until a concrete consumer actually
+needs request/response semantics - adding unused .srv definitions and
+wrapper code ahead of time is exactly the kind of speculative
+complexity the rest of this package's layers avoid (see occupancy_map/,
+exploration/, search/, goals/, which are NOT STARTED for the same
+reason).
+
+When a real need appears, follow the same pattern as topic_manager.py:
+centralize service *creation* here (client + server setup, matched
+QoS/timeout policy), rather than letting callers hand-roll
+create_service()/create_client() calls inline.
+"""
+
+# No imports, no classes, no functions yet - intentionally empty beyond
+# this docstring. See the docstring above for what belongs here once
+# there's a real consumer.
+
+
+================================================================================
+FILE: middleware/topic_manager.py
+================================================================================
+
+"""
+middleware/topic_manager.py
+
+Centralizes creation of every ROS2 publisher and subscriber used by this
+package, along with the QoS profile each topic must use. No other file
+should call node.create_publisher()/create_subscription() directly -
+route it through this module instead, so QoS decisions live in exactly
+one place (architectural principle #2/#3 in the handoff doc).
+
+QoS profiles here are matched to what the C++ mono_node_cpp.cpp node
+expects. Do not "simplify" these away - see handoff doc Section 7.
+"""
+
+from rclpy.qos import (
+    QoSProfile,
+    QoSReliabilityPolicy,
+    QoSHistoryPolicy,
+    QoSDurabilityPolicy,
+)
+
+from config import constants
+
+
+# ---------------------------------------------------------------------------
+# QoS profiles
+# ---------------------------------------------------------------------------
+
+# Image / timestep topics exchanged at the SLAM node's publish rate.
+# Must match mono_node_cpp.cpp's subscriber QoS exactly - RELIABLE +
+# KEEP_LAST + depth=1. Do not change without also changing the C++ side.
+SLAM_STREAM_QOS = QoSProfile(
+    reliability=QoSReliabilityPolicy.RELIABLE,
+    history=QoSHistoryPolicy.KEEP_LAST,
+    depth=1,
+)
+
+# Handshake topics (experiment settings + ack). These fire once at
+# startup, before the other side's subscriber/publisher is guaranteed to
+# have been discovered by DDS. TRANSIENT_LOCAL durability means a
+# late-discovered subscriber still receives the last published message,
+# fixing the "works on 2nd ros2 run, not the 1st" issue documented in
+# the handoff doc (Section 7, ros_bridge.py design intent).
+HANDSHAKE_QOS = QoSProfile(
+    reliability=QoSReliabilityPolicy.RELIABLE,
+    history=QoSHistoryPolicy.KEEP_LAST,
+    depth=1,
+    durability=QoSDurabilityPolicy.TRANSIENT_LOCAL,
+)
+
+# General-purpose topics with no special timing/discovery requirements
+# (keyframe timestamps, map topology change notifications, and future
+# reserved topics like occupancy grid / frontier goals / planned path /
+# mission status). Reliable delivery, small buffer.
+DEFAULT_QOS = QoSProfile(
+    reliability=QoSReliabilityPolicy.RELIABLE,
+    history=QoSHistoryPolicy.KEEP_LAST,
+    depth=10,
+)
+
+# Maps each known topic constant to the QoS profile it must use.
+# Add new topics here as they're introduced - never inline a QoS
+# profile in ros_bridge.py or anywhere else.
+_TOPIC_QOS = {
+    constants.TOPIC_EXPERIMENT_SETTINGS: HANDSHAKE_QOS,
+    constants.TOPIC_EXP_SETTINGS_ACK: HANDSHAKE_QOS,
+    constants.TOPIC_IMG_MSG: SLAM_STREAM_QOS,
+    constants.TOPIC_TIMESTEP_MSG: SLAM_STREAM_QOS,
+    constants.TOPIC_KEYFRAME_TIMESTAMPS: DEFAULT_QOS,
+    constants.TOPIC_MAP_TOPOLOGY_CHANGED: DEFAULT_QOS,
+    # NEW - per-frame pose/points stream, same cadence/reliability
+    # needs as the image/timestep topics.
+    constants.TOPIC_CURRENT_POSE_RAW: SLAM_STREAM_QOS,
+    constants.TOPIC_CURRENT_POINTS_RAW: SLAM_STREAM_QOS,
+    constants.TOPIC_CURRENT_POSE_METRIC: SLAM_STREAM_QOS,
+    constants.TOPIC_CURRENT_POINTS_METRIC: SLAM_STREAM_QOS,
+    constants.TOPIC_OCCUPANCY_GRID: DEFAULT_QOS,
+    constants.TOPIC_FRONTIER_GOALS: DEFAULT_QOS,
+    constants.TOPIC_PLANNED_PATH: DEFAULT_QOS,
+    constants.TOPIC_MISSION_STATUS: DEFAULT_QOS,
+    constants.TOPIC_KEYFRAME_POINTS: DEFAULT_QOS,
+    constants.TOPIC_TRAJECTORY: DEFAULT_QOS,
+}
+
+
+def qos_for_topic(topic_name: str) -> QoSProfile:
+    """
+    Return the QoS profile required for a given topic name.
+
+    Raises KeyError (deliberately, not swallowed) if the topic isn't
+    registered in _TOPIC_QOS - an unregistered topic is a bug, not a
+    case to silently default around, since a wrong QoS profile is
+    exactly the kind of mismatch that breaks the SLAM handshake.
+    """
+    if topic_name not in _TOPIC_QOS:
+        raise KeyError(
+            f"No QoS profile registered for topic '{topic_name}'. "
+            "Add it to middleware.topic_manager._TOPIC_QOS before "
+            "publishing/subscribing on it."
+        )
+    return _TOPIC_QOS[topic_name]
+
+
+class TopicManager:
+    """
+    Wraps a single rclpy Node's publisher/subscriber creation so every
+    call goes through the topic -> QoS mapping above instead of each
+    caller picking its own QoS inline.
+
+    ros_bridge.py should hold one instance of this (or call the
+    module-level qos_for_topic() directly if it prefers to manage its
+    own publisher/subscriber handles) rather than calling
+    node.create_publisher()/create_subscription() itself.
+    """
+
+    def __init__(self, node):
+        self._node = node
+        self._publishers = {}
+        self._subscriptions = {}
+
+    def get_publisher(self, topic_name: str, msg_type):
+        """
+        Return the publisher for (topic_name, msg_type), creating it on
+        first use. Repeated calls with the same key reuse the existing
+        publisher rather than creating duplicates.
+        """
+        key = (topic_name, msg_type)
+        if key not in self._publishers:
+            qos = qos_for_topic(topic_name)
+            self._publishers[key] = self._node.create_publisher(msg_type, topic_name, qos)
+        return self._publishers[key]
+
+    def get_subscription(self, topic_name: str, msg_type, callback):
+        """
+        Create a subscription for (topic_name, msg_type) with the
+        correct QoS and keep a reference to it (rclpy subscriptions are
+        garbage-collected if nothing holds a reference).
+
+        Unlike get_publisher, this does not dedupe repeated calls on
+        the same topic/type - a second call with a different callback
+        is assumed to be intentional (e.g. two independent pieces of
+        logic listening to the same topic). Keep your own reference to
+        the returned subscription if you need it later.
+        """
+        qos = qos_for_topic(topic_name)
+        subscription = self._node.create_subscription(msg_type, topic_name, callback, qos)
+        self._subscriptions.setdefault(topic_name, []).append(subscription)
+        return subscription
+
+    def destroy_all(self):
+        """
+        Destroy every publisher/subscription this instance created.
+        Call from the owning node's shutdown path (e.g. before
+        node.destroy_node()) so nothing leaks on a clean restart.
+        """
+        for publisher in self._publishers.values():
+            self._node.destroy_publisher(publisher)
+        self._publishers.clear()
+
+        for subscription_list in self._subscriptions.values():
+            for subscription in subscription_list:
+                self._node.destroy_subscription(subscription)
+        self._subscriptions.clear()
+
+

@@ -1,0 +1,8 @@
+{
+  "package_name": "tello_autonomy_msgs",
+  "non_idl_tuples": [
+    "/home/hamdan/autonomous_drone/ros2_test/src/tello_autonomy_msgs:srv/NbvPlan.srv",
+    "/home/hamdan/autonomous_drone/ros2_test/src/tello_autonomy_msgs:srv/SearchPlan.srv",
+    "/home/hamdan/autonomous_drone/ros2_test/src/tello_autonomy_msgs:msg/Segment.msg"
+  ]
+}

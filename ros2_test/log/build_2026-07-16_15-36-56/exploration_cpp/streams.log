@@ -1,0 +1,66 @@
+[0.010s] Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/exploration_cpp': AMENT_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:/opt/ros/humble LD_LIBRARY_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake /home/hamdan/autonomous_drone/ros2_test/src/exploration_cpp -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp
+[0.021s] -- Found ament_cmake: 1.3.14 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.118s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[0.123s] -- Found rclcpp: 16.0.19 (/opt/ros/humble/share/rclcpp/cmake)
+[0.149s] -- Found rosidl_generator_c: 3.1.9 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[0.152s] -- Found rosidl_adapter: 3.1.9 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[0.156s] -- Found rosidl_generator_cpp: 3.1.9 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[0.163s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.172s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.196s] -- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[0.197s] -- Found rmw_fastrtps_cpp: 6.2.10 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)
+[0.284s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[0.323s] -- Found tello_autonomy_msgs: 0.0.0 (/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/cmake)
+[0.345s] -- Found octomap_manager_shim: 0.0.1 (/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/cmake)
+[0.347s] -- Found visualization_msgs: 4.9.1 (/opt/ros/humble/share/visualization_msgs/cmake)
+[0.376s] -- Found octomap_msgs: 2.0.1 (/opt/ros/humble/share/octomap_msgs/cmake)
+[0.386s] -- Found tf2_ros: 0.25.20 (/opt/ros/humble/share/tf2_ros/cmake)
+[0.457s] -- Found tf2_eigen: 0.25.20 (/opt/ros/humble/share/tf2_eigen/cmake)
+[0.460s] -- Found tf2_geometry_msgs: 0.25.20 (/opt/ros/humble/share/tf2_geometry_msgs/cmake)
+[0.462s] -- Found eigen3_cmake_module: 0.1.1 (/opt/ros/humble/share/eigen3_cmake_module/cmake)
+[0.463s] -- Ensuring Eigen3 include directory is part of orocos-kdl CMake target
+[0.464s] -- Found nav_msgs: 4.9.1 (/opt/ros/humble/share/nav_msgs/cmake)
+[0.478s] -- Found ament_lint_auto: 0.12.15 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[0.540s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[0.540s] -- Configured cppcheck include dirs: /home/hamdan/autonomous_drone/ros2_test/src/exploration_cpp/include;$<BUILD_INTERFACE:/home/hamdan/autonomous_drone/ros2_test/src/exploration_cpp/include>
+[0.540s] -- Configured cppcheck exclude dirs and/or files: 
+[0.540s] -- Added test 'lint_cmake' to check CMake code style
+[0.541s] -- Added test 'uncrustify' to check C / C++ code style
+[0.541s] -- Configured uncrustify additional arguments: 
+[0.542s] -- Added test 'xmllint' to check XML markup files
+[0.542s] -- Configuring done
+[0.557s] -- Generating done
+[0.563s] -- Build files have been written to: /home/hamdan/autonomous_drone/ros2_test/build/exploration_cpp
+[0.570s] Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/exploration_cpp' returned '0': AMENT_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:/opt/ros/humble LD_LIBRARY_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake /home/hamdan/autonomous_drone/ros2_test/src/exploration_cpp -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp
+[0.572s] Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/exploration_cpp': AMENT_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:/opt/ros/humble LD_LIBRARY_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake --build /home/hamdan/autonomous_drone/ros2_test/build/exploration_cpp -- -j12 -l12
+[0.615s] [35m[1mConsolidate compiler generated dependencies of target nbv_planner_node[0m
+[0.644s] [100%] Built target nbv_planner_node
+[0.654s] Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/exploration_cpp' returned '0': AMENT_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:/opt/ros/humble LD_LIBRARY_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake --build /home/hamdan/autonomous_drone/ros2_test/build/exploration_cpp -- -j12 -l12
+[0.656s] Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/exploration_cpp': AMENT_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:/opt/ros/humble LD_LIBRARY_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake --install /home/hamdan/autonomous_drone/ros2_test/build/exploration_cpp
+[0.663s] -- Install configuration: ""
+[0.663s] -- Execute custom install script
+[0.663s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/lib/exploration_cpp/nbv_planner_node
+[0.664s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/include/exploration_cpp/mesh_structure.h
+[0.664s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/include/exploration_cpp/multiagent_collision_checker.h
+[0.664s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/include/exploration_cpp/nbvp.h
+[0.664s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/include/exploration_cpp/nbvp.hpp
+[0.664s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/include/exploration_cpp/rrt.h
+[0.664s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/include/exploration_cpp/tree.h
+[0.664s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/include/exploration_cpp/tree.hpp
+[0.664s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/include/kdtree/kdtree.h
+[0.664s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/ament_index/resource_index/package_run_dependencies/exploration_cpp
+[0.665s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/ament_index/resource_index/parent_prefix_path/exploration_cpp
+[0.665s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/environment/ament_prefix_path.sh
+[0.665s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/environment/ament_prefix_path.dsv
+[0.665s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/environment/path.sh
+[0.665s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/environment/path.dsv
+[0.665s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/local_setup.bash
+[0.665s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/local_setup.sh
+[0.665s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/local_setup.zsh
+[0.666s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/local_setup.dsv
+[0.666s] -- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/package.dsv
+[0.674s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/ament_index/resource_index/packages/exploration_cpp
+[0.674s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/cmake/exploration_cppConfig.cmake
+[0.674s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/cmake/exploration_cppConfig-version.cmake
+[0.675s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/exploration_cpp/share/exploration_cpp/package.xml
+[0.677s] Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/exploration_cpp' returned '0': AMENT_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:/opt/ros/humble LD_LIBRARY_PATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages:${PYTHONPATH} /usr/bin/cmake --install /home/hamdan/autonomous_drone/ros2_test/build/exploration_cpp

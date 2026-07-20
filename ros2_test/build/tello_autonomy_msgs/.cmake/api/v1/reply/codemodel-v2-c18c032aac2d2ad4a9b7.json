@@ -1,0 +1,258 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						2
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-2113d8772c987dbac443.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.12"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						17,
+						18
+					]
+				},
+				{
+					"build" : "tello_autonomy_msgs__py",
+					"jsonFile" : "directory-tello_autonomy_msgs__py-6015370c5a4116bafc47.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.12"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "/home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs/tello_autonomy_msgs__py",
+					"targetIndexes" : 
+					[
+						4
+					]
+				},
+				{
+					"build" : "tello_autonomy_msgs__rs",
+					"jsonFile" : "directory-tello_autonomy_msgs__rs-6fe6435ae2b03acffea8.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.12"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "/home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs/tello_autonomy_msgs__rs",
+					"targetIndexes" : 
+					[
+						16
+					]
+				}
+			],
+			"name" : "",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0,
+						1,
+						2
+					],
+					"name" : "tello_autonomy_msgs",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						16,
+						17,
+						18
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "ament_cmake_python_build_tello_autonomy_msgs_egg::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ament_cmake_python_build_tello_autonomy_msgs_egg-06f46fcad8fdd394fa76.json",
+					"name" : "ament_cmake_python_build_tello_autonomy_msgs_egg",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ament_cmake_python_symlink_tello_autonomy_msgs::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ament_cmake_python_symlink_tello_autonomy_msgs-9c60fca622f0116736b5.json",
+					"name" : "ament_cmake_python_symlink_tello_autonomy_msgs",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tello_autonomy_msgs::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tello_autonomy_msgs-edf8e945df37a8cf6ed8.json",
+					"name" : "tello_autonomy_msgs",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tello_autonomy_msgs__cpp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tello_autonomy_msgs__cpp-ff80ab15c5f5960e2e6f.json",
+					"name" : "tello_autonomy_msgs__cpp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "tello_autonomy_msgs__py::@f9a5b845f5f824c0ca51",
+					"jsonFile" : "target-tello_autonomy_msgs__py-8945bfe592f19f5a90ea.json",
+					"name" : "tello_autonomy_msgs__py",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tello_autonomy_msgs__rosidl_generator_c::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tello_autonomy_msgs__rosidl_generator_c-e4ed60470f9d36a7b693.json",
+					"name" : "tello_autonomy_msgs__rosidl_generator_c",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tello_autonomy_msgs__rosidl_generator_py::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tello_autonomy_msgs__rosidl_generator_py-fe8fbf4f8d185b205ca1.json",
+					"name" : "tello_autonomy_msgs__rosidl_generator_py",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tello_autonomy_msgs__rosidl_typesupport_c::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tello_autonomy_msgs__rosidl_typesupport_c-e5d22d8b60cd061e72b8.json",
+					"name" : "tello_autonomy_msgs__rosidl_typesupport_c",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tello_autonomy_msgs__rosidl_typesupport_c__pyext::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tello_autonomy_msgs__rosidl_typesupport_c__pyext-7675ce407b526e1ba802.json",
+					"name" : "tello_autonomy_msgs__rosidl_typesupport_c__pyext",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tello_autonomy_msgs__rosidl_typesupport_cpp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tello_autonomy_msgs__rosidl_typesupport_cpp-d0a8b08efcdb19fc4764.json",
+					"name" : "tello_autonomy_msgs__rosidl_typesupport_cpp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tello_autonomy_msgs__rosidl_typesupport_fastrtps_c::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tello_autonomy_msgs__rosidl_typesupport_fastrtps_c-40a86516b5bb7c3a8098.json",
+					"name" : "tello_autonomy_msgs__rosidl_typesupport_fastrtps_c",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tello_autonomy_msgs__rosidl_typesupport_fastrtps_c__pyext::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tello_autonomy_msgs__rosidl_typesupport_fastrtps_c__pyext-a84ae876040c999aa3dd.json",
+					"name" : "tello_autonomy_msgs__rosidl_typesupport_fastrtps_c__pyext",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tello_autonomy_msgs__rosidl_typesupport_fastrtps_cpp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tello_autonomy_msgs__rosidl_typesupport_fastrtps_cpp-fe02b1cc69f87ef59297.json",
+					"name" : "tello_autonomy_msgs__rosidl_typesupport_fastrtps_cpp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tello_autonomy_msgs__rosidl_typesupport_introspection_c::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tello_autonomy_msgs__rosidl_typesupport_introspection_c-ac64c6409d3aa0da9818.json",
+					"name" : "tello_autonomy_msgs__rosidl_typesupport_introspection_c",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tello_autonomy_msgs__rosidl_typesupport_introspection_c__pyext::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tello_autonomy_msgs__rosidl_typesupport_introspection_c__pyext-7e82dd8e4a643f8dbe69.json",
+					"name" : "tello_autonomy_msgs__rosidl_typesupport_introspection_c__pyext",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tello_autonomy_msgs__rosidl_typesupport_introspection_cpp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tello_autonomy_msgs__rosidl_typesupport_introspection_cpp-be4819246974a643e3cc.json",
+					"name" : "tello_autonomy_msgs__rosidl_typesupport_introspection_cpp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "tello_autonomy_msgs__rs::@9c97326c9006eaa96a39",
+					"jsonFile" : "target-tello_autonomy_msgs__rs-f8a110297a83452b9a8c.json",
+					"name" : "tello_autonomy_msgs__rs",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tello_autonomy_msgs_uninstall::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tello_autonomy_msgs_uninstall-bfdda75fcb6b8e4632d2.json",
+					"name" : "tello_autonomy_msgs_uninstall",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "uninstall::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-uninstall-b19ae842d8a87125d820.json",
+					"name" : "uninstall",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs",
+		"source" : "/home/hamdan/autonomous_drone/ros2_test/src/tello_autonomy_msgs"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 3
+	}
+}

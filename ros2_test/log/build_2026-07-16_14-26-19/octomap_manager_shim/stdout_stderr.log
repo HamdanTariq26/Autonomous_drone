@@ -1,0 +1,57 @@
+-- The C compiler identification is GNU 11.4.0
+-- The CXX compiler identification is GNU 11.4.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found ament_cmake: 1.3.14 (/opt/ros/humble/share/ament_cmake/cmake)
+-- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter 
+-- Override CMake install command with custom implementation using symlinks instead of copying resources
+-- Found ament_lint_auto: 0.12.15 (/opt/ros/humble/share/ament_lint_auto/cmake)
+-- Added test 'copyright' to check source files copyright and LICENSE
+-- Added test 'cppcheck' to perform static code analysis on C / C++ code
+-- Configured cppcheck include dirs: $<BUILD_INTERFACE:/home/hamdan/autonomous_drone/ros2_test/src/octomap_manager_shim/include>
+-- Configured cppcheck exclude dirs and/or files: 
+-- Added test 'cpplint' to check C / C++ code against the Google style
+-- Configured cpplint exclude dirs and/or files: 
+-- Added test 'lint_cmake' to check CMake code style
+-- Added test 'uncrustify' to check C / C++ code style
+-- Configured uncrustify additional arguments: 
+-- Added test 'xmllint' to check XML markup files
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/hamdan/autonomous_drone/ros2_test/build/octomap_manager_shim
+[ 50%] [32mBuilding CXX object CMakeFiles/octomap_manager_shim.dir/src/octomap_manager_shim.cpp.o[0m
+[100%] [32m[1mLinking CXX shared library liboctomap_manager_shim.so[0m
+[100%] Built target octomap_manager_shim
+-- Install configuration: ""
+-- Execute custom install script
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/include/octomap_manager_shim/octomap_manager_shim.hpp
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/environment/library_path.sh
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/environment/library_path.dsv
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/ament_index/resource_index/package_run_dependencies/octomap_manager_shim
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/ament_index/resource_index/parent_prefix_path/octomap_manager_shim
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/environment/ament_prefix_path.sh
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/environment/ament_prefix_path.dsv
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/environment/path.sh
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/environment/path.dsv
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/local_setup.bash
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/local_setup.sh
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/local_setup.zsh
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/local_setup.dsv
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/package.dsv
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/ament_index/resource_index/packages/octomap_manager_shim
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/cmake/ament_cmake_export_targets-extras.cmake
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/cmake/ament_cmake_export_dependencies-extras.cmake
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/cmake/octomap_manager_shimConfig.cmake
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/cmake/octomap_manager_shimConfig-version.cmake
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/package.xml
+-- Installing: /home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/lib/liboctomap_manager_shim.so
+-- Installing: /home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/cmake/export_octomap_manager_shimExport.cmake
+-- Installing: /home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/share/octomap_manager_shim/cmake/export_octomap_manager_shimExport-noconfig.cmake

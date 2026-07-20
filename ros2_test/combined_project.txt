@@ -1,0 +1,4606 @@
+
+================================================================================
+FILE: exploration_cpp/CMakeLists.txt
+================================================================================
+
+cmake_minimum_required(VERSION 3.8)
+project(exploration_cpp)
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+# find dependencies
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(tello_autonomy_msgs REQUIRED)
+find_package(octomap_manager_shim REQUIRED)
+find_package(visualization_msgs REQUIRED)
+find_package(octomap_msgs REQUIRED)
+find_package(tf2_ros REQUIRED)
+find_package(tf2_eigen REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
+
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
+  # the following line skips the linter which checks for copyrights
+  # comment the line when a copyright and license is added to all source files
+  set(ament_cmake_copyright_FOUND TRUE)
+  # the following line skips cpplint (only works in a git repo)
+  # comment the line when this package is in a git repo and when
+  # a copyright and license is added to all source files
+  set(ament_cmake_cpplint_FOUND TRUE)
+  ament_lint_auto_find_test_dependencies()
+endif()
+
+find_package(Eigen3 REQUIRED)
+find_package(ament_index_cpp REQUIRED)
+
+include_directories(
+  include
+  ${EIGEN3_INCLUDE_DIRS}
+)
+
+add_executable(nbv_planner_node
+  src/nbv_planner_node.cpp
+  src/mesh_structure.cpp
+  src/rrt.cpp
+  src/kdtree.c
+  src/multiagent_collision_checker.cpp
+)
+
+target_include_directories(nbv_planner_node PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+)
+
+ament_target_dependencies(nbv_planner_node
+  rclcpp
+  tello_autonomy_msgs
+  octomap_manager_shim
+  visualization_msgs
+  octomap_msgs
+  tf2_ros
+  tf2_eigen
+  tf2_geometry_msgs
+  ament_index_cpp
+  nav_msgs
+)
+
+install(TARGETS nbv_planner_node
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+install(DIRECTORY include/
+  DESTINATION include
+)
+
+ament_package()
+
+
+
+================================================================================
+FILE: exploration_cpp/include/exploration_cpp/mesh_structure.h
+================================================================================
+
+#ifndef _MESH_STRUCTURE_H_
+#define _MESH_STRUCTURE_H_
+
+#include <vector>
+#include <fstream>
+#include <Eigen/Dense>
+#include <rclcpp/rclcpp.hpp>
+#include <geometry_msgs/msg/pose.hpp>
+#include <tf2/LinearMath/Transform.h>
+#include <tf2/LinearMath/Vector3.h>
+#include <visualization_msgs/msg/marker.hpp>
+#include <octomap_manager_shim/octomap_manager_shim.hpp>
+
+namespace mesh {
+
+class StlMesh
+{
+ public:
+  StlMesh();
+  StlMesh(std::fstream& file);
+  StlMesh(const Eigen::Vector3d x1, const Eigen::Vector3d x2, const Eigen::Vector3d x3);
+  ~StlMesh();
+  static void setCameraParams(std::vector<double> cameraPitch,
+                              std::vector<double> cameraHorizontalFoV,
+                              std::vector<double> cameraVerticalFoV, double maxDist);
+  static void setPeerPose(const geometry_msgs::msg::Pose& pose, int n_peer);
+  static void setResolution(double resolution)
+  {
+    resolution_ = resolution;
+  }
+  static void setOctomapManager(octomap_manager_shim::OctomapManagerShim * manager)
+  {
+    manager_ = manager;
+  }
+  void incorporateViewFromPoseMsg(const geometry_msgs::msg::Pose& pose, int n_peer);
+  double computeInspectableArea(const tf2::Transform& transform);
+  void assembleMarkerArray(visualization_msgs::msg::Marker& inspected,
+                           visualization_msgs::msg::Marker& uninspected) const;
+
+ private:
+  void incorporateViewFromTf(const tf2::Transform& transform, const std::vector<bool>& unobstructed);
+  void split();
+  bool collapse();
+  bool getVisibility(const tf2::Transform& transform, bool& partialVisibility,
+                     bool stop_at_unknown_cell, const std::vector<bool>& unobstructed = { }) const;
+
+  bool isLeaf_;
+  bool isHead_;
+  bool isInspected_;
+  std::vector<StlMesh*> children_;
+  Eigen::Vector3d x1_;
+  Eigen::Vector3d x2_;
+  Eigen::Vector3d x3_;
+  Eigen::Vector3d normal_;
+
+  static double resolution_;
+  static std::vector<double> cameraPitch_;
+  static std::vector<double> cameraHorizontalFoV_;
+  static std::vector<double> cameraVerticalFoV_;
+  static double maxDist_;
+  static std::vector<std::vector<tf2::Vector3> > camBoundNormals_;
+  static octomap_manager_shim::OctomapManagerShim * manager_;
+  static std::vector<tf2::Vector3> peer_vehicles_;
+};
+}
+
+#endif // _MESH_STRUCTURE_H_
+
+
+
+================================================================================
+FILE: exploration_cpp/include/exploration_cpp/multiagent_collision_checker.h
+================================================================================
+
+#ifndef _MULTIAGENT_COLLISON_CHECKER_H_
+#define _MULTIAGENT_COLLISON_CHECKER_H_
+
+#include <vector>
+#include <Eigen/Dense>
+#include <octomap_manager_shim/octomap_manager_shim.hpp>
+
+namespace multiagent {
+
+bool isInCollision(const Eigen::Vector4d& start, const Eigen::Vector4d& end,
+                   const Eigen::Vector3d& boundingBox,
+                   const std::vector<std::vector<Eigen::Vector3d>*>& agent_paths);
+
+bool isInCollision(const Eigen::Vector4d& state, const Eigen::Vector3d& boundingBox,
+                   const std::vector<std::vector<Eigen::Vector3d>*>& agent_paths);
+
+std::vector<Eigen::Vector4d> circumnavigate(
+    const Eigen::Vector4d& start, const Eigen::Vector4d& end, const Eigen::Vector3d& boundingBox,
+    const octomap_manager_shim::OctomapManagerShim& manager,
+    const std::vector<std::vector<Eigen::Vector3d>*>& agent_paths);
+
+double closestDistanceBetweenLines(const Eigen::Vector3d& start1, const Eigen::Vector3d& end1,
+                                   const Eigen::Vector3d& start2, const Eigen::Vector3d& end2);
+}
+
+#endif // _MULTIAGENT_COLLISON_CHECKER_H_
+
+
+
+================================================================================
+FILE: exploration_cpp/include/exploration_cpp/nbvp.h
+================================================================================
+
+/*
+ * Copyright 2015 Andreas Bircher, ASL, ETH Zurich, Switzerland
+ * Ported to ROS2 for tello_autonomy (ARCHITECTURE.md Section 12.4).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+ //Changed
+#ifndef NBVP_H_
+#define NBVP_H_
+
+#include <vector>
+#include <fstream>
+#include <Eigen/Dense>
+
+#include <rclcpp/rclcpp.hpp>
+#include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
+#include <nav_msgs/msg/odometry.hpp>
+#include <octomap_msgs/msg/octomap.hpp>
+#include <tello_autonomy_msgs/msg/segment.hpp>
+
+#include <octomap_manager_shim/octomap_manager_shim.hpp>
+#include <tello_autonomy_msgs/srv/nbv_plan.hpp>
+#include <exploration_cpp/mesh_structure.h>
+#include <exploration_cpp/tree.hpp>
+#include <exploration_cpp/rrt.h>
+
+#define SQ(x) ((x)*(x))
+#define SQRT2 0.70711
+
+namespace nbvInspection {
+
+template<typename stateVec>
+class nbvPlanner : public rclcpp::Node
+{
+  // No nh_/nh_private_ members - ROS2 has no NodeHandle concept.
+  // `this` (the node itself) is passed to create_subscription/
+  // create_publisher/create_service calls in the constructor.
+
+  rclcpp::Subscription<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr posClient_;
+  rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odomClient_;
+  rclcpp::Subscription<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr peerPosClient1_;
+  rclcpp::Subscription<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr peerPosClient2_;
+  rclcpp::Subscription<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr peerPosClient3_;
+  rclcpp::Subscription<tello_autonomy_msgs::msg::Segment>::SharedPtr evadeClient_;
+  rclcpp::Publisher<tello_autonomy_msgs::msg::Segment>::SharedPtr evadePub_;
+  rclcpp::Service<tello_autonomy_msgs::srv::NbvPlan>::SharedPtr plannerService_;
+
+  // NEW: replaces the three deleted pointcloud_sub_* subscribers
+  // (pointcloud_sub_, pointcloud_sub_cam_up_, pointcloud_sub_cam_down_).
+  // occupancy_map_cpp already owns point-cloud insertion (Section 12.2) and
+  // publishes the finished octree here - this node only ever reads it.
+  rclcpp::Subscription<octomap_msgs::msg::Octomap>::SharedPtr occupancyMapClient_;
+
+  Params params_;
+  mesh::StlMesh * mesh_;
+  octomap_manager_shim::OctomapManagerShim * manager_;
+
+  bool ready_;
+
+ public:
+  typedef std::vector<stateVec> vector_t;
+  TreeBase<stateVec> * tree_;
+
+  explicit nbvPlanner(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
+  ~nbvPlanner();
+  bool setParams();
+  void posCallback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr pose);
+  void odomCallback(const nav_msgs::msg::Odometry::SharedPtr pose);
+  void occupancyMapCallback(const octomap_msgs::msg::Octomap::SharedPtr msg);
+  void plannerCallback(
+    const std::shared_ptr<tello_autonomy_msgs::srv::NbvPlan::Request> req,
+    std::shared_ptr<tello_autonomy_msgs::srv::NbvPlan::Response> res);
+  void evasionCallback(const tello_autonomy_msgs::msg::Segment::SharedPtr segmentMsg);
+};
+}  // namespace nbvInspection
+
+#endif  // NBVP_H_
+
+
+================================================================================
+FILE: exploration_cpp/include/exploration_cpp/nbvp.hpp
+================================================================================
+
+/*
+ * Copyright 2015 Andreas Bircher, ASL, ETH Zurich, Switzerland
+ * Ported to ROS2 for tello_autonomy (ARCHITECTURE.md Section 12.4/13.3).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+ 
+ //Changed
+
+#ifndef NBVP_HPP_
+#define NBVP_HPP_
+
+#include <fstream>
+#include <limits>
+#include <memory>
+#include <Eigen/Dense>
+
+#include <visualization_msgs/msg/marker.hpp>
+#include <octomap_msgs/conversions.h>
+
+#include <exploration_cpp/nbvp.h>
+
+// Convenience macro to get the absolute yaw difference
+#define ANGABS(x) (fmod(fabs(x),2.0*M_PI)<M_PI?fmod(fabs(x),2.0*M_PI):2.0*M_PI-fmod(fabs(x),2.0*M_PI))
+
+using namespace Eigen;
+using namespace std::placeholders;
+
+template<typename stateVec>
+nbvInspection::nbvPlanner<stateVec>::nbvPlanner(const rclcpp::NodeOptions & options)
+    : rclcpp::Node("nbv_planner_node", options)
+{
+  // No nh_/nh_private_ to store - `this` is the node.
+
+  // The shim owns no ROS wiring itself (Section 12.3's design: it's a
+  // plain reader over whatever octree setOctree() gives it). It starts
+  // with no tree until the first occupancyMapCallback() fires.
+  manager_ = new octomap_manager_shim::OctomapManagerShim();
+
+  // Set up the topics and services
+  params_.inspectionPath_ = this->create_publisher<visualization_msgs::msg::Marker>(
+    "inspectionPath", 1000);
+  evadePub_ = this->create_publisher<tello_autonomy_msgs::msg::Segment>(
+    "/evasionSegment", 100);
+  plannerService_ = this->create_service<tello_autonomy_msgs::srv::NbvPlan>(
+    "nbvplanner",
+    std::bind(&nbvInspection::nbvPlanner<stateVec>::plannerCallback, this, _1, _2));
+  posClient_ = this->create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
+    "pose", 10, std::bind(&nbvInspection::nbvPlanner<stateVec>::posCallback, this, _1));
+  odomClient_ = this->create_subscription<nav_msgs::msg::Odometry>(
+    "odometry", 10, std::bind(&nbvInspection::nbvPlanner<stateVec>::odomCallback, this, _1));
+
+  // NEW (replaces the three deleted pointcloud_sub_* subscriptions -
+  // Section 13.3, Open Issue #11). occupancy_map_cpp already owns
+  // insertion; this node only ever reads the finished octree.
+  occupancyMapClient_ = this->create_subscription<octomap_msgs::msg::Octomap>(
+    "/tello_autonomy/occupancy_grid", 10,
+    std::bind(&nbvInspection::nbvPlanner<stateVec>::occupancyMapCallback, this, _1));
+
+  if (!setParams()) {
+    RCLCPP_ERROR(this->get_logger(), "Could not start the planner. Parameters missing!");
+  }
+
+  // Precompute the camera field of view boundaries. Unchanged - pure
+  // Eigen math, no ROS1 coupling.
+  for (size_t i = 0; i < params_.camPitch_.size(); i++) {
+    double pitch = M_PI * params_.camPitch_[i] / 180.0;
+    double camTop = (pitch - M_PI * params_.camVertical_[i] / 360.0) + M_PI / 2.0;
+    double camBottom = (pitch + M_PI * params_.camVertical_[i] / 360.0) - M_PI / 2.0;
+    double side = M_PI * (params_.camHorizontal_[i]) / 360.0 - M_PI / 2.0;
+    Vector3d bottom(cos(camBottom), 0.0, -sin(camBottom));
+    Vector3d top(cos(camTop), 0.0, -sin(camTop));
+    Vector3d right(cos(side), sin(side), 0.0);
+    Vector3d left(cos(side), -sin(side), 0.0);
+    AngleAxisd m = AngleAxisd(pitch, Vector3d::UnitY());
+    Vector3d rightR = m * right;
+    Vector3d leftR = m * left;
+    rightR.normalize();
+    leftR.normalize();
+    std::vector<Eigen::Vector3d> camBoundNormals;
+    camBoundNormals.push_back(bottom);
+    camBoundNormals.push_back(top);
+    camBoundNormals.push_back(rightR);
+    camBoundNormals.push_back(leftR);
+    params_.camBoundNormals_.push_back(camBoundNormals);
+  }
+
+  // Load mesh from STL file if provided (Open Issue #7: kept, gated).
+  // ROS2 parameters are already scoped to this node, so the manual
+  // "ns + /param_name" concatenation from ROS1 is dropped - just declare
+  // the plain name.
+  std::string stlPath = this->declare_parameter<std::string>("stl_file_path", "");
+  mesh_ = nullptr;
+  if (stlPath.length() > 0) {
+    params_.meshResolution_ = this->declare_parameter<double>("mesh_resolution", 0.1);
+    std::fstream stlFile;
+    stlFile.open(stlPath.c_str());
+    if (stlFile.is_open()) {
+      mesh_ = new mesh::StlMesh(stlFile);
+      mesh_->setResolution(params_.meshResolution_);
+      // NOTE: StlMesh::setOctomapManager expects the manager type it was
+      // written against. Since manager_ is now OctomapManagerShim*, this
+      // call site (and mesh_structure.h/.cpp's signature) needs the same
+      // type swap applied here - not yet done in this file; flag before
+      // enabling mesh_.
+      mesh_->setOctomapManager(manager_);
+      mesh_->setCameraParams(
+        params_.camPitch_, params_.camHorizontal_, params_.camVertical_, params_.gainRange_);
+    } else {
+      RCLCPP_WARN(this->get_logger(), "Unable to open STL file");
+    }
+  }
+
+  // Initialize the tree instance.
+  tree_ = new RrtTree(mesh_, manager_, this);
+  tree_->setParams(params_);
+  peerPosClient1_ = this->create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
+    "peer_pose_1", 10,
+    std::bind(&nbvInspection::RrtTree::setPeerStateFromPoseMsg1, tree_, _1));
+  peerPosClient2_ = this->create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
+    "peer_pose_2", 10,
+    std::bind(&nbvInspection::RrtTree::setPeerStateFromPoseMsg2, tree_, _1));
+  peerPosClient3_ = this->create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
+    "peer_pose_3", 10,
+    std::bind(&nbvInspection::RrtTree::setPeerStateFromPoseMsg3, tree_, _1));
+  // Collaborative collision avoidance (don't hit your peer) - multi-agent,
+  // gated per Open Issue #7, never wired to anything unless peer topics
+  // are actually published.
+  evadeClient_ = this->create_subscription<tello_autonomy_msgs::msg::Segment>(
+    "/evasionSegment", 10, std::bind(&nbvInspection::TreeBase<stateVec>::evade, tree_, _1));
+
+  // Not yet ready. Needs a position message first.
+  ready_ = false;
+}
+
+template<typename stateVec>
+nbvInspection::nbvPlanner<stateVec>::~nbvPlanner()
+{
+  if (manager_) {
+    delete manager_;
+  }
+  if (mesh_) {
+    delete mesh_;
+  }
+}
+
+template<typename stateVec>
+void nbvInspection::nbvPlanner<stateVec>::posCallback(
+    const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr pose)
+{
+  tree_->setStateFromPoseMsg(*pose);
+  ready_ = true;
+}
+
+template<typename stateVec>
+void nbvInspection::nbvPlanner<stateVec>::odomCallback(
+    const nav_msgs::msg::Odometry::SharedPtr pose)
+{
+  tree_->setStateFromOdometryMsg(*pose);
+  ready_ = true;
+}
+
+// NEW method - has no ROS1 equivalent. Replaces the three deleted
+// insertPointcloudWithTf* callbacks (Section 13.3). Decodes the finished
+// octree occupancy_map_cpp publishes and hands it to the shim; does NOT
+// do any insertion itself.
+template<typename stateVec>
+void nbvInspection::nbvPlanner<stateVec>::occupancyMapCallback(
+    const octomap_msgs::msg::Octomap::SharedPtr msg)
+{
+  octomap::AbstractOcTree * abstract_tree = octomap_msgs::fullMsgToMap(*msg);
+  if (!abstract_tree) {
+    RCLCPP_WARN(this->get_logger(), "occupancyMapCallback: fullMsgToMap failed, dropping message");
+    return;
+  }
+  std::shared_ptr<octomap::OcTree> tree(dynamic_cast<octomap::OcTree *>(abstract_tree));
+  if (!tree) {
+    RCLCPP_WARN(this->get_logger(), "occupancyMapCallback: decoded map was not an OcTree");
+    return;
+  }
+  manager_->setOctree(tree);
+}
+
+template<typename stateVec>
+void nbvInspection::nbvPlanner<stateVec>::plannerCallback(
+    const std::shared_ptr<tello_autonomy_msgs::srv::NbvPlan::Request> req,
+    std::shared_ptr<tello_autonomy_msgs::srv::NbvPlan::Response> res)
+{
+  rclcpp::Time computationTime = this->now();
+  // Check that planner is ready to compute path.
+  if (!rclcpp::ok()) {
+    RCLCPP_INFO_THROTTLE(
+      this->get_logger(), *this->get_clock(), 1000,
+      "Exploration finished. Not planning any further moves.");
+    return;
+  }
+
+  if (!ready_) {
+    RCLCPP_ERROR_THROTTLE(
+      this->get_logger(), *this->get_clock(), 1000, "Planner not set up: Planner not ready!");
+    return;
+  }
+  if (manager_ == nullptr) {
+    RCLCPP_ERROR_THROTTLE(
+      this->get_logger(), *this->get_clock(), 1000, "Planner not set up: No octomap available!");
+    return;
+  }
+  if (manager_->getMapSize().norm() <= 0.0) {
+    RCLCPP_ERROR_THROTTLE(
+      this->get_logger(), *this->get_clock(), 1000, "Planner not set up: Octomap is empty!");
+    return;
+  }
+  res->path.clear();
+
+  // Clear old tree and reinitialize.
+  tree_->clear();
+  tree_->initialize();
+  vector_t path;
+  // Iterate the tree construction method.
+  int loopCount = 0;
+  while ((!tree_->gainFound() || tree_->getCounter() < params_.initIterations_) && rclcpp::ok()) {
+    if (tree_->getCounter() > params_.cuttoffIterations_) {
+      RCLCPP_INFO(this->get_logger(), "No gain found, shutting down");
+      rclcpp::shutdown();
+      return;
+    }
+    if (loopCount > 1000 * (tree_->getCounter() + 1)) {
+      RCLCPP_INFO_THROTTLE(
+        this->get_logger(), *this->get_clock(), 1000,
+        "Exceeding maximum failed iterations, return to previous point!");
+      res->path = tree_->getPathBackToPrevious(req->header.frame_id);
+      return;
+    }
+    tree_->iterate(1);
+    loopCount++;
+  }
+  // Extract the best edge.
+  res->path = tree_->getBestEdge(req->header.frame_id);
+
+  tree_->memorizeBestBranch();
+  // Publish path to block for other agents (multi agent only).
+  tello_autonomy_msgs::msg::Segment segment;
+  segment.header.stamp = this->now();
+  segment.header.frame_id = params_.navigationFrame_;
+  if (!res->path.empty()) {
+    segment.poses.push_back(res->path.front());
+    segment.poses.push_back(res->path.back());
+  }
+  evadePub_->publish(segment);
+  RCLCPP_INFO(
+    this->get_logger(), "Path computation lasted %2.3fs",
+    (this->now() - computationTime).seconds());
+}
+
+template<typename stateVec>
+bool nbvInspection::nbvPlanner<stateVec>::setParams()
+{
+  bool ret = true;
+  const double nan = std::numeric_limits<double>::quiet_NaN();
+
+  params_.v_max_ = this->declare_parameter<double>("system.v_max", 0.25);
+  params_.dyaw_max_ = this->declare_parameter<double>("system.dyaw_max", 0.5);
+  params_.camPitch_ = this->declare_parameter<std::vector<double>>(
+    "system.camera.pitch", std::vector<double>{15.0});
+  params_.camHorizontal_ = this->declare_parameter<std::vector<double>>(
+    "system.camera.horizontal", std::vector<double>{90.0});
+  params_.camVertical_ = this->declare_parameter<std::vector<double>>(
+    "system.camera.vertical", std::vector<double>{60.0});
+
+  if (params_.camPitch_.size() != params_.camHorizontal_.size() ||
+    params_.camPitch_.size() != params_.camVertical_.size())
+  {
+    RCLCPP_WARN(
+      this->get_logger(),
+      "Specified camera fields of view unclear: parameter vector length mismatch! "
+      "Setting to default.");
+    params_.camPitch_ = {15.0};
+    params_.camHorizontal_ = {90.0};
+    params_.camVertical_ = {60.0};
+  }
+
+  params_.igProbabilistic_ = this->declare_parameter<double>("nbvp.gain.probabilistic", 0.0);
+  params_.igFree_ = this->declare_parameter<double>("nbvp.gain.free", 0.0);
+  params_.igOccupied_ = this->declare_parameter<double>("nbvp.gain.occupied", 0.0);
+  params_.igUnmapped_ = this->declare_parameter<double>("nbvp.gain.unmapped", 1.0);
+  params_.igArea_ = this->declare_parameter<double>("nbvp.gain.area", 1.0);
+  params_.degressiveCoeff_ = this->declare_parameter<double>("nbvp.gain.degressive_coeff", 0.25);
+  params_.extensionRange_ = this->declare_parameter<double>("nbvp.tree.extension_range", 1.0);
+  params_.initIterations_ = this->declare_parameter<int>("nbvp.tree.initial_iterations", 15);
+  params_.dt_ = this->declare_parameter<double>("nbvp.dt", 0.1);
+  params_.gainRange_ = this->declare_parameter<double>("nbvp.gain.range", 1.0);
+
+  // These six were REQUIRED in the original (ret=false if missing, no
+  // default). ROS2's declare_parameter needs a default to avoid throwing,
+  // so NaN is used as a "not actually set" sentinel and checked below -
+  // preserves the original "warn + fail setParams()" behavior rather than
+  // silently accepting NaN bounds.
+  params_.minX_ = this->declare_parameter<double>("bbx.minX", nan);
+  if (std::isnan(params_.minX_)) {
+    RCLCPP_WARN(this->get_logger(), "No x-min value specified. Looking for bbx.minX");
+    ret = false;
+  }
+  params_.minY_ = this->declare_parameter<double>("bbx.minY", nan);
+  if (std::isnan(params_.minY_)) {
+    RCLCPP_WARN(this->get_logger(), "No y-min value specified. Looking for bbx.minY");
+    ret = false;
+  }
+  params_.minZ_ = this->declare_parameter<double>("bbx.minZ", nan);
+  if (std::isnan(params_.minZ_)) {
+    RCLCPP_WARN(this->get_logger(), "No z-min value specified. Looking for bbx.minZ");
+    ret = false;
+  }
+  params_.maxX_ = this->declare_parameter<double>("bbx.maxX", nan);
+  if (std::isnan(params_.maxX_)) {
+    RCLCPP_WARN(this->get_logger(), "No x-max value specified. Looking for bbx.maxX");
+    ret = false;
+  }
+  params_.maxY_ = this->declare_parameter<double>("bbx.maxY", nan);
+  if (std::isnan(params_.maxY_)) {
+    RCLCPP_WARN(this->get_logger(), "No y-max value specified. Looking for bbx.maxY");
+    ret = false;
+  }
+  params_.maxZ_ = this->declare_parameter<double>("bbx.maxZ", nan);
+  if (std::isnan(params_.maxZ_)) {
+    RCLCPP_WARN(this->get_logger(), "No z-max value specified. Looking for bbx.maxZ");
+    ret = false;
+  }
+
+  params_.softBounds_ = this->declare_parameter<bool>("bbx.softBounds", false);
+  params_.boundingBox_[0] = this->declare_parameter<double>("system.bbx.x", 0.5);
+  params_.boundingBox_[1] = this->declare_parameter<double>("system.bbx.y", 0.5);
+  params_.boundingBox_[2] = this->declare_parameter<double>("system.bbx.z", 0.3);
+  params_.cuttoffIterations_ = this->declare_parameter<int>("nbvp.tree.cuttoff_iterations", 200);
+  params_.zero_gain_ = this->declare_parameter<double>("nbvp.gain.zero", 0.0);
+  params_.dOvershoot_ = this->declare_parameter<double>("system.bbx.overshoot", 0.5);
+  params_.log_ = this->declare_parameter<bool>("nbvp.log.on", false);
+  params_.log_throttle_ = this->declare_parameter<double>("nbvp.log.throttle", 0.5);
+  params_.navigationFrame_ = this->declare_parameter<std::string>("tf_frame", "world");
+  params_.pcl_throttle_ = this->declare_parameter<double>("pcl_throttle", 0.333);
+  params_.inspection_throttle_ = this->declare_parameter<double>("inspection_throttle", 0.25);
+  params_.exact_root_ = this->declare_parameter<bool>("nbvp.tree.exact_root", true);
+
+  return ret;
+}
+
+// insertPointcloudWithTf / insertPointcloudWithTfCamUp / insertPointcloudWithTfCamDown:
+// DELETED ENTIRELY (Section 13.3, Open Issue #11). occupancy_map_cpp
+// already owns all point-cloud insertion; nothing in exploration_cpp
+// replaces these 1:1 - occupancyMapCallback() above does something
+// different (read the finished map, not insert into it).
+
+template<typename stateVec>
+void nbvInspection::nbvPlanner<stateVec>::evasionCallback(
+    const tello_autonomy_msgs::msg::Segment::SharedPtr segmentMsg)
+{
+  tree_->evade(*segmentMsg);
+}
+
+#endif  // NBVP_HPP_
+
+
+
+================================================================================
+FILE: exploration_cpp/include/exploration_cpp/rrt.h
+================================================================================
+
+#ifndef RRTTREE_H_
+#define RRTTREE_H_
+
+#include <rclcpp/rclcpp.hpp>
+#include <sstream>
+#include <Eigen/Dense>
+#include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
+#include <nav_msgs/msg/odometry.hpp>
+#include <kdtree/kdtree.h>
+#include <exploration_cpp/tree.h>
+#include <exploration_cpp/mesh_structure.h>
+
+#include <tf2_ros/buffer.h>
+#include <tf2_ros/transform_listener.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
+
+#define SQ(x) ((x)*(x))
+#define SQRT2 0.70711
+
+namespace nbvInspection {
+
+class RrtTree : public TreeBase<Eigen::Vector4d>
+{
+ public:
+  typedef Eigen::Vector4d StateVec;
+
+  RrtTree(rclcpp::Node * node);
+  RrtTree(mesh::StlMesh * mesh, octomap_manager_shim::OctomapManagerShim * manager, rclcpp::Node * node);
+  ~RrtTree();
+  virtual void setStateFromPoseMsg(const geometry_msgs::msg::PoseWithCovarianceStamped& pose);
+  virtual void setStateFromOdometryMsg(const nav_msgs::msg::Odometry& pose);
+  virtual void setPeerStateFromPoseMsg(const geometry_msgs::msg::PoseWithCovarianceStamped& pose, int n_peer);
+  virtual void initialize();
+  virtual void iterate(int iterations);
+  virtual std::vector<geometry_msgs::msg::Pose> getBestEdge(std::string targetFrame);
+  virtual void clear();
+  virtual std::vector<geometry_msgs::msg::Pose> getPathBackToPrevious(std::string targetFrame);
+  virtual void memorizeBestBranch();
+  void publishNode(Node<StateVec> * node);
+  double gain(StateVec state);
+  std::vector<geometry_msgs::msg::Pose> samplePath(StateVec start, StateVec end,
+                                                   std::string targetFrame);
+ protected:
+  rclcpp::Node * node_;
+  std::shared_ptr<tf2_ros::Buffer> tf_buffer_;
+  std::shared_ptr<tf2_ros::TransformListener> tf_listener_;
+  
+  kdtree * kdTree_;
+  std::stack<StateVec> history_;
+  std::vector<StateVec> bestBranchMemory_;
+  int g_ID_;
+  int iterationCount_;
+  std::fstream fileTree_;
+  std::fstream filePath_;
+  std::fstream fileResponse_;
+  std::string logFilePath_;
+  std::vector<double> inspectionThrottleTime_;
+};
+}
+
+#endif
+
+
+
+================================================================================
+FILE: exploration_cpp/include/exploration_cpp/tree.h
+================================================================================
+
+#ifndef TREE_H_
+#define TREE_H_
+
+#include <vector>
+#include <Eigen/Dense>
+#include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
+#include <geometry_msgs/msg/pose.hpp>
+#include <nav_msgs/msg/odometry.hpp>
+#include <tello_autonomy_msgs/msg/segment.hpp>
+#include <visualization_msgs/msg/marker.hpp>
+#include <rclcpp/rclcpp.hpp>
+
+#include <octomap_manager_shim/octomap_manager_shim.hpp>
+#include <exploration_cpp/mesh_structure.h>
+
+namespace nbvInspection {
+
+struct Params
+{
+  std::vector<double> camPitch_;
+  std::vector<double> camHorizontal_;
+  std::vector<double> camVertical_;
+  std::vector<std::vector<Eigen::Vector3d> > camBoundNormals_;
+
+  double igProbabilistic_;
+  double igFree_;
+  double igOccupied_;
+  double igUnmapped_;
+  double igArea_;
+  double gainRange_;
+  double degressiveCoeff_;
+  double zero_gain_;
+
+  double v_max_;
+  double dyaw_max_;
+  double dOvershoot_;
+  double extensionRange_;
+  bool exact_root_;
+  int initIterations_;
+  int cuttoffIterations_;
+  double dt_;
+
+  double minX_;
+  double minY_;
+  double minZ_;
+  double maxX_;
+  double maxY_;
+  double maxZ_;
+  bool softBounds_;
+  Eigen::Vector3d boundingBox_;
+
+  double meshResolution_;
+
+  rclcpp::Publisher<visualization_msgs::msg::Marker>::SharedPtr inspectionPath_;
+  std::string navigationFrame_;
+
+  bool log_;
+  double log_throttle_;
+  double pcl_throttle_;
+  double inspection_throttle_;
+};
+
+template<typename stateVec>
+class Node
+{
+ public:
+  Node();
+  ~Node();
+  stateVec state_;
+  Node * parent_;
+  std::vector<Node*> children_;
+  double gain_;
+  double distance_;
+};
+
+template<typename stateVec>
+class TreeBase
+{
+ protected:
+  Params params_;
+  int counter_;
+  double bestGain_;
+  Node<stateVec> * bestNode_;
+  Node<stateVec> * rootNode_;
+  mesh::StlMesh * mesh_;
+  octomap_manager_shim::OctomapManagerShim * manager_;
+  stateVec root_;
+  stateVec exact_root_;
+  std::vector<std::vector<Eigen::Vector3d>*> segments_;
+  std::vector<std::string> agentNames_;
+ public:
+  TreeBase();
+  TreeBase(mesh::StlMesh * mesh, octomap_manager_shim::OctomapManagerShim * manager);
+  ~TreeBase();
+  virtual void setStateFromPoseMsg(const geometry_msgs::msg::PoseWithCovarianceStamped& pose) = 0;
+  virtual void setStateFromOdometryMsg(const nav_msgs::msg::Odometry& pose) = 0;
+  virtual void setPeerStateFromPoseMsg(const geometry_msgs::msg::PoseWithCovarianceStamped& pose, int n_peer) = 0;
+  void setPeerStateFromPoseMsg1(const geometry_msgs::msg::PoseWithCovarianceStamped& pose);
+  void setPeerStateFromPoseMsg2(const geometry_msgs::msg::PoseWithCovarianceStamped& pose);
+  void setPeerStateFromPoseMsg3(const geometry_msgs::msg::PoseWithCovarianceStamped& pose);
+  void evade(const tello_autonomy_msgs::msg::Segment& segmentMsg);
+  virtual void iterate(int iterations) = 0;
+  virtual void initialize() = 0;
+  virtual std::vector<geometry_msgs::msg::Pose> getBestEdge(std::string targetFrame) = 0;
+  virtual void clear() = 0;
+  virtual std::vector<geometry_msgs::msg::Pose> getPathBackToPrevious(std::string targetFrame) = 0;
+  virtual void memorizeBestBranch() = 0;
+  void setParams(Params params);
+  int getCounter();
+  bool gainFound();
+};
+}
+
+#endif
+
+
+
+================================================================================
+FILE: exploration_cpp/include/exploration_cpp/tree.hpp
+================================================================================
+
+#ifndef TREE_HPP_
+#define TREE_HPP_
+
+#include <exploration_cpp/tree.h>
+#include <float.h>
+
+template<typename stateVec>
+nbvInspection::Node<stateVec>::Node()
+{
+  parent_ = NULL;
+  distance_ = DBL_MAX;
+  gain_ = 0.0;
+}
+
+template<typename stateVec>
+nbvInspection::Node<stateVec>::~Node()
+{
+  for (typename std::vector<Node<stateVec> *>::iterator it = children_.begin();
+      it != children_.end(); it++) {
+    delete (*it);
+    (*it) = NULL;
+  }
+}
+
+template<typename stateVec>
+nbvInspection::TreeBase<stateVec>::TreeBase()
+{
+  bestGain_ = params_.zero_gain_;
+  bestNode_ = NULL;
+  counter_ = 0;
+  rootNode_ = NULL;
+}
+
+template<typename stateVec>
+nbvInspection::TreeBase<stateVec>::TreeBase(mesh::StlMesh * mesh,
+                                            octomap_manager_shim::OctomapManagerShim * manager)
+{
+  mesh_ = mesh;
+  manager_ = manager;
+  bestGain_ = params_.zero_gain_;
+  bestNode_ = NULL;
+  counter_ = 0;
+  rootNode_ = NULL;
+}
+
+template<typename stateVec>
+nbvInspection::TreeBase<stateVec>::~TreeBase()
+{
+}
+
+template<typename stateVec>
+void nbvInspection::TreeBase<stateVec>::setPeerStateFromPoseMsg1(
+    const geometry_msgs::msg::PoseWithCovarianceStamped& pose)
+{
+  setPeerStateFromPoseMsg(pose, 1);
+}
+
+template<typename stateVec>
+void nbvInspection::TreeBase<stateVec>::setPeerStateFromPoseMsg2(
+    const geometry_msgs::msg::PoseWithCovarianceStamped& pose)
+{
+  setPeerStateFromPoseMsg(pose, 2);
+}
+
+template<typename stateVec>
+void nbvInspection::TreeBase<stateVec>::setPeerStateFromPoseMsg3(
+    const geometry_msgs::msg::PoseWithCovarianceStamped& pose)
+{
+  setPeerStateFromPoseMsg(pose, 3);
+}
+
+template<typename stateVec>
+void nbvInspection::TreeBase<stateVec>::setParams(Params params)
+{
+  params_ = params;
+}
+
+template<typename stateVec>
+int nbvInspection::TreeBase<stateVec>::getCounter()
+{
+  return counter_;
+}
+
+template<typename stateVec>
+bool nbvInspection::TreeBase<stateVec>::gainFound()
+{
+  return bestGain_ > params_.zero_gain_;
+}
+
+template<typename stateVec>
+void nbvInspection::TreeBase<stateVec>::evade(const tello_autonomy_msgs::msg::Segment& segmentMsg) {
+  int i;
+  for(i = 0; i < agentNames_.size(); i++) {
+    if(agentNames_[i].compare(segmentMsg.header.frame_id) == 0) {
+      break;
+    }
+  }
+  if (i == agentNames_.size()) {
+    agentNames_.push_back(segmentMsg.header.frame_id);
+    segments_.push_back(new std::vector<Eigen::Vector3d>);
+  }
+  segments_[i]->clear();
+  for(typename std::vector<geometry_msgs::msg::Pose>::const_iterator it = segmentMsg.poses.begin(); it != segmentMsg.poses.end(); it++) {
+    segments_[i]->push_back(Eigen::Vector3d(it->position.x, it->position.y, it->position.z));
+  }
+}
+
+#endif
+
+
+
+================================================================================
+FILE: exploration_cpp/include/kdtree/kdtree.h
+================================================================================
+
+/*
+This file is part of ``kdtree'', a library for working with kd-trees.
+Copyright (C) 2007-2009 John Tsiombikas <nuclear@siggraph.org>
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+3. The name of the author may not be used to endorse or promote products
+   derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
+WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
+EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
+OF SUCH DAMAGE.
+*/
+#ifndef _KDTREE_H_
+#define _KDTREE_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+struct kdtree;
+struct kdres;
+
+
+/* create a kd-tree for "k"-dimensional data */
+struct kdtree *kd_create(int k);
+
+/* free the struct kdtree */
+void kd_free(struct kdtree *tree);
+
+/* remove all the elements from the tree */
+void kd_clear(struct kdtree *tree);
+
+/* if called with non-null 2nd argument, the function provided
+ * will be called on data pointers (see kd_insert) when nodes
+ * are to be removed from the tree.
+ */
+void kd_data_destructor(struct kdtree *tree, void (*destr)(void*));
+
+/* insert a node, specifying its position, and optional data */
+int kd_insert(struct kdtree *tree, const double *pos, void *data);
+int kd_insertf(struct kdtree *tree, const float *pos, void *data);
+int kd_insert3(struct kdtree *tree, double x, double y, double z, void *data);
+int kd_insert3f(struct kdtree *tree, float x, float y, float z, void *data);
+
+/* Find one of the nearest nodes from the specified point.
+ *
+ * This function returns a pointer to a result set with at most one element.
+ */
+struct kdres *kd_nearest(struct kdtree *tree, const double *pos);
+struct kdres *kd_nearestf(struct kdtree *tree, const float *pos);
+struct kdres *kd_nearest3(struct kdtree *tree, double x, double y, double z);
+struct kdres *kd_nearest3f(struct kdtree *tree, float x, float y, float z);
+
+/* Find any nearest nodes from the specified point within a range.
+ *
+ * This function returns a pointer to a result set, which can be manipulated
+ * by the kd_res_* functions.
+ * The returned pointer can be null as an indication of an error. Otherwise
+ * a valid result set is always returned which may contain 0 or more elements.
+ * The result set must be deallocated with kd_res_free, after use.
+ */
+struct kdres *kd_nearest_range(struct kdtree *tree, const double *pos, double range);
+struct kdres *kd_nearest_rangef(struct kdtree *tree, const float *pos, float range);
+struct kdres *kd_nearest_range3(struct kdtree *tree, double x, double y, double z, double range);
+struct kdres *kd_nearest_range3f(struct kdtree *tree, float x, float y, float z, float range);
+
+/* frees a result set returned by kd_nearest_range() */
+void kd_res_free(struct kdres *set);
+
+/* returns the size of the result set (in elements) */
+int kd_res_size(struct kdres *set);
+
+/* rewinds the result set iterator */
+void kd_res_rewind(struct kdres *set);
+
+/* returns non-zero if the set iterator reached the end after the last element */
+int kd_res_end(struct kdres *set);
+
+/* advances the result set iterator, returns non-zero on success, zero if
+ * there are no more elements in the result set.
+ */
+int kd_res_next(struct kdres *set);
+
+/* returns the data pointer (can be null) of the current result set item
+ * and optionally sets its position to the pointers(s) if not null.
+ */
+void *kd_res_item(struct kdres *set, double *pos);
+void *kd_res_itemf(struct kdres *set, float *pos);
+void *kd_res_item3(struct kdres *set, double *x, double *y, double *z);
+void *kd_res_item3f(struct kdres *set, float *x, float *y, float *z);
+
+/* equivalent to kd_res_item(set, 0) */
+void *kd_res_item_data(struct kdres *set);
+
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif	/* _KDTREE_H_ */
+
+
+
+================================================================================
+FILE: exploration_cpp/package.xml
+================================================================================
+
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>exploration_cpp</name>
+  <version>0.0.0</version>
+  <description>TODO: Package description</description>
+  <maintainer email="hamdantariqedu@gmail.com">hamdan</maintainer>
+  <license>TODO: License declaration</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>tello_autonomy_msgs</depend>
+  <depend>octomap_manager_shim</depend>
+  <depend>visualization_msgs</depend>
+  <depend>octomap_msgs</depend>
+  <depend>tf2_ros</depend>
+  <depend>tf2_eigen</depend>
+  <depend>tf2_geometry_msgs</depend>
+  <depend>ament_index_cpp</depend>
+  <depend>nav_msgs</depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
+
+
+
+================================================================================
+FILE: exploration_cpp/src/kdtree.c
+================================================================================
+
+/*
+This file is part of ``kdtree'', a library for working with kd-trees.
+Copyright (C) 2007-2009 John Tsiombikas <nuclear@siggraph.org>
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+3. The name of the author may not be used to endorse or promote products
+   derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
+WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
+EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
+OF SUCH DAMAGE.
+*/
+/* single nearest neighbor search written by Tamas Nepusz <tamas@cs.rhul.ac.uk> */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include "kdtree/kdtree.h"
+
+#if defined(WIN32) || defined(__WIN32__)
+#include <malloc.h>
+#endif
+
+#ifdef USE_LIST_NODE_ALLOCATOR
+
+#ifndef NO_PTHREADS
+#include <pthread.h>
+#else
+
+#ifndef I_WANT_THREAD_BUGS
+#error "You are compiling with the fast list node allocator, with pthreads disabled! This WILL break if used from multiple threads."
+#endif	/* I want thread bugs */
+
+#endif	/* pthread support */
+#endif	/* use list node allocator */
+
+struct kdhyperrect {
+	int dim;
+	double *min, *max;              /* minimum/maximum coords */
+};
+
+struct kdnode {
+	double *pos;
+	int dir;
+	void *data;
+
+	struct kdnode *left, *right;	/* negative/positive side */
+};
+
+struct res_node {
+	struct kdnode *item;
+	double dist_sq;
+	struct res_node *next;
+};
+
+struct kdtree {
+	int dim;
+	struct kdnode *root;
+	struct kdhyperrect *rect;
+	void (*destr)(void*);
+};
+
+struct kdres {
+	struct kdtree *tree;
+	struct res_node *rlist, *riter;
+	int size;
+};
+
+#define SQ(x)			((x) * (x))
+
+
+static void clear_rec(struct kdnode *node, void (*destr)(void*));
+static int insert_rec(struct kdnode **node, const double *pos, void *data, int dir, int dim);
+static int rlist_insert(struct res_node *list, struct kdnode *item, double dist_sq);
+static void clear_results(struct kdres *set);
+
+static struct kdhyperrect* hyperrect_create(int dim, const double *min, const double *max);
+static void hyperrect_free(struct kdhyperrect *rect);
+static struct kdhyperrect* hyperrect_duplicate(const struct kdhyperrect *rect);
+static void hyperrect_extend(struct kdhyperrect *rect, const double *pos);
+static double hyperrect_dist_sq(struct kdhyperrect *rect, const double *pos);
+
+#ifdef USE_LIST_NODE_ALLOCATOR
+static struct res_node *alloc_resnode(void);
+static void free_resnode(struct res_node*);
+#else
+#define alloc_resnode()		malloc(sizeof(struct res_node))
+#define free_resnode(n)		free(n)
+#endif
+
+
+
+struct kdtree *kd_create(int k)
+{
+	struct kdtree *tree;
+
+	if(!(tree = malloc(sizeof *tree))) {
+		return 0;
+	}
+
+	tree->dim = k;
+	tree->root = 0;
+	tree->destr = 0;
+	tree->rect = 0;
+
+	return tree;
+}
+
+void kd_free(struct kdtree *tree)
+{
+	if(tree) {
+		kd_clear(tree);
+		free(tree);
+	}
+}
+
+static void clear_rec(struct kdnode *node, void (*destr)(void*))
+{
+	if(!node) return;
+
+	clear_rec(node->left, destr);
+	clear_rec(node->right, destr);
+	
+	if(destr) {
+		destr(node->data);
+	}
+	free(node->pos);
+	free(node);
+}
+
+void kd_clear(struct kdtree *tree)
+{
+	clear_rec(tree->root, tree->destr);
+	tree->root = 0;
+
+	if (tree->rect) {
+		hyperrect_free(tree->rect);
+		tree->rect = 0;
+	}
+}
+
+void kd_data_destructor(struct kdtree *tree, void (*destr)(void*))
+{
+	tree->destr = destr;
+}
+
+
+static int insert_rec(struct kdnode **nptr, const double *pos, void *data, int dir, int dim)
+{
+	int new_dir;
+	struct kdnode *node;
+
+	if(!*nptr) {
+		if(!(node = malloc(sizeof *node))) {
+			return -1;
+		}
+		if(!(node->pos = malloc(dim * sizeof *node->pos))) {
+			free(node);
+			return -1;
+		}
+		memcpy(node->pos, pos, dim * sizeof *node->pos);
+		node->data = data;
+		node->dir = dir;
+		node->left = node->right = 0;
+		*nptr = node;
+		return 0;
+	}
+
+	node = *nptr;
+	new_dir = (node->dir + 1) % dim;
+	if(pos[node->dir] < node->pos[node->dir]) {
+		return insert_rec(&(*nptr)->left, pos, data, new_dir, dim);
+	}
+	return insert_rec(&(*nptr)->right, pos, data, new_dir, dim);
+}
+
+int kd_insert(struct kdtree *tree, const double *pos, void *data)
+{
+	if (insert_rec(&tree->root, pos, data, 0, tree->dim)) {
+		return -1;
+	}
+
+	if (tree->rect == 0) {
+		tree->rect = hyperrect_create(tree->dim, pos, pos);
+	} else {
+		hyperrect_extend(tree->rect, pos);
+	}
+
+	return 0;
+}
+
+int kd_insertf(struct kdtree *tree, const float *pos, void *data)
+{
+	static double sbuf[16];
+	double *bptr, *buf = 0;
+	int res, dim = tree->dim;
+
+	if(dim > 16) {
+#ifndef NO_ALLOCA
+		if(dim <= 256)
+			bptr = buf = alloca(dim * sizeof *bptr);
+		else
+#endif
+			if(!(bptr = buf = malloc(dim * sizeof *bptr))) {
+				return -1;
+			}
+	} else {
+		bptr = sbuf;
+	}
+
+	while(dim-- > 0) {
+		*bptr++ = *pos++;
+	}
+
+	res = kd_insert(tree, buf, data);
+#ifndef NO_ALLOCA
+	if(tree->dim > 256)
+#else
+	if(tree->dim > 16)
+#endif
+		free(buf);
+	return res;
+}
+
+int kd_insert3(struct kdtree *tree, double x, double y, double z, void *data)
+{
+	double buf[3];
+	buf[0] = x;
+	buf[1] = y;
+	buf[2] = z;
+	return kd_insert(tree, buf, data);
+}
+
+int kd_insert3f(struct kdtree *tree, float x, float y, float z, void *data)
+{
+	double buf[3];
+	buf[0] = x;
+	buf[1] = y;
+	buf[2] = z;
+	return kd_insert(tree, buf, data);
+}
+
+static int find_nearest(struct kdnode *node, const double *pos, double range, struct res_node *list, int ordered, int dim)
+{
+	double dist_sq, dx;
+	int i, ret, added_res = 0;
+
+	if(!node) return 0;
+
+	dist_sq = 0;
+	for(i=0; i<dim; i++) {
+		dist_sq += SQ(node->pos[i] - pos[i]);
+	}
+	if(dist_sq <= SQ(range)) {
+		if(rlist_insert(list, node, ordered ? dist_sq : -1.0) == -1) {
+			return -1;
+		}
+		added_res = 1;
+	}
+
+	dx = pos[node->dir] - node->pos[node->dir];
+
+	ret = find_nearest(dx <= 0.0 ? node->left : node->right, pos, range, list, ordered, dim);
+	if(ret >= 0 && fabs(dx) < range) {
+		added_res += ret;
+		ret = find_nearest(dx <= 0.0 ? node->right : node->left, pos, range, list, ordered, dim);
+	}
+	if(ret == -1) {
+		return -1;
+	}
+	added_res += ret;
+
+	return added_res;
+}
+
+static void kd_nearest_i(struct kdnode *node, const double *pos, struct kdnode **result, double *result_dist_sq, struct kdhyperrect* rect)
+{
+	int dir = node->dir;
+	int i, side;
+	double dummy, dist_sq;
+	struct kdnode *nearer_subtree, *farther_subtree;
+	double *nearer_hyperrect_coord, *farther_hyperrect_coord;
+
+	/* Decide whether to go left or right in the tree */
+	dummy = pos[dir] - node->pos[dir];
+	if (dummy <= 0) {
+		nearer_subtree = node->left;
+		farther_subtree = node->right;
+		nearer_hyperrect_coord = rect->max + dir;
+		farther_hyperrect_coord = rect->min + dir;
+		side = 0;
+	} else {
+		nearer_subtree = node->right;
+		farther_subtree = node->left;
+		nearer_hyperrect_coord = rect->min + dir;
+		farther_hyperrect_coord = rect->max + dir;
+		side = 1;
+	}
+
+	if (nearer_subtree) {
+		/* Slice the hyperrect to get the hyperrect of the nearer subtree */
+		dummy = *nearer_hyperrect_coord;
+		*nearer_hyperrect_coord = node->pos[dir];
+		/* Recurse down into nearer subtree */
+		kd_nearest_i(nearer_subtree, pos, result, result_dist_sq, rect);
+		/* Undo the slice */
+		*nearer_hyperrect_coord = dummy;
+	}
+
+	/* Check the distance of the point at the current node, compare it
+	 * with our best so far */
+	dist_sq = 0;
+	for(i=0; i < rect->dim; i++) {
+		dist_sq += SQ(node->pos[i] - pos[i]);
+	}
+	if (dist_sq < *result_dist_sq) {
+		*result = node;
+		*result_dist_sq = dist_sq;
+	}
+
+	if (farther_subtree) {
+		/* Get the hyperrect of the farther subtree */
+		dummy = *farther_hyperrect_coord;
+		*farther_hyperrect_coord = node->pos[dir];
+		/* Check if we have to recurse down by calculating the closest
+		 * point of the hyperrect and see if it's closer than our
+		 * minimum distance in result_dist_sq. */
+		if (hyperrect_dist_sq(rect, pos) < *result_dist_sq) {
+			/* Recurse down into farther subtree */
+			kd_nearest_i(farther_subtree, pos, result, result_dist_sq, rect);
+		}
+		/* Undo the slice on the hyperrect */
+		*farther_hyperrect_coord = dummy;
+	}
+}
+
+struct kdres *kd_nearest(struct kdtree *kd, const double *pos)
+{
+	struct kdhyperrect *rect;
+	struct kdnode *result;
+	struct kdres *rset;
+	double dist_sq;
+	int i;
+
+	if (!kd) return 0;
+	if (!kd->rect) return 0;
+
+	/* Allocate result set */
+	if(!(rset = malloc(sizeof *rset))) {
+		return 0;
+	}
+	if(!(rset->rlist = alloc_resnode())) {
+		free(rset);
+		return 0;
+	}
+	rset->rlist->next = 0;
+	rset->tree = kd;
+
+	/* Duplicate the bounding hyperrectangle, we will work on the copy */
+	if (!(rect = hyperrect_duplicate(kd->rect))) {
+		kd_res_free(rset);
+		return 0;
+	}
+
+	/* Our first guesstimate is the root node */
+	result = kd->root;
+	dist_sq = 0;
+	for (i = 0; i < kd->dim; i++)
+		dist_sq += SQ(result->pos[i] - pos[i]);
+
+	/* Search for the nearest neighbour recursively */
+	kd_nearest_i(kd->root, pos, &result, &dist_sq, rect);
+
+	/* Free the copy of the hyperrect */
+	hyperrect_free(rect);
+
+	/* Store the result */
+	if (result) {
+		if (rlist_insert(rset->rlist, result, -1.0) == -1) {
+			kd_res_free(rset);
+			return 0;
+		}
+		rset->size = 1;
+		kd_res_rewind(rset);
+		return rset;
+	} else {
+		kd_res_free(rset);
+		return 0;
+	}
+}
+
+struct kdres *kd_nearestf(struct kdtree *tree, const float *pos)
+{
+	static double sbuf[16];
+	double *bptr, *buf = 0;
+	int dim = tree->dim;
+	struct kdres *res;
+
+	if(dim > 16) {
+#ifndef NO_ALLOCA
+		if(dim <= 256)
+			bptr = buf = alloca(dim * sizeof *bptr);
+		else
+#endif
+			if(!(bptr = buf = malloc(dim * sizeof *bptr))) {
+				return 0;
+			}
+	} else {
+		bptr = sbuf;
+	}
+
+	while(dim-- > 0) {
+		*bptr++ = *pos++;
+	}
+
+	res = kd_nearest(tree, buf);
+#ifndef NO_ALLOCA
+	if(tree->dim > 256)
+#else
+	if(tree->dim > 16)
+#endif
+		free(buf);
+	return res;
+}
+
+struct kdres *kd_nearest3(struct kdtree *tree, double x, double y, double z)
+{
+	double pos[3];
+	pos[0] = x;
+	pos[1] = y;
+	pos[2] = z;
+	return kd_nearest(tree, pos);
+}
+
+struct kdres *kd_nearest3f(struct kdtree *tree, float x, float y, float z)
+{
+	double pos[3];
+	pos[0] = x;
+	pos[1] = y;
+	pos[2] = z;
+	return kd_nearest(tree, pos);
+}
+
+struct kdres *kd_nearest_range(struct kdtree *kd, const double *pos, double range)
+{
+	int ret;
+	struct kdres *rset;
+
+	if(!(rset = malloc(sizeof *rset))) {
+		return 0;
+	}
+	if(!(rset->rlist = alloc_resnode())) {
+		free(rset);
+		return 0;
+	}
+	rset->rlist->next = 0;
+	rset->tree = kd;
+
+	if((ret = find_nearest(kd->root, pos, range, rset->rlist, 0, kd->dim)) == -1) {
+		kd_res_free(rset);
+		return 0;
+	}
+	rset->size = ret;
+	kd_res_rewind(rset);
+	return rset;
+}
+
+struct kdres *kd_nearest_rangef(struct kdtree *kd, const float *pos, float range)
+{
+	static double sbuf[16];
+	double *bptr, *buf = 0;
+	int dim = kd->dim;
+	struct kdres *res;
+
+	if(dim > 16) {
+#ifndef NO_ALLOCA
+		if(dim <= 256)
+			bptr = buf = alloca(dim * sizeof *bptr);
+		else
+#endif
+			if(!(bptr = buf = malloc(dim * sizeof *bptr))) {
+				return 0;
+			}
+	} else {
+		bptr = sbuf;
+	}
+
+	while(dim-- > 0) {
+		*bptr++ = *pos++;
+	}
+
+	res = kd_nearest_range(kd, buf, range);
+#ifndef NO_ALLOCA
+	if(kd->dim > 256)
+#else
+	if(kd->dim > 16)
+#endif
+		free(buf);
+	return res;
+}
+
+struct kdres *kd_nearest_range3(struct kdtree *tree, double x, double y, double z, double range)
+{
+	double buf[3];
+	buf[0] = x;
+	buf[1] = y;
+	buf[2] = z;
+	return kd_nearest_range(tree, buf, range);
+}
+
+struct kdres *kd_nearest_range3f(struct kdtree *tree, float x, float y, float z, float range)
+{
+	double buf[3];
+	buf[0] = x;
+	buf[1] = y;
+	buf[2] = z;
+	return kd_nearest_range(tree, buf, range);
+}
+
+void kd_res_free(struct kdres *rset)
+{
+	clear_results(rset);
+	free_resnode(rset->rlist);
+	free(rset);
+}
+
+int kd_res_size(struct kdres *set)
+{
+	return (set->size);
+}
+
+void kd_res_rewind(struct kdres *rset)
+{
+	rset->riter = rset->rlist->next;
+}
+
+int kd_res_end(struct kdres *rset)
+{
+	return rset->riter == 0;
+}
+
+int kd_res_next(struct kdres *rset)
+{
+	rset->riter = rset->riter->next;
+	return rset->riter != 0;
+}
+
+void *kd_res_item(struct kdres *rset, double *pos)
+{
+	if(rset->riter) {
+		if(pos) {
+			memcpy(pos, rset->riter->item->pos, rset->tree->dim * sizeof *pos);
+		}
+		return rset->riter->item->data;
+	}
+	return 0;
+}
+
+void *kd_res_itemf(struct kdres *rset, float *pos)
+{
+	if(rset->riter) {
+		if(pos) {
+			int i;
+			for(i=0; i<rset->tree->dim; i++) {
+				pos[i] = rset->riter->item->pos[i];
+			}
+		}
+		return rset->riter->item->data;
+	}
+	return 0;
+}
+
+void *kd_res_item3(struct kdres *rset, double *x, double *y, double *z)
+{
+	if(rset->riter) {
+		if(*x) *x = rset->riter->item->pos[0];
+		if(*y) *y = rset->riter->item->pos[1];
+		if(*z) *z = rset->riter->item->pos[2];
+	}
+	return 0;
+}
+
+void *kd_res_item3f(struct kdres *rset, float *x, float *y, float *z)
+{
+	if(rset->riter) {
+		if(*x) *x = rset->riter->item->pos[0];
+		if(*y) *y = rset->riter->item->pos[1];
+		if(*z) *z = rset->riter->item->pos[2];
+	}
+	return 0;
+}
+
+void *kd_res_item_data(struct kdres *set)
+{
+	return kd_res_item(set, 0);
+}
+
+/* ---- hyperrectangle helpers ---- */
+static struct kdhyperrect* hyperrect_create(int dim, const double *min, const double *max)
+{
+	size_t size = dim * sizeof(double);
+	struct kdhyperrect* rect = 0;
+
+	if (!(rect = malloc(sizeof(struct kdhyperrect)))) {
+		return 0;
+	}
+
+	rect->dim = dim;
+	if (!(rect->min = malloc(size))) {
+		free(rect);
+		return 0;
+	}
+	if (!(rect->max = malloc(size))) {
+		free(rect->min);
+		free(rect);
+		return 0;
+	}
+	memcpy(rect->min, min, size);
+	memcpy(rect->max, max, size);
+
+	return rect;
+}
+
+static void hyperrect_free(struct kdhyperrect *rect)
+{
+	free(rect->min);
+	free(rect->max);
+	free(rect);
+}
+
+static struct kdhyperrect* hyperrect_duplicate(const struct kdhyperrect *rect)
+{
+	return hyperrect_create(rect->dim, rect->min, rect->max);
+}
+
+static void hyperrect_extend(struct kdhyperrect *rect, const double *pos)
+{
+	int i;
+
+	for (i=0; i < rect->dim; i++) {
+		if (pos[i] < rect->min[i]) {
+			rect->min[i] = pos[i];
+		}
+		if (pos[i] > rect->max[i]) {
+			rect->max[i] = pos[i];
+		}
+	}
+}
+
+static double hyperrect_dist_sq(struct kdhyperrect *rect, const double *pos)
+{
+	int i;
+	double result = 0;
+
+	for (i=0; i < rect->dim; i++) {
+		if (pos[i] < rect->min[i]) {
+			result += SQ(rect->min[i] - pos[i]);
+		} else if (pos[i] > rect->max[i]) {
+			result += SQ(rect->max[i] - pos[i]);
+		}
+	}
+
+	return result;
+}
+
+/* ---- static helpers ---- */
+
+#ifdef USE_LIST_NODE_ALLOCATOR
+/* special list node allocators. */
+static struct res_node *free_nodes;
+
+#ifndef NO_PTHREADS
+static pthread_mutex_t alloc_mutex = PTHREAD_MUTEX_INITIALIZER;
+#endif
+
+static struct res_node *alloc_resnode(void)
+{
+	struct res_node *node;
+
+#ifndef NO_PTHREADS
+	pthread_mutex_lock(&alloc_mutex);
+#endif
+
+	if(!free_nodes) {
+		node = malloc(sizeof *node);
+	} else {
+		node = free_nodes;
+		free_nodes = free_nodes->next;
+		node->next = 0;
+	}
+
+#ifndef NO_PTHREADS
+	pthread_mutex_unlock(&alloc_mutex);
+#endif
+
+	return node;
+}
+
+static void free_resnode(struct res_node *node)
+{
+#ifndef NO_PTHREADS
+	pthread_mutex_lock(&alloc_mutex);
+#endif
+
+	node->next = free_nodes;
+	free_nodes = node;
+
+#ifndef NO_PTHREADS
+	pthread_mutex_unlock(&alloc_mutex);
+#endif
+}
+#endif	/* list node allocator or not */
+
+
+/* inserts the item. if dist_sq is >= 0, then do an ordered insert */
+static int rlist_insert(struct res_node *list, struct kdnode *item, double dist_sq)
+{
+	struct res_node *rnode;
+
+	if(!(rnode = alloc_resnode())) {
+		return -1;
+	}
+	rnode->item = item;
+	rnode->dist_sq = dist_sq;
+
+	if(dist_sq >= 0.0) {
+		while(list->next && list->next->dist_sq < dist_sq) {
+			list = list->next;
+		}
+	}
+	rnode->next = list->next;
+	list->next = rnode;
+	return 0;
+}
+
+static void clear_results(struct kdres *rset)
+{
+	struct res_node *tmp, *node = rset->rlist->next;
+
+	while(node) {
+		tmp = node;
+		node = node->next;
+		free_resnode(tmp);
+	}
+
+	rset->rlist->next = 0;
+}
+
+
+
+================================================================================
+FILE: exploration_cpp/src/mesh_structure.cpp
+================================================================================
+
+#ifndef _MESH_STRUCTURE_CPP_
+#define _MESH_STRUCTURE_CPP_
+
+#include <Eigen/Dense>
+#include <rclcpp/rclcpp.hpp>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
+#include <exploration_cpp/mesh_structure.h>
+#include <float.h>
+
+mesh::StlMesh::StlMesh()
+    : isLeaf_(true),
+      isHead_(true),
+      isInspected_(false)
+{
+}
+
+mesh::StlMesh::StlMesh(const Eigen::Vector3d x1, const Eigen::Vector3d x2, const Eigen::Vector3d x3)
+    : x1_(x1),
+      x2_(x2),
+      x3_(x3),
+      isLeaf_(true),
+      isHead_(true),
+      isInspected_(false),
+      normal_((x3 - x2).cross(x1 - x2) / 2.0)
+{
+}
+
+mesh::StlMesh::StlMesh(std::fstream& file)
+    : isLeaf_(true),
+      isHead_(true),
+      isInspected_(false),
+      x1_(0.0, 0.0, 0.0),
+      x2_(0.0, 0.0, 0.0),
+      x3_(0.0, 0.0, 0.0)
+{
+  assert(file.is_open());
+  int MaxLine = 0;
+  char* line;
+  double maxX = -DBL_MAX;
+  double maxY = -DBL_MAX;
+  double maxZ = -DBL_MAX;
+  double minX = DBL_MAX;
+  double minY = DBL_MAX;
+  double minZ = DBL_MAX;
+  line = (char * ) malloc(MaxLine = 80);
+  file.getline(line, MaxLine);
+  if (0 != strcmp(strtok(line, " "), "solid")) {
+    RCLCPP_ERROR(rclcpp::get_logger("mesh_structure"), "Invalid mesh file! Make sure the STL file is given in ascii-format.");
+    return;
+  }
+  line = (char * ) realloc(line, MaxLine);
+  file.getline(line, MaxLine);
+  int k = 0;
+  while (0 != strcmp(strtok(line, " "), "endsolid") && rclcpp::ok()) {
+    int q = 0;
+    mesh::StlMesh* newNode = new mesh::StlMesh;
+    newNode->isHead_ = true;
+    std::vector<Eigen::Vector3d*> vertices;
+    vertices.push_back(&(newNode->x1_));
+    vertices.push_back(&(newNode->x2_));
+    vertices.push_back(&(newNode->x3_));
+    int vertexCount = 0;
+    for (int i = 0; i < 7; i++) {
+      while (line[q] == ' ')
+        q++;
+      if (line[q] == 'v') {
+        const double yawTrafo = 0.0;
+        const double scaleFactor = 1.0;
+        const double offsetX = 0.0;
+        const double offsetY = 0.0;
+        const double offsetZ = 0.0;
+
+        char* v = strtok(line + q, " ");
+        v = strtok(NULL, " ");
+        double xtmp = atof(v) / scaleFactor;
+        v = strtok(NULL, " ");
+        double ytmp = atof(v) / scaleFactor;
+        vertices[vertexCount]->x() = cos(yawTrafo) * xtmp - sin(yawTrafo) * ytmp;
+        vertices[vertexCount]->y() = sin(yawTrafo) * xtmp + cos(yawTrafo) * ytmp;
+        v = strtok(NULL, " ");
+        vertices[vertexCount]->z() = atof(v) / scaleFactor;
+        vertices[vertexCount]->x() -= offsetX;
+        vertices[vertexCount]->y() -= offsetY;
+        vertices[vertexCount]->z() -= offsetZ;
+
+        if (maxX < vertices[vertexCount]->x())
+          maxX = vertices[vertexCount]->x();
+        if (maxY < vertices[vertexCount]->y())
+          maxY = vertices[vertexCount]->y();
+        if (maxZ < vertices[vertexCount]->z())
+          maxZ = vertices[vertexCount]->z();
+        if (minX > vertices[vertexCount]->x())
+          minX = vertices[vertexCount]->x();
+        if (minY > vertices[vertexCount]->y())
+          minY = vertices[vertexCount]->y();
+        if (minZ > vertices[vertexCount]->z())
+          minZ = vertices[vertexCount]->z();
+
+        vertexCount++;
+      }
+      line = (char * ) realloc(line, MaxLine);
+      file.getline(line, MaxLine);
+    }
+    newNode->normal_ = (newNode->x3_ - newNode->x2_).cross(newNode->x1_ - newNode->x2_) / 2.0;
+    children_.push_back(newNode);
+    k++;
+  }
+  free(line);
+  file.close();
+  if (k > 0)
+    isLeaf_ = false;
+  RCLCPP_INFO(
+      rclcpp::get_logger("mesh_structure"),
+      "STL file read. Contains %i elements located inside (%2.2f,%2.2f)x(%2.2f,%2.2f)x(%2.2f,%2.2f)",
+      k, minX, maxX, minY, maxY, minZ, maxZ);
+}
+
+mesh::StlMesh::~StlMesh()
+{
+  for (typename std::vector<StlMesh*>::iterator it = children_.begin(); it != children_.end(); it++)
+    delete (*it);
+}
+
+void mesh::StlMesh::setCameraParams(std::vector<double> cameraPitch,
+                                    std::vector<double> cameraHorizontalFoV,
+                                    std::vector<double> cameraVerticalFoV, double maxDist)
+{
+  cameraPitch_ = cameraPitch;
+  cameraHorizontalFoV_ = cameraHorizontalFoV;
+  cameraVerticalFoV_ = cameraVerticalFoV;
+  maxDist_ = maxDist;
+  camBoundNormals_.clear();
+  for (int i = 0; i < cameraPitch_.size(); i++) {
+    double pitch = M_PI * cameraPitch_[i] / 180.0;
+    double camTop = (pitch - M_PI * cameraVerticalFoV_[i] / 360.0) + M_PI / 2.0;
+    double camBottom = (pitch + M_PI * cameraVerticalFoV_[i] / 360.0) - M_PI / 2.0;
+    double side = M_PI * (cameraHorizontalFoV_[i]) / 360.0 - M_PI / 2.0;
+    Eigen::Vector3d bottom(cos(camBottom), 0.0, -sin(camBottom));
+    Eigen::Vector3d top(cos(camTop), 0.0, -sin(camTop));
+    Eigen::Vector3d right(cos(side), sin(side), 0.0);
+    Eigen::Vector3d left(cos(side), -sin(side), 0.0);
+    Eigen::AngleAxisd m = Eigen::AngleAxisd(pitch, Eigen::Vector3d::UnitY());
+    Eigen::Vector3d rightR = m * right;
+    Eigen::Vector3d leftR = m * left;
+    rightR.normalize();
+    leftR.normalize();
+    std::vector<tf2::Vector3> camBoundNormals;
+    camBoundNormals.push_back(tf2::Vector3(bottom.x(), bottom.y(), bottom.z()));
+    camBoundNormals.push_back(tf2::Vector3(top.x(), top.y(), top.z()));
+    camBoundNormals.push_back(tf2::Vector3(rightR.x(), rightR.y(), rightR.z()));
+    camBoundNormals.push_back(tf2::Vector3(leftR.x(), leftR.y(), leftR.z()));
+    camBoundNormals_.push_back(camBoundNormals);
+  }
+}
+
+void mesh::StlMesh::setPeerPose(const geometry_msgs::msg::Pose& pose, int n_peer)
+{
+  if (peer_vehicles_.size() > n_peer) {
+    peer_vehicles_[n_peer] = tf2::Vector3(pose.position.x, pose.position.y, pose.position.z);
+    return;
+  }
+  while (peer_vehicles_.size() <= n_peer) {
+    peer_vehicles_.push_back(tf2::Vector3(pose.position.x, pose.position.y, pose.position.z));
+  }
+}
+
+void mesh::StlMesh::incorporateViewFromPoseMsg(const geometry_msgs::msg::Pose& pose, int n_peer)
+{
+  tf2::Transform transform;
+  tf2::fromMsg(pose, transform);
+  bool inAllFoV = true;
+  std::vector<bool> unobstructed;
+  for (typename std::vector<std::vector<tf2::Vector3>>::iterator itCBN = camBoundNormals_.begin();
+      itCBN != camBoundNormals_.end(); itCBN++) {
+    bool anyInFoV = false;
+    for (int it = 0; it < peer_vehicles_.size(); it++) {
+      if (it == n_peer) {
+        continue;
+      }
+      bool inFoV = true;
+      tf2::Vector3 viewDirection = peer_vehicles_[it]
+          - tf2::Vector3(pose.position.x, pose.position.y, pose.position.z);
+      
+      // Calculate yaw from quaternion
+      tf2::Quaternion q(pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w);
+      double roll, pitch, yaw;
+      tf2::Matrix3x3(q).getRPY(roll, pitch, yaw);
+      
+      // rotate around Z axis
+      viewDirection = tf2::Transform(tf2::Quaternion(tf2::Vector3(0,0,1), yaw)) * viewDirection;
+
+      for (std::vector<tf2::Vector3>::iterator itFoVCBN = itCBN->begin(); itFoVCBN != itCBN->end();
+          itFoVCBN++) {
+        if (itFoVCBN->dot(viewDirection) < 0.0) {
+          inFoV = false;
+          break;
+        }
+      }
+      if (inFoV) {
+        anyInFoV = true;
+        break;
+      }
+    }
+    unobstructed.push_back(!anyInFoV);
+    inAllFoV &= anyInFoV;
+  }
+  if (!inAllFoV) {
+    incorporateViewFromTf(transform, unobstructed);
+  }
+  collapse();
+}
+
+void mesh::StlMesh::assembleMarkerArray(visualization_msgs::msg::Marker& inspected,
+                                        visualization_msgs::msg::Marker& uninspected) const
+{
+  if (isLeaf_) {
+    if (isInspected_) {
+      geometry_msgs::msg::Point point;
+      point.x = x1_.x(); point.y = x1_.y(); point.z = x1_.z();
+      inspected.points.push_back(point);
+      point.x = x2_.x(); point.y = x2_.y(); point.z = x2_.z();
+      inspected.points.push_back(point);
+      point.x = x3_.x(); point.y = x3_.y(); point.z = x3_.z();
+      inspected.points.push_back(point);
+      std_msgs::msg::ColorRGBA color;
+      color.r = 1.0; color.g = 0.0; color.b = 0.0; color.a = 1.0;
+      inspected.colors.push_back(color);
+      inspected.colors.push_back(color);
+      inspected.colors.push_back(color);
+    } else {
+      geometry_msgs::msg::Point point;
+      point.x = x1_.x(); point.y = x1_.y(); point.z = x1_.z();
+      uninspected.points.push_back(point);
+      point.x = x2_.x(); point.y = x2_.y(); point.z = x2_.z();
+      uninspected.points.push_back(point);
+      point.x = x3_.x(); point.y = x3_.y(); point.z = x3_.z();
+      uninspected.points.push_back(point);
+      std_msgs::msg::ColorRGBA color;
+      color.r = 0.0; color.g = 0.0; color.b = 1.0; color.a = 1.0;
+      uninspected.colors.push_back(color);
+      uninspected.colors.push_back(color);
+      uninspected.colors.push_back(color);
+    }
+  } else {
+    for (typename std::vector<mesh::StlMesh*>::const_iterator it = children_.begin();
+        it != children_.end(); it++) {
+      (*it)->assembleMarkerArray(inspected, uninspected);
+    }
+  }
+}
+
+void mesh::StlMesh::incorporateViewFromTf(const tf2::Transform& transform,
+                                          const std::vector<bool>& unobstructed)
+{
+  for (typename std::vector<mesh::StlMesh*>::iterator it = children_.begin(); it != children_.end();
+      it++) {
+    mesh::StlMesh* currentNode = *it;
+    if (currentNode->isInspected_)
+      continue;
+    bool partialVisibility = false;
+    if (currentNode->getVisibility(transform, partialVisibility, true, unobstructed)) {
+      currentNode->isInspected_ = true;
+      if (!currentNode->isLeaf_) {
+        for (typename std::vector<mesh::StlMesh*>::iterator currentChild = currentNode->children_.begin(); 
+             currentChild != currentNode->children_.end(); currentChild++)
+          delete *currentChild;
+        currentNode->children_.clear();
+        currentNode->isLeaf_ = true;
+      }
+    } else if (partialVisibility) {
+      if (currentNode->isLeaf_ && currentNode->normal_.norm() > 0.25 * resolution_) {
+        currentNode->split();
+      }
+      currentNode->incorporateViewFromTf(transform, unobstructed);
+    }
+  }
+}
+
+double mesh::StlMesh::computeInspectableArea(const tf2::Transform& transform)
+{
+  if (isLeaf_) {
+    if (isInspected_)
+      return 0.0;
+    bool partiallyVisible;
+    if (getVisibility(transform, partiallyVisible, false)) {
+      return normal_.norm();
+    } else if (partiallyVisible) {
+      if (normal_.norm() < 0.25 * resolution_)
+        return 0.0;
+      split();
+    } else {
+      return 0.0;
+    }
+  }
+
+  double ret = 0.0;
+  for (typename std::vector<mesh::StlMesh*>::const_iterator it = children_.begin();
+      it != children_.end(); it++)
+    ret += (*it)->computeInspectableArea(transform);
+  return ret;
+}
+
+void mesh::StlMesh::split()
+{
+  assert(!isInspected_);
+  isLeaf_ = false;
+  // #1
+  mesh::StlMesh * tmpNode = new mesh::StlMesh;
+  tmpNode->x1_ = x1_;
+  tmpNode->x2_ = 0.5 * (x1_ + x2_);
+  tmpNode->x3_ = 0.5 * (x1_ + x3_);
+  tmpNode->normal_ = normal_ / 4.0;
+  tmpNode->isHead_ = false;
+  tmpNode->isInspected_ = false;
+  children_.push_back(tmpNode);
+  // #2
+  tmpNode = new mesh::StlMesh;
+  tmpNode->x1_ = x2_;
+  tmpNode->x2_ = 0.5 * (x2_ + x3_);
+  tmpNode->x3_ = 0.5 * (x2_ + x1_);
+  tmpNode->normal_ = normal_ / 4.0;
+  tmpNode->isHead_ = false;
+  tmpNode->isInspected_ = false;
+  children_.push_back(tmpNode);
+  // #3
+  tmpNode = new mesh::StlMesh;
+  tmpNode->x1_ = x3_;
+  tmpNode->x2_ = 0.5 * (x3_ + x1_);
+  tmpNode->x3_ = 0.5 * (x3_ + x2_);
+  tmpNode->normal_ = normal_ / 4.0;
+  tmpNode->isHead_ = false;
+  tmpNode->isInspected_ = false;
+  children_.push_back(tmpNode);
+  // #4
+  tmpNode = new mesh::StlMesh;
+  tmpNode->x1_ = 0.5 * (x1_ + x2_);
+  tmpNode->x2_ = 0.5 * (x2_ + x3_);
+  tmpNode->x3_ = 0.5 * (x3_ + x1_);
+  tmpNode->normal_ = normal_ / 4.0;
+  tmpNode->isHead_ = false;
+  tmpNode->isInspected_ = false;
+  children_.push_back(tmpNode);
+}
+
+bool mesh::StlMesh::collapse()
+{
+  bool collapsible = true;
+  if (isLeaf_)
+    return true;
+  for (typename std::vector<StlMesh*>::iterator it = children_.begin(); it != children_.end();
+      it++) {
+    if (!(*it)->collapse())
+      collapsible = false;
+  }
+  if (collapsible) {
+    bool state = true;
+    for (typename std::vector<StlMesh*>::iterator it = children_.begin(); it != children_.end();
+        it++) {
+      if ((*it)->isHead_)
+        return false;
+      if ((*it)->isInspected_ != state)
+        return false;
+    }
+    for (typename std::vector<StlMesh*>::iterator it = children_.begin(); it != children_.end();
+        it++)
+      delete (*it);
+    children_.clear();
+    isInspected_ = state;
+    isLeaf_ = true;
+  }
+  return true;
+}
+
+bool mesh::StlMesh::getVisibility(const tf2::Transform& transform, bool& partialVisibility,
+                                  bool stop_at_unknown_cell,
+                                  const std::vector<bool>& unobstructed) const
+{
+  bool ret = true;
+  partialVisibility = false;
+  
+  double roll, pitch, yaw;
+  tf2::Matrix3x3(transform.getRotation()).getRPY(roll, pitch, yaw);
+  tf2::Vector3 originTransf = transform.getOrigin();
+  
+  if (normal_.dot(x1_ - Eigen::Vector3d(originTransf.x(), originTransf.y(), originTransf.z()))
+      >= 0.0)
+    return false;
+  for (int i = 0; i < camBoundNormals_.size(); i++) {
+    if (unobstructed.size() > 0 && !unobstructed[i]) {
+      continue;
+    }
+    tf2::Vector3 transformedX1 = transform.inverse() * tf2::Vector3(x1_.x(), x1_.y(), x1_.z());
+    if (transformedX1.length() > maxDist_
+        || manager_->getVisibility(
+            Eigen::Vector3d(originTransf.x(), originTransf.y(), originTransf.z()),
+            Eigen::Vector3d(x1_.x(), x1_.y(), x1_.z()), stop_at_unknown_cell)
+            != octomap_manager_shim::CellStatus::kFree) {
+      return false;
+    } else {
+      bool visibility1 = true;
+      for (typename std::vector<tf2::Vector3>::iterator it = camBoundNormals_[i].begin();
+          it != camBoundNormals_[i].end(); it++) {
+        if (it->dot(transformedX1) < 0.0) {
+          visibility1 = false;
+          break;
+        }
+      }
+      if (visibility1) {
+        partialVisibility = true;
+      } else {
+        ret = false;
+      }
+    }
+    tf2::Vector3 transformedX2 = transform.inverse() * tf2::Vector3(x2_.x(), x2_.y(), x2_.z());
+    if (transformedX2.length() > maxDist_
+        || manager_->getVisibility(
+            Eigen::Vector3d(originTransf.x(), originTransf.y(), originTransf.z()),
+            Eigen::Vector3d(x2_.x(), x2_.y(), x2_.z()), stop_at_unknown_cell)
+            != octomap_manager_shim::CellStatus::kFree) {
+      ret = false;
+    } else {
+      bool visibility2 = true;
+      for (typename std::vector<tf2::Vector3>::iterator it = camBoundNormals_[i].begin();
+          it != camBoundNormals_[i].end(); it++) {
+        if (it->dot(transformedX2) < 0.0) {
+          visibility2 = false;
+          break;
+        }
+      }
+      if (visibility2) {
+        partialVisibility = true;
+      } else {
+        ret = false;
+      }
+    }
+    if (partialVisibility && !ret) {
+      ret = true;
+      continue;
+    }
+    tf2::Vector3 transformedX3 = transform.inverse() * tf2::Vector3(x3_.x(), x3_.y(), x3_.z());
+    if (transformedX3.length() > maxDist_
+        || manager_->getVisibility(
+            Eigen::Vector3d(originTransf.x(), originTransf.y(), originTransf.z()),
+            Eigen::Vector3d(x3_.x(), x3_.y(), x3_.z()), stop_at_unknown_cell)
+            != octomap_manager_shim::CellStatus::kFree) {
+      ret = false;
+    } else {
+      bool visibility3 = true;
+      for (typename std::vector<tf2::Vector3>::iterator it = camBoundNormals_[i].begin();
+          it != camBoundNormals_[i].end(); it++) {
+        if (it->dot(transformedX3) < 0.0) {
+          visibility3 = false;
+          break;
+        }
+      }
+      if (visibility3) {
+        partialVisibility = true;
+      } else {
+        ret = false;
+      }
+    }
+    if (ret) {
+      return true;
+    } else {
+      ret = true;
+    }
+  }
+  return false;
+}
+
+double mesh::StlMesh::resolution_ = 0.001;
+std::vector<double> mesh::StlMesh::cameraPitch_ = { };
+std::vector<double> mesh::StlMesh::cameraHorizontalFoV_ = { };
+std::vector<double> mesh::StlMesh::cameraVerticalFoV_ = { };
+double mesh::StlMesh::maxDist_ = 5;
+std::vector<std::vector<tf2::Vector3> > mesh::StlMesh::camBoundNormals_ = { };
+octomap_manager_shim::OctomapManagerShim * mesh::StlMesh::manager_ = NULL;
+std::vector<tf2::Vector3> mesh::StlMesh::peer_vehicles_ = { };
+
+#endif // _MESH_STRUCTURE_CPP_
+
+
+
+================================================================================
+FILE: exploration_cpp/src/multiagent_collision_checker.cpp
+================================================================================
+
+#ifndef _MULTIAGENT_COLLISON_CHECKER_CPP_
+#define _MULTIAGENT_COLLISON_CHECKER_CPP_
+
+#include <string>
+#include <rclcpp/rclcpp.hpp>
+#include <exploration_cpp/multiagent_collision_checker.h>
+
+bool multiagent::isInCollision(const Eigen::Vector4d& start, const Eigen::Vector4d& end,
+                               const Eigen::Vector3d& boundingBox,
+                               const std::vector<std::vector<Eigen::Vector3d>*>& agent_paths)
+{
+  for (typename std::vector<std::vector<Eigen::Vector3d>*>::const_iterator it = agent_paths.begin();
+      it != agent_paths.end(); it++) {
+    for (int it_segment = 1; it_segment < (*it)->size(); it_segment++) {
+      if (boundingBox.norm()
+          > closestDistanceBetweenLines(Eigen::Vector3d(start.x(), start.y(), start.z()),
+                                        Eigen::Vector3d(end.x(), end.y(), end.z()),
+                                        (**it)[it_segment - 1], (**it)[it_segment])) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+bool multiagent::isInCollision(const Eigen::Vector4d& state, const Eigen::Vector3d& boundingBox,
+                               const std::vector<std::vector<Eigen::Vector3d>*>& agent_paths)
+{
+  for (typename std::vector<std::vector<Eigen::Vector3d>*>::const_iterator it = agent_paths.begin();
+      it != agent_paths.end(); it++) {
+    for (int it_segment = 1; it_segment < (*it)->size(); it_segment++) {
+      if (boundingBox.norm()
+          > closestDistanceBetweenLines(Eigen::Vector3d(state.x(), state.y(), state.z()),
+                                        Eigen::Vector3d(state.x(), state.y(), state.z()),
+                                        (**it)[it_segment - 1], (**it)[it_segment])) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+std::vector<Eigen::Vector4d> multiagent::circumnavigate(
+    const Eigen::Vector4d& start, const Eigen::Vector4d& end, const Eigen::Vector3d& boundingBox,
+    const octomap_manager_shim::OctomapManagerShim& manager,
+    const std::vector<std::vector<Eigen::Vector3d>*>& agent_paths)
+{
+  std::vector < Eigen::Vector4d > ret;
+  auto node = rclcpp::Node::make_shared("multiagent_dummy"); // Need a clock for throttle
+  RCLCPP_ERROR_THROTTLE(
+      node->get_logger(), *node->get_clock(), 1000,
+      "Function std::vector<Eigen::Vector4d> multiagent::circumnavigate(...) is not implemented and will not return any path");
+  return ret;
+}
+
+double multiagent::closestDistanceBetweenLines(const Eigen::Vector3d& start1,
+                                               const Eigen::Vector3d& end1,
+                                               const Eigen::Vector3d& start2,
+                                               const Eigen::Vector3d& end2)
+{
+  Eigen::Vector3d segment1 = end1 - start1;
+  Eigen::Vector3d segment2 = end2 - start2;
+  Eigen::Vector3d segment1normalized = segment1.normalized();
+  Eigen::Vector3d segment2normalized = segment2.normalized();
+  Eigen::Vector3d cross = segment1normalized.cross(segment2normalized);
+  double denominator = pow(cross.norm(), 2.0);
+  if (denominator != 0) {
+    Eigen::Vector3d t = (start2 - start1);
+    double numerator1 = (t.cross(segment2normalized)).dot(cross);
+    double numerator2 = (t.cross(segment1normalized)).dot(cross);
+    double t1 = numerator1 / denominator;
+    double t2 = numerator2 / denominator;
+    Eigen::Vector3d solution1 = start1 + (segment1normalized * t1);
+    Eigen::Vector3d solution2 = start2 + (segment2normalized * t2);
+    if (t1 < 0) {
+      solution1 = start1;
+    } else if (t1 > segment1.norm()) {
+      solution1 = end1;
+    }
+    if (t2 < 0) {
+      solution2 = start2;
+    } else if (t2 > segment2.norm()) {
+      solution2 = end2;
+    }
+    return (solution1 - solution2).norm();
+  }
+  double d0 = segment1normalized.dot(start2 - start1);
+  double d = (((d0 * segment1normalized) + start1) - start2).norm();
+  double d1 = segment1normalized.dot(end2 - start1);
+  if (d0 <= 0 && 0 >= d1) {
+    if (fabs(d0) < fabs(d1)) {
+      return (start2 - start1).norm();
+    }
+    return (end2 - start1).norm();
+  } else if (d0 >= segment1.norm() && segment1.norm() <= d1) {
+    if (fabs(d0) < fabs(d1)) {
+      return (start2 - end1).norm();
+    }
+    return (end2 - end1).norm();
+  }
+  return d;
+}
+
+#endif // _MULTIAGENT_COLLISON_CHECKER_CPP_
+
+
+
+================================================================================
+FILE: exploration_cpp/src/nbv_planner_node.cpp
+================================================================================
+
+#include <Eigen/Dense>
+#include <rclcpp/rclcpp.hpp>
+#include <exploration_cpp/nbvp.hpp>
+
+int main(int argc, char** argv)
+{
+  rclcpp::init(argc, argv);
+  rclcpp::NodeOptions options;
+  auto planner = std::make_shared<nbvInspection::nbvPlanner<Eigen::Matrix<double, 4, 1>>>(options);
+  rclcpp::spin(planner);
+  rclcpp::shutdown();
+  return 0;
+}
+
+
+
+================================================================================
+FILE: exploration_cpp/src/rrt.cpp
+================================================================================
+
+#ifndef RRTTREE_HPP_
+#define RRTTREE_HPP_
+
+#include <cstdlib>
+#include <exploration_cpp/multiagent_collision_checker.h>
+#include <exploration_cpp/rrt.h>
+#include <exploration_cpp/tree.hpp>
+#include <ament_index_cpp/get_package_share_directory.hpp>
+#include <tf2/utils.h>
+
+nbvInspection::RrtTree::RrtTree(rclcpp::Node * node)
+    : nbvInspection::TreeBase<StateVec>::TreeBase(), node_(node)
+{
+  tf_buffer_ = std::make_shared<tf2_ros::Buffer>(node_->get_clock());
+  tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
+  
+  kdTree_ = kd_create(3);
+  iterationCount_ = 0;
+  for (int i = 0; i < 4; i++) {
+    inspectionThrottleTime_.push_back(node_->now().seconds());
+  }
+
+  bool ifLog = false;
+  node_->get_parameter_or("nbvp.log.on", ifLog, false);
+  if (ifLog) {
+    time_t rawtime;
+    struct tm * ptm;
+    time(&rawtime);
+    ptm = gmtime(&rawtime);
+    logFilePath_ = ament_index_cpp::get_package_share_directory("exploration_cpp") + "/data/"
+        + std::to_string(ptm->tm_year + 1900) + "_" + std::to_string(ptm->tm_mon + 1) + "_"
+        + std::to_string(ptm->tm_mday) + "_" + std::to_string(ptm->tm_hour) + "_"
+        + std::to_string(ptm->tm_min) + "_" + std::to_string(ptm->tm_sec);
+    system(("mkdir -p " + logFilePath_).c_str());
+    logFilePath_ += "/";
+    fileResponse_.open((logFilePath_ + "response.txt").c_str(), std::ios::out);
+    filePath_.open((logFilePath_ + "path.txt").c_str(), std::ios::out);
+  }
+}
+
+nbvInspection::RrtTree::RrtTree(mesh::StlMesh * mesh, octomap_manager_shim::OctomapManagerShim * manager, rclcpp::Node * node)
+    : nbvInspection::TreeBase<StateVec>::TreeBase(mesh, manager), node_(node)
+{
+  tf_buffer_ = std::make_shared<tf2_ros::Buffer>(node_->get_clock());
+  tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
+
+  kdTree_ = kd_create(3);
+  iterationCount_ = 0;
+  for (int i = 0; i < 4; i++) {
+    inspectionThrottleTime_.push_back(node_->now().seconds());
+  }
+
+  bool ifLog = false;
+  node_->get_parameter_or("nbvp.log.on", ifLog, false);
+  if (ifLog) {
+    time_t rawtime;
+    struct tm * ptm;
+    time(&rawtime);
+    ptm = gmtime(&rawtime);
+    logFilePath_ = ament_index_cpp::get_package_share_directory("exploration_cpp") + "/data/"
+        + std::to_string(ptm->tm_year + 1900) + "_" + std::to_string(ptm->tm_mon + 1) + "_"
+        + std::to_string(ptm->tm_mday) + "_" + std::to_string(ptm->tm_hour) + "_"
+        + std::to_string(ptm->tm_min) + "_" + std::to_string(ptm->tm_sec);
+    system(("mkdir -p " + logFilePath_).c_str());
+    logFilePath_ += "/";
+    fileResponse_.open((logFilePath_ + "response.txt").c_str(), std::ios::out);
+    filePath_.open((logFilePath_ + "path.txt").c_str(), std::ios::out);
+  }
+}
+
+nbvInspection::RrtTree::~RrtTree()
+{
+  delete rootNode_;
+  kd_free(kdTree_);
+  if (fileResponse_.is_open()) {
+    fileResponse_.close();
+  }
+  if (fileTree_.is_open()) {
+    fileTree_.close();
+  }
+  if (filePath_.is_open()) {
+    filePath_.close();
+  }
+}
+
+void nbvInspection::RrtTree::setStateFromPoseMsg(
+    const geometry_msgs::msg::PoseWithCovarianceStamped& pose)
+{
+  geometry_msgs::msg::TransformStamped transformMsg;
+  try {
+    transformMsg = tf_buffer_->lookupTransform(params_.navigationFrame_, pose.header.frame_id, pose.header.stamp, rclcpp::Duration::from_seconds(0.1));
+  } catch (tf2::TransformException &ex) {
+    RCLCPP_ERROR(node_->get_logger(), "%s", ex.what());
+    return;
+  }
+  tf2::Transform transform;
+  tf2::fromMsg(transformMsg.transform, transform);
+  
+  tf2::Transform poseTF;
+  tf2::fromMsg(pose.pose.pose, poseTF);
+  
+  tf2::Vector3 position = poseTF.getOrigin();
+  position = transform * position;
+  tf2::Quaternion quat = poseTF.getRotation();
+  quat = transform * quat;
+  root_[0] = position.x();
+  root_[1] = position.y();
+  root_[2] = position.z();
+  
+  double roll, pitch, yaw;
+  tf2::Matrix3x3(quat).getRPY(roll, pitch, yaw);
+  root_[3] = yaw;
+
+  static double logThrottleTime = node_->now().seconds();
+  if (node_->now().seconds() - logThrottleTime > params_.log_throttle_) {
+    logThrottleTime += params_.log_throttle_;
+    if (params_.log_) {
+      for (int i = 0; i < root_.size() - 1; i++) {
+        fileResponse_ << root_[i] << ",";
+      }
+      fileResponse_ << root_[root_.size() - 1] << "\n";
+    }
+  }
+  if (node_->now().seconds() - inspectionThrottleTime_[0] > params_.inspection_throttle_) {
+    inspectionThrottleTime_[0] += params_.inspection_throttle_;
+    if (mesh_) {
+      geometry_msgs::msg::Pose poseTransformed;
+      tf2::toMsg(transform * poseTF, poseTransformed);
+      mesh_->setPeerPose(poseTransformed, 0);
+      mesh_->incorporateViewFromPoseMsg(poseTransformed, 0);
+      visualization_msgs::msg::Marker inspected;
+      inspected.ns = "meshInspected";
+      inspected.id = 0;
+      inspected.header.stamp = pose.header.stamp;
+      inspected.header.frame_id = params_.navigationFrame_;
+      inspected.type = visualization_msgs::msg::Marker::TRIANGLE_LIST;
+      inspected.action = visualization_msgs::msg::Marker::ADD;
+      inspected.pose.position.x = 0.0;
+      inspected.pose.position.y = 0.0;
+      inspected.pose.position.z = 0.0;
+      inspected.pose.orientation.x = 0.0;
+      inspected.pose.orientation.y = 0.0;
+      inspected.pose.orientation.z = 0.0;
+      inspected.pose.orientation.w = 1.0;
+      inspected.scale.x = 1.0;
+      inspected.scale.y = 1.0;
+      inspected.scale.z = 1.0;
+      visualization_msgs::msg::Marker uninspected = inspected;
+      uninspected.id++;
+      uninspected.ns = "meshUninspected";
+      mesh_->assembleMarkerArray(inspected, uninspected);
+      if (inspected.points.size() > 0) {
+        params_.inspectionPath_->publish(inspected);
+      }
+      if (uninspected.points.size() > 0) {
+        params_.inspectionPath_->publish(uninspected);
+      }
+    }
+  }
+}
+
+void nbvInspection::RrtTree::setStateFromOdometryMsg(
+    const nav_msgs::msg::Odometry& pose)
+{
+  geometry_msgs::msg::TransformStamped transformMsg;
+  try {
+    transformMsg = tf_buffer_->lookupTransform(params_.navigationFrame_, pose.header.frame_id, pose.header.stamp, rclcpp::Duration::from_seconds(0.1));
+  } catch (tf2::TransformException &ex) {
+    RCLCPP_ERROR(node_->get_logger(), "%s", ex.what());
+    return;
+  }
+  tf2::Transform transform;
+  tf2::fromMsg(transformMsg.transform, transform);
+  
+  tf2::Transform poseTF;
+  tf2::fromMsg(pose.pose.pose, poseTF);
+  
+  tf2::Vector3 position = poseTF.getOrigin();
+  position = transform * position;
+  tf2::Quaternion quat = poseTF.getRotation();
+  quat = transform * quat;
+  root_[0] = position.x();
+  root_[1] = position.y();
+  root_[2] = position.z();
+  
+  double roll, pitch, yaw;
+  tf2::Matrix3x3(quat).getRPY(roll, pitch, yaw);
+  root_[3] = yaw;
+
+  static double logThrottleTime = node_->now().seconds();
+  if (node_->now().seconds() - logThrottleTime > params_.log_throttle_) {
+    logThrottleTime += params_.log_throttle_;
+    if (params_.log_) {
+      for (int i = 0; i < root_.size() - 1; i++) {
+        fileResponse_ << root_[i] << ",";
+      }
+      fileResponse_ << root_[root_.size() - 1] << "\n";
+    }
+  }
+  if (node_->now().seconds() - inspectionThrottleTime_[0] > params_.inspection_throttle_) {
+    inspectionThrottleTime_[0] += params_.inspection_throttle_;
+    if (mesh_) {
+      geometry_msgs::msg::Pose poseTransformed;
+      tf2::toMsg(transform * poseTF, poseTransformed);
+      mesh_->setPeerPose(poseTransformed, 0);
+      mesh_->incorporateViewFromPoseMsg(poseTransformed, 0);
+      visualization_msgs::msg::Marker inspected;
+      inspected.ns = "meshInspected";
+      inspected.id = 0;
+      inspected.header.stamp = pose.header.stamp;
+      inspected.header.frame_id = params_.navigationFrame_;
+      inspected.type = visualization_msgs::msg::Marker::TRIANGLE_LIST;
+      inspected.action = visualization_msgs::msg::Marker::ADD;
+      inspected.pose.position.x = 0.0;
+      inspected.pose.position.y = 0.0;
+      inspected.pose.position.z = 0.0;
+      inspected.pose.orientation.x = 0.0;
+      inspected.pose.orientation.y = 0.0;
+      inspected.pose.orientation.z = 0.0;
+      inspected.pose.orientation.w = 1.0;
+      inspected.scale.x = 1.0;
+      inspected.scale.y = 1.0;
+      inspected.scale.z = 1.0;
+      visualization_msgs::msg::Marker uninspected = inspected;
+      uninspected.id++;
+      uninspected.ns = "meshUninspected";
+      mesh_->assembleMarkerArray(inspected, uninspected);
+      if (inspected.points.size() > 0) {
+        params_.inspectionPath_->publish(inspected);
+      }
+      if (uninspected.points.size() > 0) {
+        params_.inspectionPath_->publish(uninspected);
+      }
+    }
+  }
+}
+
+void nbvInspection::RrtTree::setPeerStateFromPoseMsg(
+    const geometry_msgs::msg::PoseWithCovarianceStamped& pose, int n_peer)
+{
+  geometry_msgs::msg::TransformStamped transformMsg;
+  try {
+    transformMsg = tf_buffer_->lookupTransform(params_.navigationFrame_, pose.header.frame_id, pose.header.stamp, rclcpp::Duration::from_seconds(0.1));
+  } catch (tf2::TransformException &ex) {
+    RCLCPP_ERROR(node_->get_logger(), "%s", ex.what());
+    return;
+  }
+  tf2::Transform transform;
+  tf2::fromMsg(transformMsg.transform, transform);
+  
+  tf2::Transform poseTF;
+  tf2::fromMsg(pose.pose.pose, poseTF);
+  geometry_msgs::msg::Pose poseTransformed;
+  tf2::toMsg(transform * poseTF, poseTransformed);
+  if (node_->now().seconds() - inspectionThrottleTime_[n_peer] > params_.inspection_throttle_) {
+    inspectionThrottleTime_[n_peer] += params_.inspection_throttle_;
+    if (mesh_) {
+      mesh_->setPeerPose(poseTransformed, n_peer);
+      mesh_->incorporateViewFromPoseMsg(poseTransformed, n_peer);
+    }
+  }
+}
+
+void nbvInspection::RrtTree::iterate(int iterations)
+{
+  StateVec newState;
+  double radius = sqrt(
+      SQ(params_.minX_ - params_.maxX_) + SQ(params_.minY_ - params_.maxY_)
+      + SQ(params_.minZ_ - params_.maxZ_));
+  bool solutionFound = false;
+  while (!solutionFound) {
+    for (int i = 0; i < 3; i++) {
+      newState[i] = 2.0 * radius * (((double) rand()) / ((double) RAND_MAX) - 0.5);
+    }
+    if (SQ(newState[0]) + SQ(newState[1]) + SQ(newState[2]) > pow(radius, 2.0))
+      continue;
+    newState += rootNode_->state_;
+    if (!params_.softBounds_) {
+      if (newState.x() < params_.minX_ + 0.5 * params_.boundingBox_.x()) {
+        continue;
+      } else if (newState.y() < params_.minY_ + 0.5 * params_.boundingBox_.y()) {
+        continue;
+      } else if (newState.z() < params_.minZ_ + 0.5 * params_.boundingBox_.z()) {
+        continue;
+      } else if (newState.x() > params_.maxX_ - 0.5 * params_.boundingBox_.x()) {
+        continue;
+      } else if (newState.y() > params_.maxY_ - 0.5 * params_.boundingBox_.y()) {
+        continue;
+      } else if (newState.z() > params_.maxZ_ - 0.5 * params_.boundingBox_.z()) {
+        continue;
+      }
+    }
+    solutionFound = true;
+  }
+
+  kdres * nearest = kd_nearest3(kdTree_, newState.x(), newState.y(), newState.z());
+  if (kd_res_size(nearest) <= 0) {
+    kd_res_free(nearest);
+    return;
+  }
+  nbvInspection::Node<StateVec> * newParent = (nbvInspection::Node<StateVec> *) kd_res_item_data(
+      nearest);
+  kd_res_free(nearest);
+
+  Eigen::Vector3d origin(newParent->state_[0], newParent->state_[1], newParent->state_[2]);
+  Eigen::Vector3d direction(newState[0] - origin[0], newState[1] - origin[1],
+                            newState[2] - origin[2]);
+  if (direction.norm() > params_.extensionRange_) {
+    direction = params_.extensionRange_ * direction.normalized();
+  }
+  newState[0] = origin[0] + direction[0];
+  newState[1] = origin[1] + direction[1];
+  newState[2] = origin[2] + direction[2];
+  if (octomap_manager_shim::CellStatus::kFree
+      == manager_->getLineStatusBoundingBox(
+          origin, direction + origin + direction.normalized() * params_.dOvershoot_,
+          params_.boundingBox_)
+      && !multiagent::isInCollision(newParent->state_, newState, params_.boundingBox_, segments_)) {
+    newState[3] = 2.0 * M_PI * (((double) rand()) / ((double) RAND_MAX) - 0.5);
+    nbvInspection::Node<StateVec> * newNode = new nbvInspection::Node<StateVec>;
+    newNode->state_ = newState;
+    newNode->parent_ = newParent;
+    newNode->distance_ = newParent->distance_ + direction.norm();
+    newParent->children_.push_back(newNode);
+    newNode->gain_ = newParent->gain_
+        + gain(newNode->state_) * exp(-params_.degressiveCoeff_ * newNode->distance_);
+
+    kd_insert3(kdTree_, newState.x(), newState.y(), newState.z(), newNode);
+
+    publishNode(newNode);
+
+    if (newNode->gain_ > bestGain_) {
+      bestGain_ = newNode->gain_;
+      bestNode_ = newNode;
+    }
+    counter_++;
+  }
+}
+
+void nbvInspection::RrtTree::initialize()
+{
+  g_ID_ = 0;
+  int i;
+  for (i = 0; i < agentNames_.size(); i++) {
+    if (agentNames_[i].compare(params_.navigationFrame_) == 0) {
+      break;
+    }
+  }
+  if (i < agentNames_.size()) {
+    segments_[i]->clear();
+  }
+  kdTree_ = kd_create(3);
+
+  if (params_.log_) {
+    if (fileTree_.is_open()) {
+      fileTree_.close();
+    }
+    fileTree_.open((logFilePath_ + "tree" + std::to_string(iterationCount_) + ".txt").c_str(),
+                   std::ios::out);
+  }
+
+  rootNode_ = new Node<StateVec>;
+  rootNode_->distance_ = 0.0;
+  rootNode_->gain_ = params_.zero_gain_;
+  rootNode_->parent_ = NULL;
+
+  if (params_.exact_root_) {
+    if (iterationCount_ <= 1) {
+      exact_root_ = root_;
+    }
+    rootNode_->state_ = exact_root_;
+  } else {
+    rootNode_->state_ = root_;
+  }
+  kd_insert3(kdTree_, rootNode_->state_.x(), rootNode_->state_.y(), rootNode_->state_.z(),
+             rootNode_);
+  iterationCount_++;
+
+  for (typename std::vector<StateVec>::reverse_iterator iter = bestBranchMemory_.rbegin();
+      iter != bestBranchMemory_.rend(); ++iter) {
+    StateVec newState = *iter;
+    kdres * nearest = kd_nearest3(kdTree_, newState.x(), newState.y(), newState.z());
+    if (kd_res_size(nearest) <= 0) {
+      kd_res_free(nearest);
+      continue;
+    }
+    nbvInspection::Node<StateVec> * newParent = (nbvInspection::Node<StateVec> *) kd_res_item_data(
+        nearest);
+    kd_res_free(nearest);
+
+    Eigen::Vector3d origin(newParent->state_[0], newParent->state_[1], newParent->state_[2]);
+    Eigen::Vector3d direction(newState[0] - origin[0], newState[1] - origin[1],
+                              newState[2] - origin[2]);
+    if (direction.norm() > params_.extensionRange_) {
+      direction = params_.extensionRange_ * direction.normalized();
+    }
+    newState[0] = origin[0] + direction[0];
+    newState[1] = origin[1] + direction[1];
+    newState[2] = origin[2] + direction[2];
+    if (octomap_manager_shim::CellStatus::kFree
+        == manager_->getLineStatusBoundingBox(
+            origin, direction + origin + direction.normalized() * params_.dOvershoot_,
+            params_.boundingBox_)
+        && !multiagent::isInCollision(newParent->state_, newState, params_.boundingBox_,
+                                      segments_)) {
+      nbvInspection::Node<StateVec> * newNode = new nbvInspection::Node<StateVec>;
+      newNode->state_ = newState;
+      newNode->parent_ = newParent;
+      newNode->distance_ = newParent->distance_ + direction.norm();
+      newParent->children_.push_back(newNode);
+      newNode->gain_ = newParent->gain_
+          + gain(newNode->state_) * exp(-params_.degressiveCoeff_ * newNode->distance_);
+
+      kd_insert3(kdTree_, newState.x(), newState.y(), newState.z(), newNode);
+
+      publishNode(newNode);
+
+      if (newNode->gain_ > bestGain_) {
+        bestGain_ = newNode->gain_;
+        bestNode_ = newNode;
+      }
+      counter_++;
+    }
+  }
+
+  visualization_msgs::msg::Marker p;
+  p.header.stamp = node_->now();
+  p.header.frame_id = params_.navigationFrame_;
+  p.id = 0;
+  p.ns = "workspace";
+  p.type = visualization_msgs::msg::Marker::CUBE;
+  p.action = visualization_msgs::msg::Marker::ADD;
+  p.pose.position.x = 0.5 * (params_.minX_ + params_.maxX_);
+  p.pose.position.y = 0.5 * (params_.minY_ + params_.maxY_);
+  p.pose.position.z = 0.5 * (params_.minZ_ + params_.maxZ_);
+  tf2::Quaternion quat;
+  quat.setEuler(0.0, 0.0, 0.0);
+  p.pose.orientation.x = quat.x();
+  p.pose.orientation.y = quat.y();
+  p.pose.orientation.z = quat.z();
+  p.pose.orientation.w = quat.w();
+  p.scale.x = params_.maxX_ - params_.minX_;
+  p.scale.y = params_.maxY_ - params_.minY_;
+  p.scale.z = params_.maxZ_ - params_.minZ_;
+  p.color.r = 200.0 / 255.0;
+  p.color.g = 100.0 / 255.0;
+  p.color.b = 0.0;
+  p.color.a = 0.1;
+  p.frame_locked = false;
+  params_.inspectionPath_->publish(p);
+}
+
+std::vector<geometry_msgs::msg::Pose> nbvInspection::RrtTree::getBestEdge(std::string targetFrame)
+{
+  std::vector<geometry_msgs::msg::Pose> ret;
+  nbvInspection::Node<StateVec> * current = bestNode_;
+  if (current->parent_ != NULL) {
+    while (current->parent_ != rootNode_ && current->parent_ != NULL) {
+      current = current->parent_;
+    }
+    ret = samplePath(current->parent_->state_, current->state_, targetFrame);
+    history_.push(current->parent_->state_);
+    exact_root_ = current->state_;
+  }
+  return ret;
+}
+
+double nbvInspection::RrtTree::gain(StateVec state)
+{
+  double gain = 0.0;
+  const double disc = manager_->getResolution();
+  Eigen::Vector3d origin(state[0], state[1], state[2]);
+  Eigen::Vector3d vec;
+  double rangeSq = pow(params_.gainRange_, 2.0);
+  for (vec[0] = std::max(state[0] - params_.gainRange_, params_.minX_);
+      vec[0] < std::min(state[0] + params_.gainRange_, params_.maxX_); vec[0] += disc) {
+    for (vec[1] = std::max(state[1] - params_.gainRange_, params_.minY_);
+        vec[1] < std::min(state[1] + params_.gainRange_, params_.maxY_); vec[1] += disc) {
+      for (vec[2] = std::max(state[2] - params_.gainRange_, params_.minZ_);
+          vec[2] < std::min(state[2] + params_.gainRange_, params_.maxZ_); vec[2] += disc) {
+        Eigen::Vector3d dir = vec - origin;
+        if (dir.transpose().dot(dir) > rangeSq) {
+          continue;
+        }
+        bool insideAFieldOfView = false;
+        for (typename std::vector<std::vector<Eigen::Vector3d>>::iterator itCBN = params_
+            .camBoundNormals_.begin(); itCBN != params_.camBoundNormals_.end(); itCBN++) {
+          bool inThisFieldOfView = true;
+          for (typename std::vector<Eigen::Vector3d>::iterator itSingleCBN = itCBN->begin();
+              itSingleCBN != itCBN->end(); itSingleCBN++) {
+            Eigen::Vector3d normal = Eigen::AngleAxisd(state[3], Eigen::Vector3d::UnitZ())
+                * (*itSingleCBN);
+            double val = dir.dot(normal.normalized());
+            if (val < SQRT2 * disc) {
+              inThisFieldOfView = false;
+              break;
+            }
+          }
+          if (inThisFieldOfView) {
+            insideAFieldOfView = true;
+            break;
+          }
+        }
+        if (!insideAFieldOfView) {
+          continue;
+        }
+        double probability;
+        octomap_manager_shim::CellStatus node = manager_->getCellProbabilityPoint(
+            vec, &probability);
+        if (node == octomap_manager_shim::CellStatus::kUnknown) {
+          if (octomap_manager_shim::CellStatus::kOccupied
+              != this->manager_->getVisibility(origin, vec, false)) {
+            gain += params_.igUnmapped_;
+          }
+        } else if (node == octomap_manager_shim::CellStatus::kOccupied) {
+          if (octomap_manager_shim::CellStatus::kOccupied
+              != this->manager_->getVisibility(origin, vec, false)) {
+            gain += params_.igOccupied_;
+          }
+        } else {
+          if (octomap_manager_shim::CellStatus::kOccupied
+              != this->manager_->getVisibility(origin, vec, false)) {
+            gain += params_.igFree_;
+          }
+        }
+      }
+    }
+  }
+  gain *= pow(disc, 3.0);
+  if (mesh_) {
+    tf2::Transform transform;
+    transform.setOrigin(tf2::Vector3(state.x(), state.y(), state.z()));
+    tf2::Quaternion quaternion;
+    quaternion.setEuler(0.0, 0.0, state[3]);
+    transform.setRotation(quaternion);
+    gain += params_.igArea_ * mesh_->computeInspectableArea(transform);
+  }
+  return gain;
+}
+
+std::vector<geometry_msgs::msg::Pose> nbvInspection::RrtTree::getPathBackToPrevious(
+    std::string targetFrame)
+{
+  std::vector<geometry_msgs::msg::Pose> ret;
+  if (history_.empty()) {
+    return ret;
+  }
+  ret = samplePath(root_, history_.top(), targetFrame);
+  history_.pop();
+  return ret;
+}
+
+void nbvInspection::RrtTree::memorizeBestBranch()
+{
+  bestBranchMemory_.clear();
+  Node<StateVec> * current = bestNode_;
+  while (current->parent_ && current->parent_->parent_) {
+    bestBranchMemory_.push_back(current->state_);
+    current = current->parent_;
+  }
+}
+
+void nbvInspection::RrtTree::clear()
+{
+  delete rootNode_;
+  rootNode_ = NULL;
+
+  counter_ = 0;
+  bestGain_ = params_.zero_gain_;
+  bestNode_ = NULL;
+
+  kd_free(kdTree_);
+}
+
+void nbvInspection::RrtTree::publishNode(Node<StateVec> * node)
+{
+  visualization_msgs::msg::Marker p;
+  p.header.stamp = node_->now();
+  p.header.frame_id = params_.navigationFrame_;
+  p.id = g_ID_;
+  g_ID_++;
+  p.ns = "vp_tree";
+  p.type = visualization_msgs::msg::Marker::ARROW;
+  p.action = visualization_msgs::msg::Marker::ADD;
+  p.pose.position.x = node->state_[0];
+  p.pose.position.y = node->state_[1];
+  p.pose.position.z = node->state_[2];
+  tf2::Quaternion quat;
+  quat.setEuler(0.0, 0.0, node->state_[3]);
+  p.pose.orientation.x = quat.x();
+  p.pose.orientation.y = quat.y();
+  p.pose.orientation.z = quat.z();
+  p.pose.orientation.w = quat.w();
+  p.scale.x = std::max(node->gain_ / 20.0, 0.05);
+  p.scale.y = 0.1;
+  p.scale.z = 0.1;
+  p.color.r = 167.0 / 255.0;
+  p.color.g = 167.0 / 255.0;
+  p.color.b = 0.0;
+  p.color.a = 1.0;
+  p.frame_locked = false;
+  params_.inspectionPath_->publish(p);
+
+  if (!node->parent_)
+    return;
+
+  p.id = g_ID_;
+  g_ID_++;
+  p.ns = "vp_branches";
+  p.type = visualization_msgs::msg::Marker::ARROW;
+  p.action = visualization_msgs::msg::Marker::ADD;
+  p.pose.position.x = node->parent_->state_[0];
+  p.pose.position.y = node->parent_->state_[1];
+  p.pose.position.z = node->parent_->state_[2];
+  Eigen::Quaternion<float> q;
+  Eigen::Vector3f init(1.0, 0.0, 0.0);
+  Eigen::Vector3f dir(node->state_[0] - node->parent_->state_[0],
+                      node->state_[1] - node->parent_->state_[1],
+                      node->state_[2] - node->parent_->state_[2]);
+  q.setFromTwoVectors(init, dir);
+  q.normalize();
+  p.pose.orientation.x = q.x();
+  p.pose.orientation.y = q.y();
+  p.pose.orientation.z = q.z();
+  p.pose.orientation.w = q.w();
+  p.scale.x = dir.norm();
+  p.scale.y = 0.03;
+  p.scale.z = 0.03;
+  p.color.r = 100.0 / 255.0;
+  p.color.g = 100.0 / 255.0;
+  p.color.b = 0.7;
+  p.color.a = 1.0;
+  p.frame_locked = false;
+  params_.inspectionPath_->publish(p);
+
+  if (params_.log_) {
+    for (int i = 0; i < node->state_.size(); i++) {
+      fileTree_ << node->state_[i] << ",";
+    }
+    fileTree_ << node->gain_ << ",";
+    for (int i = 0; i < node->parent_->state_.size(); i++) {
+      fileTree_ << node->parent_->state_[i] << ",";
+    }
+    fileTree_ << node->parent_->gain_ << "\n";
+  }
+}
+
+std::vector<geometry_msgs::msg::Pose> nbvInspection::RrtTree::samplePath(StateVec start, StateVec end,
+                                                                    std::string targetFrame)
+{
+  std::vector<geometry_msgs::msg::Pose> ret;
+  geometry_msgs::msg::TransformStamped transformMsg;
+  try {
+    transformMsg = tf_buffer_->lookupTransform(targetFrame, params_.navigationFrame_, tf2::TimePointZero);
+  } catch (tf2::TransformException &ex) {
+    RCLCPP_ERROR(node_->get_logger(), "%s", ex.what());
+    return ret;
+  }
+  tf2::Transform transform;
+  tf2::fromMsg(transformMsg.transform, transform);
+  
+  Eigen::Vector3d distance(end[0] - start[0], end[1] - start[1], end[2] - start[2]);
+  double yaw_direction = end[3] - start[3];
+  if (yaw_direction > M_PI) {
+    yaw_direction -= 2.0 * M_PI;
+  }
+  if (yaw_direction < -M_PI) {
+    yaw_direction += 2.0 * M_PI;
+  }
+  double disc = std::min(params_.dt_ * params_.v_max_ / distance.norm(),
+                         params_.dt_ * params_.dyaw_max_ / abs(yaw_direction));
+  assert(disc > 0.0);
+  for (double it = 0.0; it <= 1.0; it += disc) {
+    tf2::Vector3 origin((1.0 - it) * start[0] + it * end[0], (1.0 - it) * start[1] + it * end[1],
+                       (1.0 - it) * start[2] + it * end[2]);
+    double yaw = start[3] + yaw_direction * it;
+    if (yaw > M_PI)
+      yaw -= 2.0 * M_PI;
+    if (yaw < -M_PI)
+      yaw += 2.0 * M_PI;
+    tf2::Quaternion quat;
+    quat.setEuler(0.0, 0.0, yaw);
+    origin = transform * origin;
+    quat = transform * quat;
+    tf2::Transform poseTF(quat, origin);
+    geometry_msgs::msg::Pose pose;
+    tf2::toMsg(poseTF, pose);
+    ret.push_back(pose);
+    if (params_.log_) {
+      filePath_ << poseTF.getOrigin().x() << ",";
+      filePath_ << poseTF.getOrigin().y() << ",";
+      filePath_ << poseTF.getOrigin().z() << ",";
+      
+      double rp, pp, yp;
+      tf2::Matrix3x3(poseTF.getRotation()).getRPY(rp, pp, yp);
+      filePath_ << yp << "\n";
+    }
+  }
+  return ret;
+}
+
+#endif
+
+
+
+================================================================================
+FILE: occupancy_map_cpp/CMakeLists.txt
+================================================================================
+
+cmake_minimum_required(VERSION 3.8)
+project(occupancy_map_cpp)
+
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 17)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+endif()
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(octomap REQUIRED)
+find_package(octomap_msgs REQUIRED)
+find_package(octomap_ros REQUIRED)
+find_package(message_filters REQUIRED)
+find_package(pcl_conversions REQUIRED)
+find_package(PCL REQUIRED COMPONENTS common io)
+
+include_directories(
+  include
+  ${OCTOMAP_INCLUDE_DIRS}
+  ${PCL_INCLUDE_DIRS}
+)
+
+add_executable(occupancy_map_node
+  src/occupancy_map_node.cpp
+  src/main.cpp
+)
+
+ament_target_dependencies(occupancy_map_node
+  rclcpp
+  geometry_msgs
+  sensor_msgs
+  nav_msgs
+  octomap_msgs
+  octomap_ros
+  message_filters
+  pcl_conversions
+)
+
+target_link_libraries(occupancy_map_node
+  ${OCTOMAP_LIBRARIES}
+  ${PCL_LIBRARIES}
+)
+
+install(TARGETS
+  occupancy_map_node
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+install(DIRECTORY include/
+  DESTINATION include/
+)
+
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
+  ament_lint_auto_find_test_dependencies()
+endif()
+
+ament_package()
+
+
+
+================================================================================
+FILE: occupancy_map_cpp/include/occupancy_map_cpp/occupancy_map_node.hpp
+================================================================================
+
+#ifndef OCCUPANCY_MAP_CPP__OCCUPANCY_MAP_NODE_HPP_
+#define OCCUPANCY_MAP_CPP__OCCUPANCY_MAP_NODE_HPP_
+
+#include <atomic>
+#include <condition_variable>
+#include <deque>
+#include <memory>
+#include <mutex>
+#include <string>
+#include <thread>
+
+#include <rclcpp/rclcpp.hpp>
+#include <geometry_msgs/msg/pose_stamped.hpp>
+#include <sensor_msgs/msg/point_cloud2.hpp>
+#include <octomap_msgs/msg/octomap.hpp>
+#include <octomap/octomap.h>
+
+#include <message_filters/subscriber.h>
+#include <message_filters/synchronizer.h>
+#include <message_filters/sync_policies/approximate_time.h>
+
+namespace occupancy_map_cpp
+{
+
+// One unit of work for the worker thread: a pose paired with the point
+// cloud captured from that pose. Built by the message_filters
+// synchronizer so insertPointCloud() always gets a matched pair.
+struct InsertionJob
+{
+  geometry_msgs::msg::PoseStamped::ConstSharedPtr pose;
+  sensor_msgs::msg::PointCloud2::ConstSharedPtr points;
+};
+
+// Design note (see ARCHITECTURE.md Section 12.2 and the chat discussion
+// that scaffolded this file):
+//
+//   - The ROS callback (syncedCallback) does nothing but push a job onto
+//     a queue and return. This mirrors the fix from scale_factor_manager.py
+//     Bug #3/#4: expensive work never runs on a subscription callback.
+//   - worker_thread_ drains that queue on its own schedule
+//     (insertion_period_ms_) and does the actual OcTree::insertPointCloud
+//     ray-casting.
+//   - publish_timer_ runs independently, at a much lower, decoupled rate
+//     (publish_period_ms_), serializing the current octree state.
+//   - octree_mutex_ is the only thing shared between the worker thread
+//     and the publish timer; the queue mutex is separate and only ever
+//     touches job_queue_.
+class OccupancyMapNode : public rclcpp::Node
+{
+public:
+  explicit OccupancyMapNode(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
+  ~OccupancyMapNode() override;
+
+private:
+  // Fired by the message_filters synchronizer once a pose/points pair
+  // within sync_slop_sec_ of each other has been found. Must stay cheap.
+  void syncedCallback(
+    const geometry_msgs::msg::PoseStamped::ConstSharedPtr & pose,
+    const sensor_msgs::msg::PointCloud2::ConstSharedPtr & points);
+
+  // Runs on publish_timer_'s own thread via the executor; serializes and
+  // publishes the current octree. Independent of insertion_period_ms_.
+  void publishTimerCallback();
+
+  // Runs on worker_thread_ for the lifetime of the node. Drains
+  // job_queue_ and calls OcTree::insertPointCloud for each job.
+  void workerLoop();
+
+  // --- parameters (loaded once in the constructor) ---
+  double resolution_;
+  int insertion_period_ms_;
+  int publish_period_ms_;
+  double sync_slop_sec_;
+  double max_sensor_range_;  // <= 0 means unlimited, passed to insertPointCloud
+  std::string map_frame_id_;
+
+  // --- the map itself ---
+  std::unique_ptr<octomap::OcTree> octree_;
+  std::mutex octree_mutex_;
+
+  // --- queue shared between syncedCallback (producer) and workerLoop (consumer) ---
+  std::deque<InsertionJob> job_queue_;
+  std::mutex queue_mutex_;
+  std::condition_variable queue_cv_;
+  std::atomic<bool> shutting_down_{false};
+  std::thread worker_thread_;
+
+  // --- ROS interfaces ---
+  message_filters::Subscriber<geometry_msgs::msg::PoseStamped> pose_sub_;
+  message_filters::Subscriber<sensor_msgs::msg::PointCloud2> points_sub_;
+
+  using SyncPolicy = message_filters::sync_policies::ApproximateTime<
+    geometry_msgs::msg::PoseStamped, sensor_msgs::msg::PointCloud2>;
+  std::shared_ptr<message_filters::Synchronizer<SyncPolicy>> synchronizer_;
+
+  rclcpp::Publisher<octomap_msgs::msg::Octomap>::SharedPtr occupancy_pub_;
+  rclcpp::TimerBase::SharedPtr publish_timer_;
+};
+
+}  // namespace occupancy_map_cpp
+
+#endif  // OCCUPANCY_MAP_CPP__OCCUPANCY_MAP_NODE_HPP_
+
+
+
+================================================================================
+FILE: occupancy_map_cpp/package.xml
+================================================================================
+
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>occupancy_map_cpp</name>
+  <version>0.0.1</version>
+  <description>
+    OctoMap-based occupancy mapping node for tello_autonomy. Consumes
+    TOPIC_CURRENT_POSE_METRIC / TOPIC_CURRENT_POINTS_METRIC and publishes
+    an octomap_msgs/Octomap on TOPIC_OCCUPANCY_GRID for exploration_cpp /
+    search_cpp to consume. See ARCHITECTURE.md Section 12.2.
+  </description>
+  <maintainer email="hamdan@example.com">hamdan</maintainer>
+  <license>TODO</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>geometry_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>octomap_msgs</depend>
+  <depend>octomap_ros</depend>
+  <depend>message_filters</depend>
+  <depend>pcl_conversions</depend>
+  <depend>pcl_ros</depend>
+  <depend>libpcl-all-dev</depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
+
+
+
+================================================================================
+FILE: occupancy_map_cpp/src/main.cpp
+================================================================================
+
+#include <rclcpp/rclcpp.hpp>
+
+#include "occupancy_map_cpp/occupancy_map_node.hpp"
+
+int main(int argc, char ** argv)
+{
+  rclcpp::init(argc, argv);
+  auto node = std::make_shared<occupancy_map_cpp::OccupancyMapNode>();
+  rclcpp::spin(node);
+  rclcpp::shutdown();
+  return 0;
+}
+
+
+
+================================================================================
+FILE: occupancy_map_cpp/src/occupancy_map_node.cpp
+================================================================================
+
+#include "occupancy_map_cpp/occupancy_map_node.hpp"
+
+#include <chrono>
+#include <cmath>
+
+#include <octomap_msgs/conversions.h>
+#include <pcl/point_cloud.h>
+#include <pcl/point_types.h>
+#include <pcl_conversions/pcl_conversions.h>
+
+namespace occupancy_map_cpp
+{
+
+OccupancyMapNode::OccupancyMapNode(const rclcpp::NodeOptions & options)
+: rclcpp::Node("occupancy_map_node", options)
+{
+  // --- parameters ---
+  // Defaults mirror the topic names in ARCHITECTURE.md Section 5.
+  // TODO(Section 9): once occupancy_map_cpp constants are added to
+  // config/constants.py, these defaults should be kept in sync by hand
+  // (there's no shared file between the Python and C++ sides - flag any
+  // future rename in both places).
+  resolution_ = this->declare_parameter<double>("resolution", 0.10);
+  insertion_period_ms_ = this->declare_parameter<int>("insertion_period_ms", 50);
+  publish_period_ms_ = this->declare_parameter<int>("publish_period_ms", 1000);
+  sync_slop_sec_ = this->declare_parameter<double>("sync_slop_sec", 0.05);
+  max_sensor_range_ = this->declare_parameter<double>("max_sensor_range", -1.0);
+  map_frame_id_ = this->declare_parameter<std::string>("map_frame_id", "map");
+
+  const std::string pose_topic = this->declare_parameter<std::string>(
+    "pose_topic", "/tello_autonomy/current_pose_metric");
+  const std::string points_topic = this->declare_parameter<std::string>(
+    "points_topic", "/tello_autonomy/current_points_metric");
+  const std::string occupancy_topic = this->declare_parameter<std::string>(
+    "occupancy_topic", "/tello_autonomy/occupancy_grid");
+
+  octree_ = std::make_unique<octomap::OcTree>(resolution_);
+
+  // --- publisher ---
+  occupancy_pub_ = this->create_publisher<octomap_msgs::msg::Octomap>(
+    occupancy_topic, rclcpp::QoS(10));
+
+  // --- synchronized subscribers ---
+  // Pose and points are published as two separate topics per frame by
+  // live_scaler.py. insertPointCloud() needs both as one unit (an origin
+  // + a cloud), so pair them here by timestamp before anything reaches
+  // the queue. See the class-level comment in the header for why this
+  // exists - it's a gap ARCHITECTURE.md Section 12.2 didn't spell out.
+  pose_sub_.subscribe(this, pose_topic);
+  points_sub_.subscribe(this, points_topic);
+
+  synchronizer_ = std::make_shared<message_filters::Synchronizer<SyncPolicy>>(
+    SyncPolicy(10), pose_sub_, points_sub_);
+  synchronizer_->setMaxIntervalDuration(rclcpp::Duration::from_seconds(sync_slop_sec_));
+  synchronizer_->registerCallback(
+    std::bind(
+      &OccupancyMapNode::syncedCallback, this,
+      std::placeholders::_1, std::placeholders::_2));
+
+  // --- decoupled publish timer (Section 12.2: "two independently
+  // tunable rates, not one") ---
+  publish_timer_ = this->create_wall_timer(
+    std::chrono::milliseconds(publish_period_ms_),
+    std::bind(&OccupancyMapNode::publishTimerCallback, this));
+
+  // --- worker thread: the only thing that ever calls insertPointCloud ---
+  worker_thread_ = std::thread(&OccupancyMapNode::workerLoop, this);
+
+  RCLCPP_INFO(
+    this->get_logger(),
+    "occupancy_map_node started: resolution=%.3fm insertion_period=%dms "
+    "publish_period=%dms sync_slop=%.3fs",
+    resolution_, insertion_period_ms_, publish_period_ms_, sync_slop_sec_);
+}
+
+OccupancyMapNode::~OccupancyMapNode()
+{
+  shutting_down_.store(true);
+  queue_cv_.notify_all();
+  if (worker_thread_.joinable()) {
+    worker_thread_.join();
+  }
+}
+
+void OccupancyMapNode::syncedCallback(
+  const geometry_msgs::msg::PoseStamped::ConstSharedPtr & pose,
+  const sensor_msgs::msg::PointCloud2::ConstSharedPtr & points)
+{
+  // Deliberately the only thing this callback does. All real work
+  // happens on worker_thread_ - see workerLoop().
+  {
+    std::lock_guard<std::mutex> lock(queue_mutex_);
+    job_queue_.push_back(InsertionJob{pose, points});
+  }
+  queue_cv_.notify_one();
+}
+
+void OccupancyMapNode::workerLoop()
+{
+  const auto period = std::chrono::milliseconds(insertion_period_ms_);
+
+  while (!shutting_down_.load()) {
+    std::deque<InsertionJob> jobs_to_process;
+
+    {
+      std::unique_lock<std::mutex> lock(queue_mutex_);
+      // Wake early if work arrives, otherwise wake at most every
+      // insertion_period_ms_ to re-check the shutdown flag.
+      queue_cv_.wait_for(
+        lock, period,
+        [this] {return !job_queue_.empty() || shutting_down_.load();});
+      jobs_to_process.swap(job_queue_);
+    }
+
+    if (jobs_to_process.empty()) {
+      continue;
+    }
+
+    for (const auto & job : jobs_to_process) {
+      pcl::PointCloud<pcl::PointXYZ> pcl_cloud;
+      pcl::fromROSMsg(*job.points, pcl_cloud);
+
+      octomap::Pointcloud octomap_cloud;
+      octomap_cloud.reserve(pcl_cloud.size());
+      for (const auto & pt : pcl_cloud.points) {
+        if (std::isfinite(pt.x) && std::isfinite(pt.y) && std::isfinite(pt.z)) {
+          octomap_cloud.push_back(pt.x, pt.y, pt.z);
+        }
+      }
+
+      const octomap::point3d origin(
+        static_cast<float>(job.pose->pose.position.x),
+        static_cast<float>(job.pose->pose.position.y),
+        static_cast<float>(job.pose->pose.position.z));
+
+      std::lock_guard<std::mutex> lock(octree_mutex_);
+      if (max_sensor_range_ > 0.0) {
+        octree_->insertPointCloud(octomap_cloud, origin, max_sensor_range_);
+      } else {
+        octree_->insertPointCloud(octomap_cloud, origin);
+      }
+    }
+  }
+}
+
+void OccupancyMapNode::publishTimerCallback()
+{
+  octomap_msgs::msg::Octomap msg;
+
+  {
+    std::lock_guard<std::mutex> lock(octree_mutex_);
+    if (octree_->size() == 0) {
+      return;  // nothing inserted yet, skip this publish tick
+    }
+    if (!octomap_msgs::fullMapToMsg(*octree_, msg)) {
+      RCLCPP_WARN(this->get_logger(), "fullMapToMsg failed, skipping this publish tick");
+      return;
+    }
+  }
+
+  msg.header.stamp = this->now();
+  msg.header.frame_id = map_frame_id_;
+  occupancy_pub_->publish(msg);
+}
+
+}  // namespace occupancy_map_cpp
+
+
+
+================================================================================
+FILE: octomap_manager_shim/CMakeLists.txt
+================================================================================
+
+cmake_minimum_required(VERSION 3.8)
+project(octomap_manager_shim)
+
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 17)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+endif()
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+find_package(ament_cmake REQUIRED)
+find_package(octomap REQUIRED)
+find_package(Eigen3 REQUIRED)
+
+add_library(${PROJECT_NAME} SHARED
+  src/octomap_manager_shim.cpp
+)
+
+target_include_directories(${PROJECT_NAME} PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+  ${OCTOMAP_INCLUDE_DIRS}
+  ${EIGEN3_INCLUDE_DIR}
+)
+
+target_link_libraries(${PROJECT_NAME} PUBLIC
+  ${OCTOMAP_LIBRARIES}
+)
+
+install(
+  DIRECTORY include/
+  DESTINATION include
+)
+
+install(
+  TARGETS ${PROJECT_NAME}
+  EXPORT export_${PROJECT_NAME}
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION bin
+  INCLUDES DESTINATION include
+)
+
+ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
+ament_export_dependencies(octomap Eigen3)
+
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
+  ament_lint_auto_find_test_dependencies()
+endif()
+
+ament_package()
+
+
+
+================================================================================
+FILE: octomap_manager_shim/include/octomap_manager_shim/octomap_manager_shim.hpp
+================================================================================
+
+#ifndef OCTOMAP_MANAGER_SHIM__OCTOMAP_MANAGER_SHIM_HPP_
+#define OCTOMAP_MANAGER_SHIM__OCTOMAP_MANAGER_SHIM_HPP_
+
+#include <memory>
+
+#include <Eigen/Dense>
+#include <octomap/octomap.h>
+
+namespace octomap_manager_shim
+{
+
+// Matches volumetric_mapping::WorldBase::CellStatus exactly (see
+// volumetric_map_base/include/volumetric_map_base/world_base.h in the real
+// ethz-asl/volumetric_mapping repo - verified directly, not inferred).
+enum class CellStatus
+{
+  kFree = 0,
+  kOccupied = 1,
+  kUnknown = 2
+};
+
+// Direct replacement for volumetric_mapping::OctomapManager (ARCHITECTURE.md
+// Section 12.3), re-implemented against a plain octomap::OcTree so
+// exploration_cpp/search_cpp don't need to port volumetric_mapping itself.
+//
+// Method signatures and algorithms here are ported directly from the real
+// ethz-asl/volumetric_mapping OctomapWorld::getResolution/getMapSize/
+// getCellProbabilityPoint/getVisibility/getLineStatus/getLineStatusBoundingBox
+// (octomap_world/src/octomap_world.cc), not reinvented - verified against
+// that source directly. Eigen::Vector3d is used throughout (rather than
+// octomap::point3d) specifically so nbvplanner's Eigen-based call sites in
+// rrt.cpp/mesh_structure.cpp port with minimal changes.
+//
+// Ownership: does NOT own the tree. Callers decode their own
+// octomap::OcTree from TOPIC_OCCUPANCY_GRID (via octomap_msgs::msgToMap)
+// and call setOctree() each time a fresh map arrives; this class only ever
+// reads it.
+class OctomapManagerShim
+{
+public:
+  explicit OctomapManagerShim(std::shared_ptr<const octomap::OcTree> tree = nullptr);
+
+  void setOctree(std::shared_ptr<const octomap::OcTree> tree);
+  bool hasOctree() const;
+
+  // Matches OctomapWorld::enableTreatUnknownAsOccupied()/
+  // disableTreatUnknownAsOccupied(). Default true, matching upstream's
+  // OctomapParameters default - i.e. collision-checking (getLineStatus /
+  // getLineStatusBoundingBox) treats unmapped space as blocked unless you
+  // explicitly turn this off. This is deliberately NOT the same thing as
+  // "explore unknown space" - that incentive lives entirely in nbvplanner's
+  // gain() function via igUnmapped_, not here. See the .cpp for more.
+  void setTreatUnknownAsOccupied(bool treat_as_occupied);
+  bool treatUnknownAsOccupied() const;
+
+  // --- direct passthroughs ---
+  double getResolution() const;
+
+  // Empty-map guard: returns Vector3d::Zero() if the tree is null/empty,
+  // matching the pattern nbvp.hpp uses (`manager_->getMapSize().norm() <=
+  // 0.0`) rather than a separate bool return.
+  Eigen::Vector3d getMapSize() const;
+
+  CellStatus getCellProbabilityPoint(
+    const Eigen::Vector3d & point, double * probability) const;
+
+  // Is `voxel_to_test` visible from `view_point` - does a ray between them
+  // pass through any occupied cell first? The voxel_to_test cell itself is
+  // excluded from the check (matches upstream: you're asking "can I see
+  // this cell", not "is this cell itself free").
+  CellStatus getVisibility(
+    const Eigen::Vector3d & view_point, const Eigen::Vector3d & voxel_to_test,
+    bool stop_at_unknown_cell) const;
+
+  // Single-line collision check (no bounding box). Public mainly because
+  // getLineStatusBoundingBox is built from repeated calls to this; exposed
+  // in case a caller wants a bare centerline check.
+  CellStatus getLineStatus(const Eigen::Vector3d & start, const Eigen::Vector3d & end) const;
+
+  // Is the straight edge from `start` to `end`, swept by a box of the given
+  // size, collision-free? Ported directly from OctomapWorld::
+  // getLineStatusBoundingBox: builds a grid of parallel offset lines along
+  // world x/y/z, with per-axis spacing derived from the octree resolution
+  // (ceil(box_size / resolution)) so no cell can be skipped between
+  // samples - not a fixed/sparse sample count.
+  CellStatus getLineStatusBoundingBox(
+    const Eigen::Vector3d & start, const Eigen::Vector3d & end,
+    const Eigen::Vector3d & bounding_box_size) const;
+
+private:
+  std::shared_ptr<const octomap::OcTree> octree_;
+  bool treat_unknown_as_occupied_ = true;
+};
+
+}  // namespace octomap_manager_shim
+
+#endif  // OCTOMAP_MANAGER_SHIM__OCTOMAP_MANAGER_SHIM_HPP_
+
+
+
+================================================================================
+FILE: octomap_manager_shim/package.xml
+================================================================================
+
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>octomap_manager_shim</name>
+  <version>0.0.1</version>
+  <description>
+    5-method OctomapManager-replacement shim (ARCHITECTURE.md Section 12.3),
+    written directly against octomap::OcTree instead of porting
+    volumetric_mapping. Shared library so exploration_cpp and search_cpp
+    both consume the same map-query implementation instead of each
+    re-implementing it (see Open Issue #4 for why that's worth avoiding).
+    No ROS dependency - plain C++ against liboctomap only.
+  </description>
+  <maintainer email="hamdan@example.com">hamdan</maintainer>
+  <license>TODO</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <depend>octomap</depend>
+  <depend>eigen</depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
+
+
+
+================================================================================
+FILE: octomap_manager_shim/src/octomap_manager_shim.cpp
+================================================================================
+
+#include "octomap_manager_shim/octomap_manager_shim.hpp"
+
+#include <cmath>
+
+namespace octomap_manager_shim
+{
+
+namespace
+{
+// Matches the free-standing pointEigenToOctomap() helper in the real
+// octomap_world.cc (file-local there too, not part of the public API).
+inline octomap::point3d pointEigenToOctomap(const Eigen::Vector3d & point)
+{
+  return octomap::point3d(
+    static_cast<float>(point.x()), static_cast<float>(point.y()), static_cast<float>(point.z()));
+}
+}  // namespace
+
+OctomapManagerShim::OctomapManagerShim(std::shared_ptr<const octomap::OcTree> tree)
+: octree_(std::move(tree))
+{
+}
+
+void OctomapManagerShim::setOctree(std::shared_ptr<const octomap::OcTree> tree)
+{
+  octree_ = std::move(tree);
+}
+
+bool OctomapManagerShim::hasOctree() const
+{
+  return octree_ != nullptr;
+}
+
+void OctomapManagerShim::setTreatUnknownAsOccupied(bool treat_as_occupied)
+{
+  treat_unknown_as_occupied_ = treat_as_occupied;
+}
+
+bool OctomapManagerShim::treatUnknownAsOccupied() const
+{
+  return treat_unknown_as_occupied_;
+}
+
+double OctomapManagerShim::getResolution() const
+{
+  // OctomapWorld::getResolution(): return octree_->getResolution();
+  return octree_ ? octree_->getResolution() : 0.0;
+}
+
+Eigen::Vector3d OctomapManagerShim::getMapSize() const
+{
+  if (!octree_ || octree_->size() == 0) {
+    return Eigen::Vector3d::Zero();
+  }
+  // OctomapWorld::getMapSize(): metric max - metric min, NOT getMetricSize()
+  // (which assumes a tree centered at the origin - not necessarily true).
+  double min_x = 0.0, min_y = 0.0, min_z = 0.0;
+  double max_x = 0.0, max_y = 0.0, max_z = 0.0;
+  octree_->getMetricMin(min_x, min_y, min_z);
+  octree_->getMetricMax(max_x, max_y, max_z);
+  return Eigen::Vector3d(max_x - min_x, max_y - min_y, max_z - min_z);
+}
+
+CellStatus OctomapManagerShim::getCellProbabilityPoint(
+  const Eigen::Vector3d & point, double * probability) const
+{
+  // Ported directly from OctomapWorld::getCellProbabilityPoint(). Note this
+  // always returns kUnknown for an unmapped cell regardless of
+  // treat_unknown_as_occupied_ - that flag only affects the line-status
+  // methods below, matching upstream.
+  if (!octree_) {
+    if (probability) {
+      *probability = -1.0;
+    }
+    return CellStatus::kUnknown;
+  }
+
+  const octomap::OcTreeNode * node = octree_->search(point.x(), point.y(), point.z());
+  if (node == nullptr) {
+    if (probability) {
+      *probability = -1.0;
+    }
+    return CellStatus::kUnknown;
+  }
+  if (probability) {
+    *probability = node->getOccupancy();
+  }
+  return octree_->isNodeOccupied(node) ? CellStatus::kOccupied : CellStatus::kFree;
+}
+
+CellStatus OctomapManagerShim::getVisibility(
+  const Eigen::Vector3d & view_point, const Eigen::Vector3d & voxel_to_test,
+  bool stop_at_unknown_cell) const
+{
+  // Ported directly from OctomapWorld::getVisibility().
+  if (!octree_) {
+    return CellStatus::kUnknown;
+  }
+
+  octomap::KeyRay key_ray;
+  octree_->computeRayKeys(
+    pointEigenToOctomap(view_point), pointEigenToOctomap(voxel_to_test), key_ray);
+
+  const octomap::OcTreeKey voxel_to_test_key =
+    octree_->coordToKey(pointEigenToOctomap(voxel_to_test));
+
+  for (const octomap::OcTreeKey & key : key_ray) {
+    if (key != voxel_to_test_key) {
+      const octomap::OcTreeNode * node = octree_->search(key);
+      if (node == nullptr) {
+        if (stop_at_unknown_cell) {
+          return CellStatus::kUnknown;
+        }
+      } else if (octree_->isNodeOccupied(node)) {
+        return CellStatus::kOccupied;
+      }
+    }
+  }
+  return CellStatus::kFree;
+}
+
+CellStatus OctomapManagerShim::getLineStatus(
+  const Eigen::Vector3d & start, const Eigen::Vector3d & end) const
+{
+  // Ported directly from OctomapWorld::getLineStatus(). Note this DOES
+  // honor treat_unknown_as_occupied_, unlike getVisibility() above -
+  // matches upstream exactly, including that asymmetry.
+  if (!octree_) {
+    return treat_unknown_as_occupied_ ? CellStatus::kOccupied : CellStatus::kUnknown;
+  }
+
+  octomap::KeyRay key_ray;
+  octree_->computeRayKeys(pointEigenToOctomap(start), pointEigenToOctomap(end), key_ray);
+
+  for (const octomap::OcTreeKey & key : key_ray) {
+    const octomap::OcTreeNode * node = octree_->search(key);
+    if (node == nullptr) {
+      if (treat_unknown_as_occupied_) {
+        return CellStatus::kOccupied;
+      } else {
+        return CellStatus::kUnknown;
+      }
+    } else if (octree_->isNodeOccupied(node)) {
+      return CellStatus::kOccupied;
+    }
+  }
+  return CellStatus::kFree;
+}
+
+CellStatus OctomapManagerShim::getLineStatusBoundingBox(
+  const Eigen::Vector3d & start, const Eigen::Vector3d & end,
+  const Eigen::Vector3d & bounding_box_size) const
+{
+  // Ported directly from OctomapWorld::getLineStatusBoundingBox(). Builds a
+  // grid of parallel offset lines along world x/y/z (not rotated to the
+  // travel direction), with per-axis spacing derived from the octree
+  // resolution so no cell between samples can be skipped. This is the real,
+  // validated answer to Open Issue #6 - not the fixed/sparse pattern
+  // discussed earlier in the chat before this source was pulled.
+  if (!octree_) {
+    return treat_unknown_as_occupied_ ? CellStatus::kOccupied : CellStatus::kUnknown;
+  }
+
+  const double epsilon = 0.001;
+  const double resolution = getResolution();
+
+  double x_disc = bounding_box_size.x() / std::ceil((bounding_box_size.x() + epsilon) / resolution);
+  double y_disc = bounding_box_size.y() / std::ceil((bounding_box_size.y() + epsilon) / resolution);
+  double z_disc = bounding_box_size.z() / std::ceil((bounding_box_size.z() + epsilon) / resolution);
+
+  if (x_disc <= 0.0) {x_disc = 1.0;}
+  if (y_disc <= 0.0) {y_disc = 1.0;}
+  if (z_disc <= 0.0) {z_disc = 1.0;}
+
+  const Eigen::Vector3d half_size = bounding_box_size * 0.5;
+
+  for (double x = -half_size.x(); x <= half_size.x(); x += x_disc) {
+    for (double y = -half_size.y(); y <= half_size.y(); y += y_disc) {
+      for (double z = -half_size.z(); z <= half_size.z(); z += z_disc) {
+        const Eigen::Vector3d offset(x, y, z);
+        const CellStatus status = getLineStatus(start + offset, end + offset);
+        if (status != CellStatus::kFree) {
+          return status;
+        }
+      }
+    }
+  }
+  return CellStatus::kFree;
+}
+
+}  // namespace octomap_manager_shim
+
+
+
+================================================================================
+FILE: search_cpp/CMakeLists.txt
+================================================================================
+
+cmake_minimum_required(VERSION 3.8)
+project(search_cpp)
+
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 17)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+endif()
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+# ---- find dependencies ----
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(octomap_msgs REQUIRED)
+find_package(octomap REQUIRED)
+find_package(Eigen3 REQUIRED)
+find_package(octomap_manager_shim REQUIRED)
+find_package(tello_autonomy_msgs REQUIRED)
+find_package(ompl REQUIRED)
+
+# ---- executable ----
+add_executable(search_node
+  src/search_node.cpp
+)
+
+target_include_directories(search_node PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+  ${OCTOMAP_INCLUDE_DIRS}
+  ${EIGEN3_INCLUDE_DIR}
+  ${OMPL_INCLUDE_DIRS}
+)
+
+target_link_libraries(search_node
+  ${OCTOMAP_LIBRARIES}
+  ${OMPL_LIBRARIES}
+)
+
+ament_target_dependencies(search_node
+  rclcpp
+  geometry_msgs
+  nav_msgs
+  octomap_msgs
+  octomap_manager_shim
+  tello_autonomy_msgs
+)
+
+# ---- install ----
+install(TARGETS search_node
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+install(DIRECTORY include/
+  DESTINATION include
+)
+
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
+  set(ament_cmake_copyright_FOUND TRUE)
+  set(ament_cmake_cpplint_FOUND TRUE)
+  ament_lint_auto_find_test_dependencies()
+endif()
+
+ament_package()
+
+
+
+================================================================================
+FILE: search_cpp/include/search_cpp/search_node.hpp
+================================================================================
+
+#ifndef SEARCH_CPP__SEARCH_NODE_HPP_
+#define SEARCH_CPP__SEARCH_NODE_HPP_
+
+#include <atomic>
+#include <memory>
+#include <mutex>
+#include <string>
+
+#include <rclcpp/rclcpp.hpp>
+#include <geometry_msgs/msg/pose_stamped.hpp>
+#include <octomap_msgs/msg/octomap.hpp>
+#include <octomap/octomap.h>
+
+#include <ompl/base/SpaceInformation.h>
+#include <ompl/base/spaces/SE3StateSpace.h>
+#include <ompl/geometric/SimpleSetup.h>
+#include <ompl/geometric/planners/informedtrees/BITstar.h>
+
+#include <octomap_manager_shim/octomap_manager_shim.hpp>
+#include <tello_autonomy_msgs/srv/search_plan.hpp>
+
+namespace ob = ompl::base;
+namespace og = ompl::geometric;
+
+namespace search_cpp
+{
+
+// Drone physical bounding box (meters), padded by a small safety margin.
+// Tello body: 98 x 92.5 x 41 mm  →  0.098 x 0.0925 x 0.041 m
+// We add a 10 mm margin on every axis for sensor tolerances and wind drift.
+static constexpr double DRONE_BB_X = 0.108;  // 98mm + 10mm margin
+static constexpr double DRONE_BB_Y = 0.103;  // 92.5mm + 10mm margin
+static constexpr double DRONE_BB_Z = 0.051;  // 41mm + 10mm margin
+
+// BIT* planning budget: stop after this many seconds even if not optimal.
+// 0.5 s gives BIT* enough iterations for room-scale environments while
+// keeping service latency acceptable in a receding-horizon loop.
+static constexpr double PLAN_TIMEOUT_SEC = 0.5;
+
+class SearchNode : public rclcpp::Node
+{
+public:
+  explicit SearchNode(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
+  ~SearchNode() = default;
+
+private:
+  // ---- ROS2 interface ----
+  rclcpp::Subscription<octomap_msgs::msg::Octomap>::SharedPtr map_sub_;
+  rclcpp::Service<tello_autonomy_msgs::srv::SearchPlan>::SharedPtr plan_srv_;
+
+  // ---- OctoMap/shim ----
+  std::shared_ptr<const octomap::OcTree> octree_;
+  std::shared_ptr<octomap_manager_shim::OctomapManagerShim> shim_;
+  mutable std::mutex map_mutex_;  // guards octree_ and shim_ from concurrent map update
+
+  // ---- parameters ----
+  double plan_timeout_sec_;
+  Eigen::Vector3d drone_bbox_;
+
+  // ---- callbacks ----
+  void mapCallback(const octomap_msgs::msg::Octomap::SharedPtr msg);
+
+  void planCallback(
+    const std::shared_ptr<tello_autonomy_msgs::srv::SearchPlan::Request> req,
+    std::shared_ptr<tello_autonomy_msgs::srv::SearchPlan::Response> res);
+
+  // ---- OMPL helpers ----
+  bool isStateValid(
+    const ob::State * state,
+    const std::shared_ptr<const octomap_manager_shim::OctomapManagerShim> & shim_snap) const;
+
+  std::vector<geometry_msgs::msg::PoseStamped> omplPathToMsg(
+    const og::PathGeometric & path,
+    const std::string & frame_id,
+    const rclcpp::Time & stamp) const;
+};
+
+}  // namespace search_cpp
+
+#endif  // SEARCH_CPP__SEARCH_NODE_HPP_
+
+
+
+================================================================================
+FILE: search_cpp/package.xml
+================================================================================
+
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>search_cpp</name>
+  <version>0.0.0</version>
+  <description>TODO: Package description</description>
+  <maintainer email="hamdantariqedu@gmail.com">hamdan</maintainer>
+  <license>TODO: License declaration</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>ompl</depend>
+  <depend>tello_autonomy_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>octomap_manager_shim</depend>
+  <depend>octomap_msgs</depend>
+  <depend>tf2_ros</depend>
+  <depend>tf2_geometry_msgs</depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
+
+
+
+================================================================================
+FILE: search_cpp/src/search_node.cpp
+================================================================================
+
+// search_node.cpp  –  OMPL BIT* goal-directed planner for tello_autonomy
+//
+// Architecture note (project(v2).md Section 12.5):
+//   This node is the "Go-To-Goal" layer. It is NOT a frontier explorer –
+//   exploration_cpp (ported nbvplanner) handles that. This node is called
+//   whenever the system needs to reach a specific, known destination:
+//     - Return-to-Home
+//     - User waypoint ("click-and-go")
+//     - Pre-built map traversal (sequence of goal poses)
+//
+// Map input:  /tello_autonomy/occupancy_grid  (octomap_msgs/Octomap)
+//   Produced by occupancy_map_cpp (Section 12.2). We subscribe here and
+//   decode into a local octomap::OcTree, handed to octomap_manager_shim
+//   (Section 12.3/13) for collision checking – same pattern as exploration_cpp.
+//
+// Service:    /tello_autonomy/search_plan  (tello_autonomy_msgs/srv/SearchPlan)
+//   Client sends a start + goal PoseStamped; we return success + path[].
+//
+// Planner: BIT* (Batch Informed Trees) – user-selected. BIT* is an asymptotically
+//   optimal informed sampling planner that converges faster than RRT* by
+//   sampling from an informed ellipsoidal subset once an initial solution
+//   is found. Appropriate for room-scale, low-obstacle-density environments.
+//
+// Bounding box (Section 12.5 open question, now answered):
+//   Tello body 98 × 92.5 × 41 mm + 10 mm safety margin on each axis.
+//   Every OMPL state is checked by sweeping the drone bbox through
+//   getLineStatusBoundingBox() on a zero-length segment (point check).
+//
+// Threading: the map callback and the service handler can run on different
+//   ROS2 executor threads. map_mutex_ guards the octree_/shim_ pair.
+
+#include "search_cpp/search_node.hpp"
+
+#include <Eigen/Dense>
+#include <octomap_msgs/conversions.h>
+#include <ompl/base/objectives/PathLengthOptimizationObjective.h>
+#include <ompl/geometric/PathSimplifier.h>
+
+namespace search_cpp
+{
+
+SearchNode::SearchNode(const rclcpp::NodeOptions & options)
+: rclcpp::Node("search_node", options)
+{
+  // --- parameters ---
+  plan_timeout_sec_ = this->declare_parameter<double>("plan_timeout_sec", PLAN_TIMEOUT_SEC);
+
+  // Drone bounding box: use drone body + margin (see header for rationale)
+  const double bb_x = this->declare_parameter<double>("drone_bbox_x", DRONE_BB_X);
+  const double bb_y = this->declare_parameter<double>("drone_bbox_y", DRONE_BB_Y);
+  const double bb_z = this->declare_parameter<double>("drone_bbox_z", DRONE_BB_Z);
+  drone_bbox_ = Eigen::Vector3d(bb_x, bb_y, bb_z);
+
+  const std::string map_topic = this->declare_parameter<std::string>(
+    "map_topic", "/tello_autonomy/occupancy_grid");
+
+  // --- shim (no octree yet; will be set on first map message) ---
+  shim_ = std::make_shared<octomap_manager_shim::OctomapManagerShim>();
+  // Per architecture (Section 13.2): treat_unknown_as_occupied = true means
+  // unmapped space is blocked for collision checking – conservative and correct
+  // for a Go-To-Goal planner that should only enter known-safe space.
+  shim_->setTreatUnknownAsOccupied(true);
+
+  // --- map subscriber ---
+  map_sub_ = this->create_subscription<octomap_msgs::msg::Octomap>(
+    map_topic, rclcpp::QoS(10),
+    std::bind(&SearchNode::mapCallback, this, std::placeholders::_1));
+
+  // --- service server ---
+  plan_srv_ = this->create_service<tello_autonomy_msgs::srv::SearchPlan>(
+    "/tello_autonomy/search_plan",
+    std::bind(
+      &SearchNode::planCallback, this,
+      std::placeholders::_1, std::placeholders::_2));
+
+  RCLCPP_INFO(
+    this->get_logger(),
+    "search_node started: planner=BIT* timeout=%.2fs "
+    "drone_bbox=[%.3f, %.3f, %.3f]m",
+    plan_timeout_sec_, bb_x, bb_y, bb_z);
+}
+
+// ---------------------------------------------------------------------------
+// Map callback: decode octomap_msgs → octomap::OcTree → shim
+// ---------------------------------------------------------------------------
+void SearchNode::mapCallback(const octomap_msgs::msg::Octomap::SharedPtr msg)
+{
+  // msgToMap returns a raw AbstractOcTree* - we own it
+  auto * raw = octomap_msgs::msgToMap(*msg);
+  if (!raw) {
+    RCLCPP_WARN(this->get_logger(), "mapCallback: msgToMap returned null, skipping");
+    return;
+  }
+
+  auto * raw_octree = dynamic_cast<octomap::OcTree *>(raw);
+  if (!raw_octree) {
+    RCLCPP_WARN(
+      this->get_logger(),
+      "mapCallback: received map is not an OcTree (type=%s), skipping",
+      msg->id.c_str());
+    delete raw;
+    return;
+  }
+
+  auto new_tree = std::shared_ptr<const octomap::OcTree>(raw_octree);
+  std::lock_guard<std::mutex> lock(map_mutex_);
+  octree_ = new_tree;
+  shim_->setOctree(octree_);
+}
+
+// ---------------------------------------------------------------------------
+// State validity checker (called by OMPL's SpaceInformation)
+// ---------------------------------------------------------------------------
+bool SearchNode::isStateValid(
+  const ob::State * state,
+  const std::shared_ptr<const octomap_manager_shim::OctomapManagerShim> & shim_snap) const
+{
+  if (!shim_snap->hasOctree()) {
+    return false;  // no map yet – treat everything as invalid (conservative)
+  }
+
+  const auto * se3 = state->as<ob::SE3StateSpace::StateType>();
+  const Eigen::Vector3d pos(
+    se3->getX(), se3->getY(), se3->getZ());
+
+  // A "point" check: call getLineStatusBoundingBox with start==end, which
+  // degenerates to checking the swept box at a single location.
+  // This ensures the drone's physical footprint fits at this state.
+  const auto status = shim_snap->getLineStatusBoundingBox(pos, pos, drone_bbox_);
+  return (status == octomap_manager_shim::CellStatus::kFree);
+}
+
+// ---------------------------------------------------------------------------
+// Plan service handler
+// ---------------------------------------------------------------------------
+void SearchNode::planCallback(
+  const std::shared_ptr<tello_autonomy_msgs::srv::SearchPlan::Request> req,
+  std::shared_ptr<tello_autonomy_msgs::srv::SearchPlan::Response> res)
+{
+  // Take a shared snapshot of the shim so the map can be updated concurrently
+  // while we are planning without holding map_mutex_ for the full duration.
+  std::shared_ptr<const octomap_manager_shim::OctomapManagerShim> shim_snap;
+  {
+    std::lock_guard<std::mutex> lock(map_mutex_);
+    if (!shim_ || !shim_->hasOctree()) {
+      RCLCPP_WARN(this->get_logger(), "SearchPlan called before any map received");
+      res->success = false;
+      return;
+    }
+    // Snapshot: create a new shim sharing the same (immutable) octree ptr
+    auto snap = std::make_shared<octomap_manager_shim::OctomapManagerShim>();
+    snap->setOctree(octree_);
+    snap->setTreatUnknownAsOccupied(true);
+    shim_snap = snap;
+  }
+
+  // --- 1. Determine search bounds from the live map ---
+  const Eigen::Vector3d map_size = shim_snap->getMapSize();
+  if (map_size.norm() <= 0.0) {
+    RCLCPP_WARN(this->get_logger(), "Map is empty, cannot plan");
+    res->success = false;
+    return;
+  }
+
+  // --- 2. Set up OMPL SE3 state space ---
+  auto space = std::make_shared<ob::SE3StateSpace>();
+
+  // Bounds: use the actual OcTree metric bounds so OMPL doesn't sample outside
+  // the mapped volume. shim_ exposes getMapSize() but not min/max separately,
+  // so we read those directly from the octree once (with the lock).
+  double min_x, min_y, min_z, max_x, max_y, max_z;
+  {
+    std::lock_guard<std::mutex> lock(map_mutex_);
+    octree_->getMetricMin(min_x, min_y, min_z);
+    octree_->getMetricMax(max_x, max_y, max_z);
+  }
+
+  ob::RealVectorBounds bounds(3);
+  bounds.setLow(0, min_x);  bounds.setHigh(0, max_x);
+  bounds.setLow(1, min_y);  bounds.setHigh(1, max_y);
+  bounds.setLow(2, min_z);  bounds.setHigh(2, max_z);
+  space->setBounds(bounds);
+
+  // --- 3. SpaceInformation + validity checker ---
+  auto si = std::make_shared<ob::SpaceInformation>(space);
+  si->setStateValidityChecker(
+    [this, shim_snap](const ob::State * s) {
+      return this->isStateValid(s, shim_snap);
+    });
+  si->setup();
+
+  // --- 4. Start and goal states ---
+  ob::ScopedState<ob::SE3StateSpace> start(space);
+  start->setX(req->start.pose.position.x);
+  start->setY(req->start.pose.position.y);
+  start->setZ(req->start.pose.position.z);
+  start->rotation().x = req->start.pose.orientation.x;
+  start->rotation().y = req->start.pose.orientation.y;
+  start->rotation().z = req->start.pose.orientation.z;
+  start->rotation().w = req->start.pose.orientation.w;
+
+  ob::ScopedState<ob::SE3StateSpace> goal(space);
+  goal->setX(req->goal.pose.position.x);
+  goal->setY(req->goal.pose.position.y);
+  goal->setZ(req->goal.pose.position.z);
+  goal->rotation().x = req->goal.pose.orientation.x;
+  goal->rotation().y = req->goal.pose.orientation.y;
+  goal->rotation().z = req->goal.pose.orientation.z;
+  goal->rotation().w = req->goal.pose.orientation.w;
+
+  // Validate start/goal before handing to planner
+  if (!si->isValid(start.get())) {
+    RCLCPP_WARN(this->get_logger(), "SearchPlan: start state is in collision or unknown space");
+    res->success = false;
+    return;
+  }
+  if (!si->isValid(goal.get())) {
+    RCLCPP_WARN(this->get_logger(), "SearchPlan: goal state is in collision or unknown space");
+    res->success = false;
+    return;
+  }
+
+  // --- 5. Set up BIT* planner via SimpleSetup ---
+  og::SimpleSetup ss(si);
+  ss.setStartAndGoalStates(start, goal);
+
+  // Optimization objective: minimize path length (Section 12.5: shortest safe path)
+  ss.setOptimizationObjective(
+    std::make_shared<ob::PathLengthOptimizationObjective>(si));
+
+  // BIT* (Batch Informed Trees) – selected per user request
+  ss.setPlanner(std::make_shared<og::BITstar>(si));
+
+  // --- 6. Solve ---
+  const ob::PlannerStatus status = ss.solve(plan_timeout_sec_);
+
+  if (!status || !ss.haveExactSolutionPath()) {
+    RCLCPP_WARN(
+      this->get_logger(),
+      "SearchPlan: BIT* found no solution within %.2fs", plan_timeout_sec_);
+    res->success = false;
+    return;
+  }
+
+  // --- 7. Simplify/smooth the raw path ---
+  // OMPL's PathSimplifier removes unnecessary waypoints and smooths corners.
+  // This is especially important for BIT* whose raw paths can be slightly
+  // jagged even after optimization.
+  ss.simplifySolution();
+  og::PathGeometric & path = ss.getSolutionPath();
+  path.interpolate();  // add intermediate states for smooth following
+
+  // --- 8. Convert to ROS2 message ---
+  const std::string frame_id =
+    req->start.header.frame_id.empty() ? "map" : req->start.header.frame_id;
+  res->path = omplPathToMsg(path, frame_id, this->now());
+  res->success = true;
+
+  RCLCPP_INFO(
+    this->get_logger(),
+    "SearchPlan: found path with %zu waypoints (%.2fs budget)",
+    res->path.size(), plan_timeout_sec_);
+}
+
+// ---------------------------------------------------------------------------
+// Convert OMPL path states → PoseStamped[]
+// ---------------------------------------------------------------------------
+std::vector<geometry_msgs::msg::PoseStamped> SearchNode::omplPathToMsg(
+  const og::PathGeometric & path,
+  const std::string & frame_id,
+  const rclcpp::Time & stamp) const
+{
+  std::vector<geometry_msgs::msg::PoseStamped> out;
+  out.reserve(path.getStateCount());
+
+  for (std::size_t i = 0; i < path.getStateCount(); ++i) {
+    const auto * se3 = path.getState(i)->as<ob::SE3StateSpace::StateType>();
+    geometry_msgs::msg::PoseStamped ps;
+    ps.header.stamp = stamp;
+    ps.header.frame_id = frame_id;
+    ps.pose.position.x = se3->getX();
+    ps.pose.position.y = se3->getY();
+    ps.pose.position.z = se3->getZ();
+    ps.pose.orientation.x = se3->rotation().x;
+    ps.pose.orientation.y = se3->rotation().y;
+    ps.pose.orientation.z = se3->rotation().z;
+    ps.pose.orientation.w = se3->rotation().w;
+    out.push_back(ps);
+  }
+
+  return out;
+}
+
+}  // namespace search_cpp
+
+// ---------------------------------------------------------------------------
+// main
+// ---------------------------------------------------------------------------
+int main(int argc, char ** argv)
+{
+  rclcpp::init(argc, argv);
+  rclcpp::spin(std::make_shared<search_cpp::SearchNode>());
+  rclcpp::shutdown();
+  return 0;
+}
+
+
+
+================================================================================
+FILE: tello_autonomy_msgs/CMakeLists.txt
+================================================================================
+
+cmake_minimum_required(VERSION 3.8)
+project(tello_autonomy_msgs)
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+# find dependencies
+find_package(ament_cmake REQUIRED)
+# uncomment the following section in order to fill in
+# further dependencies manually.
+find_package(rosidl_default_generators REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
+
+rosidl_generate_interfaces(${PROJECT_NAME}
+  "srv/NbvPlan.srv"
+  "srv/SearchPlan.srv"
+  "msg/Segment.msg"
+  DEPENDENCIES std_msgs geometry_msgs
+)
+
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
+  # the following line skips the linter which checks for copyrights
+  # comment the line when a copyright and license is added to all source files
+  set(ament_cmake_copyright_FOUND TRUE)
+  # the following line skips cpplint (only works in a git repo)
+  # comment the line when this package is in a git repo and when
+  # a copyright and license is added to all source files
+  set(ament_cmake_cpplint_FOUND TRUE)
+  ament_lint_auto_find_test_dependencies()
+endif()
+
+ament_package()
+
+
+
+================================================================================
+FILE: tello_autonomy_msgs/package.xml
+================================================================================
+
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>tello_autonomy_msgs</name>
+  <version>0.0.0</version>
+  <description>TODO: Package description</description>
+  <maintainer email="hamdantariqedu@gmail.com">hamdan</maintainer>
+  <license>TODO: License declaration</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>rosidl_default_generators</buildtool_depend>
+
+  <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
+
+  <exec_depend>rosidl_default_runtime</exec_depend>
+  <member_of_group>rosidl_interface_packages</member_of_group>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
+
+

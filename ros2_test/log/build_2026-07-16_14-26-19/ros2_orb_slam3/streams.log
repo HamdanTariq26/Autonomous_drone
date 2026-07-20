@@ -1,0 +1,1035 @@
+[0.014s] Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3 -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3
+[0.069s] -- The C compiler identification is GNU 11.4.0
+[0.125s] -- The CXX compiler identification is GNU 11.4.0
+[0.132s] -- Detecting C compiler ABI info
+[0.206s] -- Detecting C compiler ABI info - done
+[0.211s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.212s] -- Detecting C compile features
+[0.213s] -- Detecting C compile features - done
+[0.215s] -- Detecting CXX compiler ABI info
+[0.296s] -- Detecting CXX compiler ABI info - done
+[0.301s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.302s] -- Detecting CXX compile features
+[0.302s] -- Detecting CXX compile features - done
+[0.463s] -- Found Python3: /usr/bin/python3.10 (found version "3.10.12") found components: Interpreter 
+[0.466s] -- Found ament_cmake: 1.3.14 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.528s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[0.548s] -- Found rclcpp: 16.0.19 (/opt/ros/humble/share/rclcpp/cmake)
+[0.580s] -- Found rosidl_generator_c: 3.1.9 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[0.584s] -- Found rosidl_adapter: 3.1.9 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[0.591s] -- Found rosidl_generator_cpp: 3.1.9 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[0.601s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.614s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.648s] -- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[0.650s] -- Found rmw_fastrtps_cpp: 6.2.10 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)
+[0.739s] -- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "3.0.2")  
+[0.765s] -- Found FastRTPS: /opt/ros/humble/include  
+[0.807s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[0.815s] -- Looking for pthread.h
+[0.887s] -- Looking for pthread.h - found
+[0.887s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+[0.959s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+[0.960s] -- Found Threads: TRUE  
+[1.006s] -- Found rclpy: 3.3.21 (/opt/ros/humble/share/rclpy/cmake)
+[1.007s] -- Found sensor_msgs: 4.9.1 (/opt/ros/humble/share/sensor_msgs/cmake)
+[1.032s] -- Found cv_bridge: 3.2.1 (/opt/ros/humble/share/cv_bridge/cmake)
+[1.044s] -- Found OpenCV: /usr (found suitable version "4.5.4", minimum required is "4.2") 
+[1.057s] -- Found OpenGL: /usr/lib/x86_64-linux-gnu/libOpenGL.so  found components: OpenGL 
+[1.059s] -- Found image_transport: 3.1.13 (/opt/ros/humble/share/image_transport/cmake)
+[1.090s] -- Found nav_msgs: 4.9.1 (/opt/ros/humble/share/nav_msgs/cmake)
+[1.265s] -- Configuring done
+[1.300s] -- Generating done
+[1.308s] -- Build files have been written to: /home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3
+[1.322s] Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3 -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3
+[1.324s] Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3 -- -j12 -l12
+[1.381s] [  9%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/LocalMapping.cc.o[0m
+[1.382s] [  9%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/ORBextractor.cc.o[0m
+[1.382s] [ 12%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/LoopClosing.cc.o[0m
+[1.382s] [ 12%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/Tracking.cc.o[0m
+[1.383s] [ 15%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/System.cc.o[0m
+[1.387s] [ 18%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/ORBmatcher.cc.o[0m
+[1.388s] [ 21%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/FrameDrawer.cc.o[0m
+[1.389s] [ 25%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/Converter.cc.o[0m
+[1.392s] [ 28%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/KeyFrame.cc.o[0m
+[1.392s] [ 31%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/MapPoint.cc.o[0m
+[1.398s] [ 31%] Built target ament_cmake_python_symlink_ros2_orb_slam3
+[1.424s] [ 34%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/Atlas.cc.o[0m
+[1.898s] running egg_info
+[1.899s] creating ros2_orb_slam3.egg-info
+[1.900s] writing ros2_orb_slam3.egg-info/PKG-INFO
+[1.900s] writing dependency_links to ros2_orb_slam3.egg-info/dependency_links.txt
+[1.900s] writing top-level names to ros2_orb_slam3.egg-info/top_level.txt
+[1.901s] writing manifest file 'ros2_orb_slam3.egg-info/SOURCES.txt'
+[1.908s] reading manifest file 'ros2_orb_slam3.egg-info/SOURCES.txt'
+[1.909s] writing manifest file 'ros2_orb_slam3.egg-info/SOURCES.txt'
+[1.990s] [ 34%] Built target ament_cmake_python_build_ros2_orb_slam3_egg
+[2.018s] [ 37%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/Map.cc.o[0m
+[6.622s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:37,
+[6.623s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[6.623s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Converter.cc:19:
+[6.623s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h:62:74: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[6.623s]    62 |     typedef Eigen::Map<Matrix<double, D, D>, Matrix<double,D,D>::Flags & AlignedBit ? Aligned : Unaligned >  HessianBlockType;
+[6.624s]       |                                                                          ^~~~~~~~~~
+[6.627s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[6.627s]                  from /usr/include/eigen3/Eigen/Dense:1,
+[6.628s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:25,
+[6.628s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Converter.cc:19:
+[6.628s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[6.628s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[6.628s]       |                                     ^~~~~~~~~~
+[6.664s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38,
+[6.667s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[6.667s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Converter.cc:19:
+[6.668s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:59:82: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[6.668s]    59 |       typedef Eigen::Map<Matrix<double, Di, Dj>, Matrix<double, Di, Dj>::Flags & AlignedBit ? Aligned : Unaligned > HessianBlockType;
+[6.668s]       |                                                                                  ^~~~~~~~~~
+[6.668s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[6.668s]                  from /usr/include/eigen3/Eigen/Dense:1,
+[6.668s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:25,
+[6.668s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Converter.cc:19:
+[6.668s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[6.668s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[6.669s]       |                                     ^~~~~~~~~~
+[6.676s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38,
+[6.677s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[6.677s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Converter.cc:19:
+[6.677s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:60:82: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[6.677s]    60 |       typedef Eigen::Map<Matrix<double, Dj, Di>, Matrix<double, Dj, Di>::Flags & AlignedBit ? Aligned : Unaligned > HessianBlockTransposedType;
+[6.677s]       |                                                                                  ^~~~~~~~~~
+[6.677s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[6.677s]                  from /usr/include/eigen3/Eigen/Dense:1,
+[6.677s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:25,
+[6.677s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Converter.cc:19:
+[6.677s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[6.677s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[6.678s]       |                                     ^~~~~~~~~~
+[7.601s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:37,
+[7.601s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[7.602s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Converter.cc:19:
+[7.602s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h: In instantiation of ‘class g2o::BaseVertex<3, Eigen::Matrix<double, 3, 1> >’:
+[7.602s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_sba.h:40:35:   required from here
+[7.602s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h:62:72: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[7.604s]    62 |     typedef Eigen::Map<Matrix<double, D, D>, Matrix<double,D,D>::Flags & AlignedBit ? Aligned : Unaligned >  HessianBlockType;
+[7.604s]       |                                                                  ~~~~~~^~~~~~~~~~~~
+[7.604s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[7.606s]                  from /usr/include/eigen3/Eigen/Dense:1,
+[7.606s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:25,
+[7.610s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Converter.cc:19:
+[7.610s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[7.611s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[7.611s]       |                                     ^~~~~~~~~~
+[7.845s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:30,
+[7.846s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:24,
+[7.846s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:23,
+[7.846s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/KeyFrame.cc:19:
+[7.846s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/ImuTypes.h: In member function ‘void ORB_SLAM3::IMU::Preintegrated::printMeasurements() const’:
+[7.846s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/ImuTypes.h:204:23: warning: comparison of integer expressions of different signedness: ‘int’ and ‘std::vector<ORB_SLAM3::IMU::Preintegrated::integrable>::size_type’ {aka ‘long unsigned int’} [-Wsign-compare]
+[7.846s]   204 |         for(int i=0; i<mvMeasurements.size(); i++){
+[7.846s]       |                      ~^~~~~~~~~~~~~~~~~~~~~~
+[8.100s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:37,
+[8.100s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[8.100s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Converter.cc:19:
+[8.100s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h: In instantiation of ‘class g2o::BaseVertex<6, g2o::SE3Quat>’:
+[8.102s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:59:33:   required from here
+[8.102s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h:62:72: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[8.102s]    62 |     typedef Eigen::Map<Matrix<double, D, D>, Matrix<double,D,D>::Flags & AlignedBit ? Aligned : Unaligned >  HessianBlockType;
+[8.102s]       |                                                                  ~~~~~~^~~~~~~~~~~~
+[8.103s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[8.103s]                  from /usr/include/eigen3/Eigen/Dense:1,
+[8.103s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:25,
+[8.103s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Converter.cc:19:
+[8.103s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[8.103s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[8.103s]       |                                     ^~~~~~~~~~
+[8.156s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38,
+[8.156s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[8.157s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Converter.cc:19:
+[8.157s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h: In instantiation of ‘class g2o::BaseBinaryEdge<6, g2o::SE3Quat, g2o::VertexSE3Expmap, g2o::VertexSE3Expmap>’:
+[8.157s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:83:24:   required from here
+[8.157s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:59:80: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[8.157s]    59 |       typedef Eigen::Map<Matrix<double, Di, Dj>, Matrix<double, Di, Dj>::Flags & AlignedBit ? Aligned : Unaligned > HessianBlockType;
+[8.157s]       |                                                                          ~~~~~~^~~~~~~~~~~~
+[8.157s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[8.159s]                  from /usr/include/eigen3/Eigen/Dense:1,
+[8.159s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:25,
+[8.159s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Converter.cc:19:
+[8.159s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[8.159s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[8.159s]       |                                     ^~~~~~~~~~
+[8.160s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38,
+[8.161s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[8.161s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Converter.cc:19:
+[8.161s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:60:80: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[8.161s]    60 |       typedef Eigen::Map<Matrix<double, Dj, Di>, Matrix<double, Dj, Di>::Flags & AlignedBit ? Aligned : Unaligned > HessianBlockTransposedType;
+[8.161s]       |                                                                          ~~~~~~^~~~~~~~~~~~
+[8.161s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[8.161s]                  from /usr/include/eigen3/Eigen/Dense:1,
+[8.161s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:25,
+[8.161s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Converter.cc:19:
+[8.161s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[8.161s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[8.161s]       |                                     ^~~~~~~~~~
+[8.269s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38,
+[8.270s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[8.270s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Converter.cc:19:
+[8.270s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h: In instantiation of ‘class g2o::BaseBinaryEdge<2, Eigen::Matrix<double, 2, 1>, g2o::VertexSBAPointXYZ, g2o::VertexSE3Expmap>’:
+[8.270s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:114:35:   required from here
+[8.271s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:59:80: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[8.271s]    59 |       typedef Eigen::Map<Matrix<double, Di, Dj>, Matrix<double, Di, Dj>::Flags & AlignedBit ? Aligned : Unaligned > HessianBlockType;
+[8.271s]       |                                                                          ~~~~~~^~~~~~~~~~~~
+[8.271s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[8.271s]                  from /usr/include/eigen3/Eigen/Dense:1,
+[8.271s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:25,
+[8.272s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Converter.cc:19:
+[8.272s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[8.273s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[8.273s]       |                                     ^~~~~~~~~~
+[8.293s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38,
+[8.293s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[8.295s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Converter.cc:19:
+[8.295s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:60:80: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[8.295s]    60 |       typedef Eigen::Map<Matrix<double, Dj, Di>, Matrix<double, Dj, Di>::Flags & AlignedBit ? Aligned : Unaligned > HessianBlockTransposedType;
+[8.295s]       |                                                                          ~~~~~~^~~~~~~~~~~~
+[8.295s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[8.295s]                  from /usr/include/eigen3/Eigen/Dense:1,
+[8.296s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:25,
+[8.296s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Converter.cc:19:
+[8.296s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[8.296s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[8.296s]       |                                     ^~~~~~~~~~
+[8.423s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38,
+[8.424s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[8.424s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Converter.cc:19:
+[8.424s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h: In instantiation of ‘class g2o::BaseBinaryEdge<3, Eigen::Matrix<double, 3, 1>, g2o::VertexSBAPointXYZ, g2o::VertexSE3Expmap>’:
+[8.424s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:146:41:   required from here
+[8.424s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:59:80: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[8.424s]    59 |       typedef Eigen::Map<Matrix<double, Di, Dj>, Matrix<double, Di, Dj>::Flags & AlignedBit ? Aligned : Unaligned > HessianBlockType;
+[8.424s]       |                                                                          ~~~~~~^~~~~~~~~~~~
+[8.424s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[8.424s]                  from /usr/include/eigen3/Eigen/Dense:1,
+[8.424s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:25,
+[8.425s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Converter.cc:19:
+[8.425s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[8.425s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[8.425s]       |                                     ^~~~~~~~~~
+[8.427s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:30,
+[8.427s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28,
+[8.427s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23,
+[8.427s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/ORBmatcher.h:28,
+[8.427s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/ORBmatcher.cc:20:
+[8.427s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/ImuTypes.h: In member function ‘void ORB_SLAM3::IMU::Preintegrated::printMeasurements() const’:
+[8.428s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/ImuTypes.h:204:23: warning: comparison of integer expressions of different signedness: ‘int’ and ‘std::vector<ORB_SLAM3::IMU::Preintegrated::integrable>::size_type’ {aka ‘long unsigned int’} [-Wsign-compare]
+[8.428s]   204 |         for(int i=0; i<mvMeasurements.size(); i++){
+[8.428s]       |                      ~^~~~~~~~~~~~~~~~~~~~~~
+[8.428s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38,
+[8.428s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[8.429s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Converter.cc:19:
+[8.429s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:60:80: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[8.429s]    60 |       typedef Eigen::Map<Matrix<double, Dj, Di>, Matrix<double, Dj, Di>::Flags & AlignedBit ? Aligned : Unaligned > HessianBlockTransposedType;
+[8.429s]       |                                                                          ~~~~~~^~~~~~~~~~~~
+[8.429s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[8.429s]                  from /usr/include/eigen3/Eigen/Dense:1,
+[8.430s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:25,
+[8.430s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Converter.cc:19:
+[8.430s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[8.430s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[8.430s]       |                                     ^~~~~~~~~~
+[8.564s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:37,
+[8.564s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[8.564s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33,
+[8.564s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:24,
+[8.564s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:23,
+[8.564s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/KeyFrame.cc:19:
+[8.565s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h: At global scope:
+[8.565s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h:62:74: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[8.565s]    62 |     typedef Eigen::Map<Matrix<double, D, D>, Matrix<double,D,D>::Flags & AlignedBit ? Aligned : Unaligned >  HessianBlockType;
+[8.565s]       |                                                                          ^~~~~~~~~~
+[8.567s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[8.567s]                  from /usr/include/eigen3/Eigen/LU:11,
+[8.567s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/so2.hpp:12,
+[8.567s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/se2.hpp:7,
+[8.567s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/geometry.hpp:7,
+[8.567s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:28,
+[8.567s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:24,
+[8.567s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:23,
+[8.567s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/KeyFrame.cc:19:
+[8.568s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[8.568s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[8.568s]       |                                     ^~~~~~~~~~
+[8.613s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38,
+[8.614s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[8.614s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33,
+[8.614s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:24,
+[8.614s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:23,
+[8.614s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/KeyFrame.cc:19:
+[8.614s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:59:82: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[8.615s]    59 |       typedef Eigen::Map<Matrix<double, Di, Dj>, Matrix<double, Di, Dj>::Flags & AlignedBit ? Aligned : Unaligned > HessianBlockType;
+[8.615s]       |                                                                                  ^~~~~~~~~~
+[8.615s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[8.615s]                  from /usr/include/eigen3/Eigen/LU:11,
+[8.615s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/so2.hpp:12,
+[8.615s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/se2.hpp:7,
+[8.615s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/geometry.hpp:7,
+[8.615s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:28,
+[8.615s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:24,
+[8.615s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:23,
+[8.615s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/KeyFrame.cc:19:
+[8.615s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[8.615s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[8.615s]       |                                     ^~~~~~~~~~
+[8.616s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38,
+[8.616s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[8.616s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33,
+[8.616s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:24,
+[8.616s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:23,
+[8.616s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/KeyFrame.cc:19:
+[8.616s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:60:82: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[8.617s]    60 |       typedef Eigen::Map<Matrix<double, Dj, Di>, Matrix<double, Dj, Di>::Flags & AlignedBit ? Aligned : Unaligned > HessianBlockTransposedType;
+[8.617s]       |                                                                                  ^~~~~~~~~~
+[8.617s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[8.617s]                  from /usr/include/eigen3/Eigen/LU:11,
+[8.617s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/so2.hpp:12,
+[8.617s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/se2.hpp:7,
+[8.618s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/geometry.hpp:7,
+[8.618s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:28,
+[8.618s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:24,
+[8.618s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:23,
+[8.618s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/KeyFrame.cc:19:
+[8.618s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[8.619s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[8.619s]       |                                     ^~~~~~~~~~
+[8.766s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:37,
+[8.766s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[8.767s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33,
+[8.767s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28,
+[8.769s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23,
+[8.769s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/ORBmatcher.h:28,
+[8.769s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/ORBmatcher.cc:20:
+[8.770s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h: At global scope:
+[8.770s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h:62:74: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[8.770s]    62 |     typedef Eigen::Map<Matrix<double, D, D>, Matrix<double,D,D>::Flags & AlignedBit ? Aligned : Unaligned >  HessianBlockType;
+[8.770s]       |                                                                          ^~~~~~~~~~
+[8.770s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[8.770s]                  from /usr/include/eigen3/Eigen/Dense:1,
+[8.770s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/rotation_matrix.hpp:7,
+[8.770s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/so3.hpp:7,
+[8.770s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/rxso3.hpp:7,
+[8.771s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/sim3.hpp:7,
+[8.772s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/ORBmatcher.h:26,
+[8.774s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/ORBmatcher.cc:20:
+[8.775s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[8.775s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[8.776s]       |                                     ^~~~~~~~~~
+[8.834s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38,
+[8.834s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[8.834s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33,
+[8.835s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28,
+[8.835s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23,
+[8.835s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/ORBmatcher.h:28,
+[8.835s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/ORBmatcher.cc:20:
+[8.835s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:59:82: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[8.838s]    59 |       typedef Eigen::Map<Matrix<double, Di, Dj>, Matrix<double, Di, Dj>::Flags & AlignedBit ? Aligned : Unaligned > HessianBlockType;
+[8.839s]       |                                                                                  ^~~~~~~~~~
+[8.839s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[8.839s]                  from /usr/include/eigen3/Eigen/Dense:1,
+[8.839s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/rotation_matrix.hpp:7,
+[8.839s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/so3.hpp:7,
+[8.839s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/rxso3.hpp:7,
+[8.839s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/sim3.hpp:7,
+[8.839s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/ORBmatcher.h:26,
+[8.839s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/ORBmatcher.cc:20:
+[8.839s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[8.840s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[8.840s]       |                                     ^~~~~~~~~~
+[8.840s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38,
+[8.840s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[8.843s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33,
+[8.843s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28,
+[8.843s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23,
+[8.844s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/ORBmatcher.h:28,
+[8.844s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/ORBmatcher.cc:20:
+[8.844s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:60:82: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[8.844s]    60 |       typedef Eigen::Map<Matrix<double, Dj, Di>, Matrix<double, Dj, Di>::Flags & AlignedBit ? Aligned : Unaligned > HessianBlockTransposedType;
+[8.844s]       |                                                                                  ^~~~~~~~~~
+[8.844s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[8.844s]                  from /usr/include/eigen3/Eigen/Dense:1,
+[8.844s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/rotation_matrix.hpp:7,
+[8.844s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/so3.hpp:7,
+[8.844s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/rxso3.hpp:7,
+[8.845s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/sim3.hpp:7,
+[8.845s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/ORBmatcher.h:26,
+[8.845s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/ORBmatcher.cc:20:
+[8.845s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[8.845s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[8.845s]       |                                     ^~~~~~~~~~
+[9.156s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:37,
+[9.158s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[9.158s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Converter.cc:19:
+[9.158s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h: In instantiation of ‘class g2o::BaseVertex<7, g2o::Sim3>’:
+[9.159s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_seven_dof_expmap.h:48:35:   required from here
+[9.160s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h:62:72: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[9.160s]    62 |     typedef Eigen::Map<Matrix<double, D, D>, Matrix<double,D,D>::Flags & AlignedBit ? Aligned : Unaligned >  HessianBlockType;
+[9.161s]       |                                                                  ~~~~~~^~~~~~~~~~~~
+[9.162s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[9.163s]                  from /usr/include/eigen3/Eigen/Dense:1,
+[9.163s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:25,
+[9.163s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Converter.cc:19:
+[9.163s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[9.163s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[9.163s]       |                                     ^~~~~~~~~~
+[9.186s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:30,
+[9.186s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28,
+[9.187s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23,
+[9.187s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Map.h:23,
+[9.187s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Map.cc:20:
+[9.187s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/ImuTypes.h: In member function ‘void ORB_SLAM3::IMU::Preintegrated::printMeasurements() const’:
+[9.187s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/ImuTypes.h:204:23: warning: comparison of integer expressions of different signedness: ‘int’ and ‘std::vector<ORB_SLAM3::IMU::Preintegrated::integrable>::size_type’ {aka ‘long unsigned int’} [-Wsign-compare]
+[9.187s]   204 |         for(int i=0; i<mvMeasurements.size(); i++){
+[9.187s]       |                      ~^~~~~~~~~~~~~~~~~~~~~~
+[9.285s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38,
+[9.285s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[9.286s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Converter.cc:19:
+[9.286s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h: In instantiation of ‘class g2o::BaseBinaryEdge<7, g2o::Sim3, g2o::VertexSim3Expmap, g2o::VertexSim3Expmap>’:
+[9.286s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_seven_dof_expmap.h:99:27:   required from here
+[9.286s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:59:80: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[9.286s]    59 |       typedef Eigen::Map<Matrix<double, Di, Dj>, Matrix<double, Di, Dj>::Flags & AlignedBit ? Aligned : Unaligned > HessianBlockType;
+[9.286s]       |                                                                          ~~~~~~^~~~~~~~~~~~
+[9.290s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[9.290s]                  from /usr/include/eigen3/Eigen/Dense:1,
+[9.291s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:25,
+[9.291s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Converter.cc:19:
+[9.291s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[9.291s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[9.291s]       |                                     ^~~~~~~~~~
+[9.291s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38,
+[9.291s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[9.291s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Converter.cc:19:
+[9.291s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:60:80: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[9.291s]    60 |       typedef Eigen::Map<Matrix<double, Dj, Di>, Matrix<double, Dj, Di>::Flags & AlignedBit ? Aligned : Unaligned > HessianBlockTransposedType;
+[9.291s]       |                                                                          ~~~~~~^~~~~~~~~~~~
+[9.291s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[9.292s]                  from /usr/include/eigen3/Eigen/Dense:1,
+[9.292s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:25,
+[9.292s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Converter.cc:19:
+[9.292s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[9.292s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[9.292s]       |                                     ^~~~~~~~~~
+[9.376s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:37,
+[9.376s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[9.376s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33,
+[9.376s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28,
+[9.376s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23,
+[9.376s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Map.h:23,
+[9.376s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Map.cc:20:
+[9.377s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h: At global scope:
+[9.377s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h:62:74: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[9.377s]    62 |     typedef Eigen::Map<Matrix<double, D, D>, Matrix<double,D,D>::Flags & AlignedBit ? Aligned : Unaligned >  HessianBlockType;
+[9.377s]       |                                                                          ^~~~~~~~~~
+[9.378s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[9.378s]                  from /usr/include/eigen3/Eigen/LU:11,
+[9.378s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/so2.hpp:12,
+[9.379s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/se2.hpp:7,
+[9.379s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/geometry.hpp:7,
+[9.379s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:28,
+[9.379s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28,
+[9.379s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23,
+[9.379s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Map.h:23,
+[9.379s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Map.cc:20:
+[9.379s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[9.379s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[9.379s]       |                                     ^~~~~~~~~~
+[9.403s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:30,
+[9.404s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:24,
+[9.404s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:23,
+[9.404s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/LoopClosing.h:23,
+[9.404s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/LoopClosing.cc:20:
+[9.404s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/ImuTypes.h: In member function ‘void ORB_SLAM3::IMU::Preintegrated::printMeasurements() const’:
+[9.404s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/ImuTypes.h:204:23: warning: comparison of integer expressions of different signedness: ‘int’ and ‘std::vector<ORB_SLAM3::IMU::Preintegrated::integrable>::size_type’ {aka ‘long unsigned int’} [-Wsign-compare]
+[9.404s]   204 |         for(int i=0; i<mvMeasurements.size(); i++){
+[9.404s]       |                      ~^~~~~~~~~~~~~~~~~~~~~~
+[9.424s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38,
+[9.425s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[9.425s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Converter.cc:19:
+[9.425s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h: In instantiation of ‘class g2o::BaseBinaryEdge<2, Eigen::Matrix<double, 2, 1>, g2o::VertexSBAPointXYZ, g2o::VertexSim3Expmap>’:
+[9.425s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_seven_dof_expmap.h:130:36:   required from here
+[9.425s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:59:80: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[9.426s]    59 |       typedef Eigen::Map<Matrix<double, Di, Dj>, Matrix<double, Di, Dj>::Flags & AlignedBit ? Aligned : Unaligned > HessianBlockType;
+[9.426s]       |                                                                          ~~~~~~^~~~~~~~~~~~
+[9.426s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[9.429s]                  from /usr/include/eigen3/Eigen/Dense:1,
+[9.429s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:25,
+[9.429s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Converter.cc:19:
+[9.430s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[9.430s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[9.430s]       |                                     ^~~~~~~~~~
+[9.431s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38,
+[9.431s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[9.431s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33,
+[9.431s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28,
+[9.432s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23,
+[9.432s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Map.h:23,
+[9.432s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Map.cc:20:
+[9.432s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:59:82: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[9.432s]    59 |       typedef Eigen::Map<Matrix<double, Di, Dj>, Matrix<double, Di, Dj>::Flags & AlignedBit ? Aligned : Unaligned > HessianBlockType;
+[9.432s]       |                                                                                  ^~~~~~~~~~
+[9.432s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[9.432s]                  from /usr/include/eigen3/Eigen/LU:11,
+[9.432s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/so2.hpp:12,
+[9.432s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/se2.hpp:7,
+[9.432s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/geometry.hpp:7,
+[9.432s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:28,
+[9.432s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28,
+[9.433s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23,
+[9.433s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Map.h:23,
+[9.433s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Map.cc:20:
+[9.433s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[9.433s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[9.433s]       |                                     ^~~~~~~~~~
+[9.434s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38,
+[9.434s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[9.434s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33,
+[9.434s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28,
+[9.434s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23,
+[9.434s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Map.h:23,
+[9.434s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Map.cc:20:
+[9.434s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:60:82: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[9.434s]    60 |       typedef Eigen::Map<Matrix<double, Dj, Di>, Matrix<double, Dj, Di>::Flags & AlignedBit ? Aligned : Unaligned > HessianBlockTransposedType;
+[9.436s]       |                                                                                  ^~~~~~~~~~
+[9.436s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[9.436s]                  from /usr/include/eigen3/Eigen/LU:11,
+[9.436s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/so2.hpp:12,
+[9.436s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/se2.hpp:7,
+[9.436s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/geometry.hpp:7,
+[9.437s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:28,
+[9.437s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28,
+[9.437s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23,
+[9.437s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Map.h:23,
+[9.437s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Map.cc:20:
+[9.437s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[9.437s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[9.437s]       |                                     ^~~~~~~~~~
+[9.454s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38,
+[9.454s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[9.454s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Converter.cc:19:
+[9.455s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:60:80: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[9.455s]    60 |       typedef Eigen::Map<Matrix<double, Dj, Di>, Matrix<double, Dj, Di>::Flags & AlignedBit ? Aligned : Unaligned > HessianBlockTransposedType;
+[9.455s]       |                                                                          ~~~~~~^~~~~~~~~~~~
+[9.455s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[9.456s]                  from /usr/include/eigen3/Eigen/Dense:1,
+[9.456s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:25,
+[9.456s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/Converter.cc:19:
+[9.456s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[9.457s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[9.457s]       |                                     ^~~~~~~~~~
+[9.484s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:30,
+[9.484s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28,
+[9.484s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23,
+[9.485s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/MapPoint.cc:19:
+[9.486s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/ImuTypes.h: In member function ‘void ORB_SLAM3::IMU::Preintegrated::printMeasurements() const’:
+[9.486s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/ImuTypes.h:204:23: warning: comparison of integer expressions of different signedness: ‘int’ and ‘std::vector<ORB_SLAM3::IMU::Preintegrated::integrable>::size_type’ {aka ‘long unsigned int’} [-Wsign-compare]
+[9.486s]   204 |         for(int i=0; i<mvMeasurements.size(); i++){
+[9.487s]       |                      ~^~~~~~~~~~~~~~~~~~~~~~
+[9.523s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:37,
+[9.523s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[9.523s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33,
+[9.523s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:24,
+[9.525s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:23,
+[9.525s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/KeyFrame.cc:19:
+[9.525s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h: In instantiation of ‘class g2o::BaseVertex<3, Eigen::Matrix<double, 3, 1> >’:
+[9.525s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_sba.h:40:35:   required from here
+[9.525s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h:62:72: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[9.526s]    62 |     typedef Eigen::Map<Matrix<double, D, D>, Matrix<double,D,D>::Flags & AlignedBit ? Aligned : Unaligned >  HessianBlockType;
+[9.526s]       |                                                                  ~~~~~~^~~~~~~~~~~~
+[9.526s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[9.526s]                  from /usr/include/eigen3/Eigen/LU:11,
+[9.526s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/so2.hpp:12,
+[9.526s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/se2.hpp:7,
+[9.526s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/geometry.hpp:7,
+[9.526s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:28,
+[9.526s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:24,
+[9.526s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:23,
+[9.526s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/KeyFrame.cc:19:
+[9.526s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[9.527s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[9.527s]       |                                     ^~~~~~~~~~
+[9.536s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:30,
+[9.537s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:24,
+[9.537s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:23,
+[9.537s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/LocalMapping.h:23,
+[9.537s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/LocalMapping.cc:20:
+[9.537s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/ImuTypes.h: In member function ‘void ORB_SLAM3::IMU::Preintegrated::printMeasurements() const’:
+[9.537s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/ImuTypes.h:204:23: warning: comparison of integer expressions of different signedness: ‘int’ and ‘std::vector<ORB_SLAM3::IMU::Preintegrated::integrable>::size_type’ {aka ‘long unsigned int’} [-Wsign-compare]
+[9.537s]   204 |         for(int i=0; i<mvMeasurements.size(); i++){
+[9.538s]       |                      ~^~~~~~~~~~~~~~~~~~~~~~
+[9.570s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:30,
+[9.570s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28,
+[9.570s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23,
+[9.571s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Map.h:23,
+[9.571s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Atlas.h:22,
+[9.571s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapDrawer.h:23,
+[9.571s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Viewer.h:24,
+[9.571s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Tracking.h:26,
+[9.571s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/FrameDrawer.h:23,
+[9.571s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/FrameDrawer.cc:19:
+[9.572s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/ImuTypes.h: In member function ‘void ORB_SLAM3::IMU::Preintegrated::printMeasurements() const’:
+[9.572s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/ImuTypes.h:204:23: warning: comparison of integer expressions of different signedness: ‘int’ and ‘std::vector<ORB_SLAM3::IMU::Preintegrated::integrable>::size_type’ {aka ‘long unsigned int’} [-Wsign-compare]
+[9.572s]   204 |         for(int i=0; i<mvMeasurements.size(); i++){
+[9.572s]       |                      ~^~~~~~~~~~~~~~~~~~~~~~
+[9.577s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:37,
+[9.577s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[9.577s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33,
+[9.578s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:24,
+[9.578s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:23,
+[9.578s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/KeyFrame.cc:19:
+[9.578s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h: In instantiation of ‘class g2o::BaseVertex<6, g2o::SE3Quat>’:
+[9.578s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:59:33:   required from here
+[9.578s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h:62:72: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[9.578s]    62 |     typedef Eigen::Map<Matrix<double, D, D>, Matrix<double,D,D>::Flags & AlignedBit ? Aligned : Unaligned >  HessianBlockType;
+[9.578s]       |                                                                  ~~~~~~^~~~~~~~~~~~
+[9.578s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[9.578s]                  from /usr/include/eigen3/Eigen/LU:11,
+[9.578s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/so2.hpp:12,
+[9.579s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/se2.hpp:7,
+[9.579s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/geometry.hpp:7,
+[9.579s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:28,
+[9.579s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:24,
+[9.579s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:23,
+[9.579s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/KeyFrame.cc:19:
+[9.579s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[9.579s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[9.579s]       |                                     ^~~~~~~~~~
+[9.663s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38,
+[9.663s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[9.663s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33,
+[9.664s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:24,
+[9.664s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:23,
+[9.664s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/KeyFrame.cc:19:
+[9.664s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h: In instantiation of ‘class g2o::BaseBinaryEdge<6, g2o::SE3Quat, g2o::VertexSE3Expmap, g2o::VertexSE3Expmap>’:
+[9.664s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:83:24:   required from here
+[9.664s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:59:80: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[9.664s]    59 |       typedef Eigen::Map<Matrix<double, Di, Dj>, Matrix<double, Di, Dj>::Flags & AlignedBit ? Aligned : Unaligned > HessianBlockType;
+[9.664s]       |                                                                          ~~~~~~^~~~~~~~~~~~
+[9.664s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[9.665s]                  from /usr/include/eigen3/Eigen/LU:11,
+[9.665s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/so2.hpp:12,
+[9.665s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/se2.hpp:7,
+[9.665s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/geometry.hpp:7,
+[9.665s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:28,
+[9.665s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:24,
+[9.665s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:23,
+[9.665s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/KeyFrame.cc:19:
+[9.665s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[9.665s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[9.667s]       |                                     ^~~~~~~~~~
+[9.667s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38,
+[9.667s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[9.667s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33,
+[9.667s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:24,
+[9.667s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:23,
+[9.668s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/KeyFrame.cc:19:
+[9.668s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:60:80: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[9.668s]    60 |       typedef Eigen::Map<Matrix<double, Dj, Di>, Matrix<double, Dj, Di>::Flags & AlignedBit ? Aligned : Unaligned > HessianBlockTransposedType;
+[9.668s]       |                                                                          ~~~~~~^~~~~~~~~~~~
+[9.668s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:37,
+[9.668s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[9.668s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33,
+[9.668s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28,
+[9.668s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23,
+[9.668s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/MapPoint.cc:19:
+[9.668s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h: At global scope:
+[9.668s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h:62:74: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[9.668s]    62 |     typedef Eigen::Map<Matrix<double, D, D>, Matrix<double,D,D>::Flags & AlignedBit ? Aligned : Unaligned >  HessianBlockType;
+[9.669s]       |                                                                          ^~~~~~~~~~
+[9.669s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[9.669s]                  from /usr/include/eigen3/Eigen/LU:11,
+[9.669s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/so2.hpp:12,
+[9.669s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/se2.hpp:7,
+[9.669s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/geometry.hpp:7,
+[9.669s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:28,
+[9.669s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:24,
+[9.669s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:23,
+[9.669s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/KeyFrame.cc:19:
+[9.669s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[9.669s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[9.669s]       |                                     ^~~~~~~~~~
+[9.670s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[9.670s]                  from /usr/include/eigen3/Eigen/LU:11,
+[9.670s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/so2.hpp:12,
+[9.670s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/se2.hpp:7,
+[9.670s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/geometry.hpp:7,
+[9.670s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:28,
+[9.673s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28,
+[9.673s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23,
+[9.673s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/MapPoint.cc:19:
+[9.673s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[9.673s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[9.673s]       |                                     ^~~~~~~~~~
+[9.674s] [ 40%] [32mBuilding CXX object CMakeFiles/orb_slam3_lib.dir/orb_slam3/src/MapDrawer.cc.o[0m
+[9.729s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38,
+[9.729s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[9.730s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33,
+[9.730s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28,
+[9.730s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23,
+[9.730s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/MapPoint.cc:19:
+[9.730s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:59:82: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[9.730s]    59 |       typedef Eigen::Map<Matrix<double, Di, Dj>, Matrix<double, Di, Dj>::Flags & AlignedBit ? Aligned : Unaligned > HessianBlockType;
+[9.731s]       |                                                                                  ^~~~~~~~~~
+[9.731s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[9.732s]                  from /usr/include/eigen3/Eigen/LU:11,
+[9.732s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/so2.hpp:12,
+[9.732s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/se2.hpp:7,
+[9.732s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/geometry.hpp:7,
+[9.732s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:28,
+[9.732s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28,
+[9.734s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23,
+[9.734s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/MapPoint.cc:19:
+[9.734s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[9.734s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[9.734s]       |                                     ^~~~~~~~~~
+[9.734s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38,
+[9.734s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[9.734s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33,
+[9.734s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28,
+[9.734s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23,
+[9.734s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/MapPoint.cc:19:
+[9.735s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:60:82: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[9.735s]    60 |       typedef Eigen::Map<Matrix<double, Dj, Di>, Matrix<double, Dj, Di>::Flags & AlignedBit ? Aligned : Unaligned > HessianBlockTransposedType;
+[9.735s]       |                                                                                  ^~~~~~~~~~
+[9.735s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[9.735s]                  from /usr/include/eigen3/Eigen/LU:11,
+[9.735s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/so2.hpp:12,
+[9.735s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/se2.hpp:7,
+[9.735s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/geometry.hpp:7,
+[9.735s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:28,
+[9.735s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28,
+[9.735s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23,
+[9.735s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/MapPoint.cc:19:
+[9.736s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[9.736s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[9.736s]       |                                     ^~~~~~~~~~
+[9.751s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:37,
+[9.752s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[9.752s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33,
+[9.752s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28,
+[9.752s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23,
+[9.752s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Map.h:23,
+[9.752s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Atlas.h:22,
+[9.752s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapDrawer.h:23,
+[9.752s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Viewer.h:24,
+[9.752s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Tracking.h:26,
+[9.753s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/FrameDrawer.h:23,
+[9.753s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/FrameDrawer.cc:19:
+[9.753s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h: At global scope:
+[9.753s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h:62:74: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[9.753s]    62 |     typedef Eigen::Map<Matrix<double, D, D>, Matrix<double,D,D>::Flags & AlignedBit ? Aligned : Unaligned >  HessianBlockType;
+[9.753s]       |                                                                          ^~~~~~~~~~
+[9.753s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[9.753s]                  from /usr/include/eigen3/Eigen/LU:11,
+[9.753s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/so2.hpp:12,
+[9.753s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/se2.hpp:7,
+[9.753s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/geometry.hpp:7,
+[9.753s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:28,
+[9.754s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28,
+[9.754s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23,
+[9.754s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Map.h:23,
+[9.754s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Atlas.h:22,
+[9.754s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapDrawer.h:23,
+[9.754s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Viewer.h:24,
+[9.754s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Tracking.h:26,
+[9.757s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/FrameDrawer.h:23,
+[9.757s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/FrameDrawer.cc:19:
+[9.758s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[9.758s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[9.758s]       |                                     ^~~~~~~~~~
+[9.776s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:37,
+[9.776s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[9.776s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33,
+[9.776s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28,
+[9.776s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23,
+[9.777s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/ORBmatcher.h:28,
+[9.777s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/ORBmatcher.cc:20:
+[9.777s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h: In instantiation of ‘class g2o::BaseVertex<3, Eigen::Matrix<double, 3, 1> >’:
+[9.777s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_sba.h:40:35:   required from here
+[9.777s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h:62:72: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[9.777s]    62 |     typedef Eigen::Map<Matrix<double, D, D>, Matrix<double,D,D>::Flags & AlignedBit ? Aligned : Unaligned >  HessianBlockType;
+[9.777s]       |                                                                  ~~~~~~^~~~~~~~~~~~
+[9.777s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[9.777s]                  from /usr/include/eigen3/Eigen/Dense:1,
+[9.778s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/rotation_matrix.hpp:7,
+[9.778s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/so3.hpp:7,
+[9.778s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/rxso3.hpp:7,
+[9.778s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/sim3.hpp:7,
+[9.778s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/ORBmatcher.h:26,
+[9.778s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/ORBmatcher.cc:20:
+[9.778s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[9.778s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[9.778s]       |                                     ^~~~~~~~~~
+[9.782s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38,
+[9.782s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[9.782s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33,
+[9.782s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:24,
+[9.782s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:23,
+[9.782s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/KeyFrame.cc:19:
+[9.782s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h: In instantiation of ‘class g2o::BaseBinaryEdge<2, Eigen::Matrix<double, 2, 1>, g2o::VertexSBAPointXYZ, g2o::VertexSE3Expmap>’:
+[9.782s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:114:35:   required from here
+[9.782s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:59:80: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[9.784s]    59 |       typedef Eigen::Map<Matrix<double, Di, Dj>, Matrix<double, Di, Dj>::Flags & AlignedBit ? Aligned : Unaligned > HessianBlockType;
+[9.784s]       |                                                                          ~~~~~~^~~~~~~~~~~~
+[9.784s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[9.784s]                  from /usr/include/eigen3/Eigen/LU:11,
+[9.784s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/so2.hpp:12,
+[9.785s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/se2.hpp:7,
+[9.785s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/geometry.hpp:7,
+[9.785s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:28,
+[9.785s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:24,
+[9.785s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:23,
+[9.785s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/KeyFrame.cc:19:
+[9.785s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[9.785s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[9.785s]       |                                     ^~~~~~~~~~
+[9.798s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38,
+[9.798s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[9.798s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33,
+[9.798s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28,
+[9.798s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23,
+[9.799s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Map.h:23,
+[9.799s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Atlas.h:22,
+[9.799s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapDrawer.h:23,
+[9.799s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Viewer.h:24,
+[9.799s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Tracking.h:26,
+[9.799s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/FrameDrawer.h:23,
+[9.799s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/FrameDrawer.cc:19:
+[9.800s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:59:82: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[9.801s]    59 |       typedef Eigen::Map<Matrix<double, Di, Dj>, Matrix<double, Di, Dj>::Flags & AlignedBit ? Aligned : Unaligned > HessianBlockType;
+[9.801s]       |                                                                                  ^~~~~~~~~~
+[9.801s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[9.802s]                  from /usr/include/eigen3/Eigen/LU:11,
+[9.802s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/so2.hpp:12,
+[9.802s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/se2.hpp:7,
+[9.802s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/geometry.hpp:7,
+[9.803s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:28,
+[9.803s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28,
+[9.803s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23,
+[9.803s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Map.h:23,
+[9.804s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Atlas.h:22,
+[9.804s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapDrawer.h:23,
+[9.804s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Viewer.h:24,
+[9.804s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Tracking.h:26,
+[9.804s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/FrameDrawer.h:23,
+[9.805s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/FrameDrawer.cc:19:
+[9.805s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[9.805s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[9.805s]       |                                     ^~~~~~~~~~
+[9.805s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38,
+[9.805s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[9.805s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33,
+[9.805s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28,
+[9.806s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23,
+[9.806s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Map.h:23,
+[9.806s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Atlas.h:22,
+[9.806s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapDrawer.h:23,
+[9.806s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Viewer.h:24,
+[9.806s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Tracking.h:26,
+[9.806s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/FrameDrawer.h:23,
+[9.806s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/FrameDrawer.cc:19:
+[9.806s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:60:82: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[9.806s]    60 |       typedef Eigen::Map<Matrix<double, Dj, Di>, Matrix<double, Dj, Di>::Flags & AlignedBit ? Aligned : Unaligned > HessianBlockTransposedType;
+[9.806s]       |                                                                                  ^~~~~~~~~~
+[9.806s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[9.807s]                  from /usr/include/eigen3/Eigen/LU:11,
+[9.807s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/so2.hpp:12,
+[9.807s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/se2.hpp:7,
+[9.807s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/geometry.hpp:7,
+[9.807s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:28,
+[9.807s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28,
+[9.807s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23,
+[9.807s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Map.h:23,
+[9.807s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Atlas.h:22,
+[9.807s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapDrawer.h:23,
+[9.807s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Viewer.h:24,
+[9.807s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Tracking.h:26,
+[9.807s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/FrameDrawer.h:23,
+[9.808s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/FrameDrawer.cc:19:
+[9.808s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[9.808s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[9.808s]       |                                     ^~~~~~~~~~
+[9.812s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38,
+[9.812s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[9.812s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33,
+[9.812s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:24,
+[9.812s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:23,
+[9.812s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/KeyFrame.cc:19:
+[9.812s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:60:80: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[9.813s]    60 |       typedef Eigen::Map<Matrix<double, Dj, Di>, Matrix<double, Dj, Di>::Flags & AlignedBit ? Aligned : Unaligned > HessianBlockTransposedType;
+[9.813s]       |                                                                          ~~~~~~^~~~~~~~~~~~
+[9.813s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[9.813s]                  from /usr/include/eigen3/Eigen/LU:11,
+[9.813s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/so2.hpp:12,
+[9.813s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/se2.hpp:7,
+[9.813s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/geometry.hpp:7,
+[9.813s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:28,
+[9.813s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:24,
+[9.813s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:23,
+[9.813s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/KeyFrame.cc:19:
+[9.813s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[9.814s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[9.814s]       |                                     ^~~~~~~~~~
+[9.840s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:37,
+[9.841s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[9.841s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33,
+[9.841s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28,
+[9.841s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23,
+[9.841s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/ORBmatcher.h:28,
+[9.841s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/ORBmatcher.cc:20:
+[9.841s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h: In instantiation of ‘class g2o::BaseVertex<6, g2o::SE3Quat>’:
+[9.841s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:59:33:   required from here
+[9.842s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h:62:72: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[9.842s]    62 |     typedef Eigen::Map<Matrix<double, D, D>, Matrix<double,D,D>::Flags & AlignedBit ? Aligned : Unaligned >  HessianBlockType;
+[9.842s]       |                                                                  ~~~~~~^~~~~~~~~~~~
+[9.842s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[9.842s]                  from /usr/include/eigen3/Eigen/Dense:1,
+[9.842s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/rotation_matrix.hpp:7,
+[9.842s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/so3.hpp:7,
+[9.842s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/rxso3.hpp:7,
+[9.842s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/sim3.hpp:7,
+[9.842s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/ORBmatcher.h:26,
+[9.842s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/ORBmatcher.cc:20:
+[9.843s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[9.843s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[9.843s]       |                                     ^~~~~~~~~~
+[9.874s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:37,
+[9.875s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[9.875s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33,
+[9.875s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:24,
+[9.876s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:23,
+[9.876s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/LoopClosing.h:23,
+[9.877s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/LoopClosing.cc:20:
+[9.877s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h: At global scope:
+[9.877s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h:62:74: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[9.877s]    62 |     typedef Eigen::Map<Matrix<double, D, D>, Matrix<double,D,D>::Flags & AlignedBit ? Aligned : Unaligned >  HessianBlockType;
+[9.877s]       |                                                                          ^~~~~~~~~~
+[9.877s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:37,
+[9.877s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[9.877s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33,
+[9.877s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:24,
+[9.877s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:23,
+[9.878s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/LocalMapping.h:23,
+[9.878s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/LocalMapping.cc:20:
+[9.878s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h: At global scope:
+[9.878s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_vertex.h:62:74: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[9.878s]    62 |     typedef Eigen::Map<Matrix<double, D, D>, Matrix<double,D,D>::Flags & AlignedBit ? Aligned : Unaligned >  HessianBlockType;
+[9.879s]       |                                                                          ^~~~~~~~~~
+[9.879s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[9.879s]                  from /usr/include/eigen3/Eigen/LU:11,
+[9.879s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/so2.hpp:12,
+[9.879s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/se2.hpp:7,
+[9.879s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/geometry.hpp:7,
+[9.879s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:28,
+[9.879s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:24,
+[9.879s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:23,
+[9.879s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/LoopClosing.h:23,
+[9.880s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/LoopClosing.cc:20:
+[9.880s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[9.880s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[9.880s]       |                                     ^~~~~~~~~~
+[9.880s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[9.880s]                  from /usr/include/eigen3/Eigen/LU:11,
+[9.880s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/so2.hpp:12,
+[9.880s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/se2.hpp:7,
+[9.880s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/geometry.hpp:7,
+[9.881s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:28,
+[9.881s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:24,
+[9.881s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:23,
+[9.881s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/LocalMapping.h:23,
+[9.881s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/LocalMapping.cc:20:
+[9.881s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[9.881s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[9.881s]       |                                     ^~~~~~~~~~
+[9.897s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38,
+[9.898s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[9.898s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33,
+[9.898s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28,
+[9.898s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23,
+[9.898s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/ORBmatcher.h:28,
+[9.898s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/ORBmatcher.cc:20:
+[9.898s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h: In instantiation of ‘class g2o::BaseBinaryEdge<6, g2o::SE3Quat, g2o::VertexSE3Expmap, g2o::VertexSE3Expmap>’:
+[9.898s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:83:24:   required from here
+[9.898s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:59:80: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[9.898s]    59 |       typedef Eigen::Map<Matrix<double, Di, Dj>, Matrix<double, Di, Dj>::Flags & AlignedBit ? Aligned : Unaligned > HessianBlockType;
+[9.899s]       |                                                                          ~~~~~~^~~~~~~~~~~~
+[9.899s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[9.899s]                  from /usr/include/eigen3/Eigen/Dense:1,
+[9.899s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/rotation_matrix.hpp:7,
+[9.901s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/so3.hpp:7,
+[9.901s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/rxso3.hpp:7,
+[9.902s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/sim3.hpp:7,
+[9.902s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/ORBmatcher.h:26,
+[9.902s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/ORBmatcher.cc:20:
+[9.902s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[9.902s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[9.902s]       |                                     ^~~~~~~~~~
+[9.902s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38,
+[9.902s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[9.902s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33,
+[9.902s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:28,
+[9.902s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:23,
+[9.902s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/ORBmatcher.h:28,
+[9.902s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/ORBmatcher.cc:20:
+[9.904s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:60:80: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[9.906s]    60 |       typedef Eigen::Map<Matrix<double, Dj, Di>, Matrix<double, Dj, Di>::Flags & AlignedBit ? Aligned : Unaligned > HessianBlockTransposedType;
+[9.906s]       |                                                                          ~~~~~~^~~~~~~~~~~~
+[9.906s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[9.909s]                  from /usr/include/eigen3/Eigen/Dense:1,
+[9.909s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/rotation_matrix.hpp:7,
+[9.910s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/so3.hpp:7,
+[9.910s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/rxso3.hpp:7,
+[9.910s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/sim3.hpp:7,
+[9.910s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/ORBmatcher.h:26,
+[9.910s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/ORBmatcher.cc:20:
+[9.910s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[9.910s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[9.910s]       |                                     ^~~~~~~~~~
+[9.925s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38,
+[9.925s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[9.925s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33,
+[9.925s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:24,
+[9.925s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:23,
+[9.925s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/KeyFrame.cc:19:
+[9.925s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h: In instantiation of ‘class g2o::BaseBinaryEdge<3, Eigen::Matrix<double, 3, 1>, g2o::VertexSBAPointXYZ, g2o::VertexSE3Expmap>’:
+[9.926s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:146:41:   required from here
+[9.926s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:59:80: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[9.926s]    59 |       typedef Eigen::Map<Matrix<double, Di, Dj>, Matrix<double, Di, Dj>::Flags & AlignedBit ? Aligned : Unaligned > HessianBlockType;
+[9.926s]       |                                                                          ~~~~~~^~~~~~~~~~~~
+[9.926s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[9.926s]                  from /usr/include/eigen3/Eigen/LU:11,
+[9.926s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/so2.hpp:12,
+[9.926s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/se2.hpp:7,
+[9.927s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/geometry.hpp:7,
+[9.927s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:28,
+[9.927s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:24,
+[9.927s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:23,
+[9.927s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/KeyFrame.cc:19:
+[9.927s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[9.927s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[9.927s]       |                                     ^~~~~~~~~~
+[9.927s] In file included from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/types_six_dof_expmap.h:38,
+[9.927s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Converter.h:26,
+[9.927s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:33,
+[9.927s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:24,
+[9.928s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:23,
+[9.928s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/KeyFrame.cc:19:
+[9.928s] /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/g2o/g2o/types/../core/base_binary_edge.h:60:80: warning: ‘Eigen::AlignedBit’ is deprecated [-Wdeprecated-declarations]
+[9.928s]    60 |       typedef Eigen::Map<Matrix<double, Dj, Di>, Matrix<double, Dj, Di>::Flags & AlignedBit ? Aligned : Unaligned > HessianBlockTransposedType;
+[9.928s]       |                                                                          ~~~~~~^~~~~~~~~~~~
+[9.928s] In file included from /usr/include/eigen3/Eigen/Core:161,
+[9.928s]                  from /usr/include/eigen3/Eigen/LU:11,
+[9.928s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/so2.hpp:12,
+[9.928s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/se2.hpp:7,
+[9.928s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/Thirdparty/Sophus/sophus/geometry.hpp:7,
+[9.929s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/Frame.h:28,
+[9.929s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/MapPoint.h:24,
+[9.929s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/include/KeyFrame.h:23,
+[9.929s]                  from /home/hamdan/autonomous_drone/ros2_test/src/ros2_orb_slam3/orb_slam3/src/KeyFrame.cc:19:
+[9.929s] /usr/include/eigen3/Eigen/src/Core/util/Constants.h:167:37: note: declared here
+[9.929s]   167 | EIGEN_DEPRECATED const unsigned int AlignedBit = 0x80;
+[9.929s]       |                                     ^~~~~~~~~~

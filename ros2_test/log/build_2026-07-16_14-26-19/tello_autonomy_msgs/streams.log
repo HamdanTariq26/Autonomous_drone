@@ -1,0 +1,98 @@
+[0.013s] Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/hamdan/autonomous_drone/ros2_test/src/tello_autonomy_msgs -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs
+[0.075s] -- The C compiler identification is GNU 11.4.0
+[0.131s] -- The CXX compiler identification is GNU 11.4.0
+[0.138s] -- Detecting C compiler ABI info
+[0.211s] -- Detecting C compiler ABI info - done
+[0.217s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.217s] -- Detecting C compile features
+[0.218s] -- Detecting C compile features - done
+[0.221s] -- Detecting CXX compiler ABI info
+[0.304s] -- Detecting CXX compiler ABI info - done
+[0.314s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.314s] -- Detecting CXX compile features
+[0.315s] -- Detecting CXX compile features - done
+[0.318s] -- Found ament_cmake: 1.3.14 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.463s] -- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter 
+[0.521s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[0.542s] -- Found rosidl_default_generators: 1.2.1 (/opt/ros/humble/share/rosidl_default_generators/cmake)
+[0.544s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.550s] -- Found rosidl_adapter: 3.1.9 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[0.582s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.613s] -- Found std_msgs: 4.9.1 (/opt/ros/humble/share/std_msgs/cmake)
+[0.635s] -- Found geometry_msgs: 4.9.1 (/opt/ros/humble/share/geometry_msgs/cmake)
+[0.923s] -- Found ament_cmake_ros: 0.10.0 (/opt/ros/humble/share/ament_cmake_ros/cmake)
+[1.160s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[1.609s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[1.665s] -- Found PythonInterp: /usr/bin/python3 (found suitable version "3.10.12", minimum required is "3.6") 
+[1.669s] -- Found python_cmake_module: 0.10.0 (/opt/ros/humble/share/python_cmake_module/cmake)
+[1.738s] -- Found PythonLibs: /usr/lib/x86_64-linux-gnu/libpython3.10.so (found suitable version "3.10.12", minimum required is "3.5") 
+[1.738s] -- Using PYTHON_EXECUTABLE: /usr/bin/python3
+[1.739s] -- Using PYTHON_INCLUDE_DIRS: /usr/include/python3.10
+[1.739s] -- Using PYTHON_LIBRARIES: /usr/lib/x86_64-linux-gnu/libpython3.10.so
+[1.782s] -- Found PythonExtra: .so  
+[2.081s] -- Found ament_lint_auto: 0.12.15 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[2.113s] -- Added test 'lint_cmake' to check CMake code style
+[2.114s] -- Added test 'xmllint' to check XML markup files
+[2.120s] -- Configuring done
+[2.251s] -- Generating done
+[2.278s] -- Build files have been written to: /home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs
+[2.349s] Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/hamdan/autonomous_drone/ros2_test/src/tello_autonomy_msgs -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs
+[2.359s] Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs -- -j12 -l12
+[2.475s] [  2%] [34m[1mGenerating C code for ROS interfaces[0m
+[2.486s] [  4%] [34m[1mGenerating Rust code for ROS interfaces[0m
+[2.523s] [  6%] [34m[1mGenerating C++ code for ROS interfaces[0m
+[2.552s] [  6%] Built target ament_cmake_python_symlink_tello_autonomy_msgs
+[3.098s] running egg_info
+[3.098s] creating tello_autonomy_msgs.egg-info
+[3.099s] writing tello_autonomy_msgs.egg-info/PKG-INFO
+[3.099s] writing dependency_links to tello_autonomy_msgs.egg-info/dependency_links.txt
+[3.099s] writing top-level names to tello_autonomy_msgs.egg-info/top_level.txt
+[3.100s] writing manifest file 'tello_autonomy_msgs.egg-info/SOURCES.txt'
+[3.103s] reading manifest file 'tello_autonomy_msgs.egg-info/SOURCES.txt'
+[3.104s] writing manifest file 'tello_autonomy_msgs.egg-info/SOURCES.txt'
+[3.190s] [  6%] Built target ament_cmake_python_build_tello_autonomy_msgs_egg
+[3.636s] [  6%] Built target tello_autonomy_msgs__cpp
+[3.669s] [  6%] Built target tello_autonomy_msgs__rs
+[3.690s] [  8%] [34m[1mGenerating C++ type support for eProsima Fast-RTPS[0m
+[3.690s] [ 10%] [34m[1mGenerating C++ introspection for ROS interfaces[0m
+[3.706s] [ 12%] [34m[1mGenerating C++ type support dispatch for ROS interfaces[0m
+[4.330s] [ 14%] [32mBuilding C object CMakeFiles/tello_autonomy_msgs__rosidl_generator_c.dir/rosidl_generator_c/tello_autonomy_msgs/srv/detail/nbv_plan__functions.c.o[0m
+[4.333s] [ 16%] [32mBuilding C object CMakeFiles/tello_autonomy_msgs__rosidl_generator_c.dir/rosidl_generator_c/tello_autonomy_msgs/srv/detail/search_plan__functions.c.o[0m
+[4.338s] [ 18%] [32mBuilding C object CMakeFiles/tello_autonomy_msgs__rosidl_generator_c.dir/rosidl_generator_c/tello_autonomy_msgs/msg/detail/segment__functions.c.o[0m
+[4.593s] [ 20%] [32mBuilding CXX object CMakeFiles/tello_autonomy_msgs__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/tello_autonomy_msgs/srv/nbv_plan__type_support.cpp.o[0m
+[4.604s] [ 25%] [32mBuilding CXX object CMakeFiles/tello_autonomy_msgs__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/tello_autonomy_msgs/msg/segment__type_support.cpp.o[0m
+[4.605s] [ 25%] [32m[1mLinking C shared library libtello_autonomy_msgs__rosidl_generator_c.so[0m
+[4.605s] [ 27%] [32mBuilding CXX object CMakeFiles/tello_autonomy_msgs__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/tello_autonomy_msgs/srv/search_plan__type_support.cpp.o[0m
+[4.772s] [ 27%] Built target tello_autonomy_msgs__rosidl_generator_c
+[4.820s] [ 29%] [34m[1mGenerating C type support for eProsima Fast-RTPS[0m
+[4.820s] [ 31%] [34m[1mGenerating C introspection for ROS interfaces[0m
+[4.844s] [ 33%] [34m[1mGenerating C type support dispatch for ROS interfaces[0m
+[5.017s] [ 35%] [32mBuilding CXX object CMakeFiles/tello_autonomy_msgs__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/tello_autonomy_msgs/srv/detail/nbv_plan__type_support.cpp.o[0m
+[5.019s] [ 37%] [32mBuilding CXX object CMakeFiles/tello_autonomy_msgs__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/tello_autonomy_msgs/srv/detail/search_plan__type_support.cpp.o[0m
+[5.038s] [ 39%] [32mBuilding CXX object CMakeFiles/tello_autonomy_msgs__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/tello_autonomy_msgs/msg/detail/segment__type_support.cpp.o[0m
+[5.433s] [ 41%] [32mBuilding CXX object CMakeFiles/tello_autonomy_msgs__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/tello_autonomy_msgs/srv/detail/dds_fastrtps/search_plan__type_support.cpp.o[0m
+[5.437s] [ 43%] [32mBuilding CXX object CMakeFiles/tello_autonomy_msgs__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/tello_autonomy_msgs/srv/detail/dds_fastrtps/nbv_plan__type_support.cpp.o[0m
+[5.465s] [ 45%] [32mBuilding CXX object CMakeFiles/tello_autonomy_msgs__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/tello_autonomy_msgs/msg/detail/dds_fastrtps/segment__type_support.cpp.o[0m
+[5.890s] [ 47%] [32mBuilding CXX object CMakeFiles/tello_autonomy_msgs__rosidl_typesupport_c.dir/rosidl_typesupport_c/tello_autonomy_msgs/srv/nbv_plan__type_support.cpp.o[0m
+[5.899s] [ 50%] [32mBuilding CXX object CMakeFiles/tello_autonomy_msgs__rosidl_typesupport_c.dir/rosidl_typesupport_c/tello_autonomy_msgs/msg/segment__type_support.cpp.o[0m
+[5.902s] [ 52%] [32mBuilding CXX object CMakeFiles/tello_autonomy_msgs__rosidl_typesupport_c.dir/rosidl_typesupport_c/tello_autonomy_msgs/srv/search_plan__type_support.cpp.o[0m
+[5.935s] [ 54%] [32m[1mLinking CXX shared library libtello_autonomy_msgs__rosidl_typesupport_cpp.so[0m
+[6.063s] [ 56%] [32m[1mLinking CXX shared library libtello_autonomy_msgs__rosidl_typesupport_c.so[0m
+[6.096s] [ 58%] [32mBuilding C object CMakeFiles/tello_autonomy_msgs__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/tello_autonomy_msgs/srv/detail/nbv_plan__type_support.c.o[0m
+[6.105s] [ 60%] [32mBuilding C object CMakeFiles/tello_autonomy_msgs__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/tello_autonomy_msgs/srv/detail/search_plan__type_support.c.o[0m
+[6.117s] [ 62%] [32mBuilding C object CMakeFiles/tello_autonomy_msgs__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/tello_autonomy_msgs/msg/detail/segment__type_support.c.o[0m
+[6.144s] [ 62%] Built target tello_autonomy_msgs__rosidl_typesupport_cpp
+[6.289s] [ 64%] [32m[1mLinking C shared library libtello_autonomy_msgs__rosidl_typesupport_introspection_c.so[0m
+[6.323s] [ 66%] [32mBuilding CXX object CMakeFiles/tello_autonomy_msgs__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/tello_autonomy_msgs/msg/detail/segment__type_support_c.cpp.o[0m
+[6.336s] [ 68%] [32mBuilding CXX object CMakeFiles/tello_autonomy_msgs__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/tello_autonomy_msgs/srv/detail/nbv_plan__type_support_c.cpp.o[0m
+[6.339s] [ 70%] [32mBuilding CXX object CMakeFiles/tello_autonomy_msgs__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/tello_autonomy_msgs/srv/detail/search_plan__type_support_c.cpp.o[0m
+[6.347s] [ 70%] Built target tello_autonomy_msgs__rosidl_typesupport_c
+[6.464s] [ 70%] Built target tello_autonomy_msgs__rosidl_typesupport_introspection_c
+[6.711s] [ 72%] [32m[1mLinking CXX shared library libtello_autonomy_msgs__rosidl_typesupport_introspection_cpp.so[0m
+[7.377s] [ 72%] Built target tello_autonomy_msgs__rosidl_typesupport_introspection_cpp
+[7.437s] [ 75%] [32m[1mLinking CXX shared library libtello_autonomy_msgs__rosidl_typesupport_fastrtps_cpp.so[0m
+[7.552s] [ 77%] [32m[1mLinking CXX shared library libtello_autonomy_msgs__rosidl_typesupport_fastrtps_c.so[0m
+[7.785s] [ 77%] Built target tello_autonomy_msgs__rosidl_typesupport_fastrtps_cpp
+[7.859s] [ 77%] Built target tello_autonomy_msgs__rosidl_typesupport_fastrtps_c
+[7.930s] [ 77%] Built target tello_autonomy_msgs
+[8.005s] [ 79%] [34m[1mGenerating Python code for ROS interfaces[0m

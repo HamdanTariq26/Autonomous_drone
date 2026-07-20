@@ -1,0 +1,64 @@
+-- Found ament_cmake: 1.3.14 (/opt/ros/humble/share/ament_cmake/cmake)
+-- Override CMake install command with custom implementation using symlinks instead of copying resources
+-- Found rclcpp: 16.0.19 (/opt/ros/humble/share/rclcpp/cmake)
+-- Found rosidl_generator_c: 3.1.9 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+-- Found rosidl_adapter: 3.1.9 (/opt/ros/humble/share/rosidl_adapter/cmake)
+-- Found rosidl_generator_cpp: 3.1.9 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+-- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+-- Found rmw_fastrtps_cpp: 6.2.10 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)
+-- Using RMW implementation 'rmw_fastrtps_cpp' as default
+-- Found geometry_msgs: 4.9.1 (/opt/ros/humble/share/geometry_msgs/cmake)
+-- Found sensor_msgs: 4.9.1 (/opt/ros/humble/share/sensor_msgs/cmake)
+-- Found nav_msgs: 4.9.1 (/opt/ros/humble/share/nav_msgs/cmake)
+-- Found octomap_msgs: 2.0.1 (/opt/ros/humble/share/octomap_msgs/cmake)
+-- Found octomap_ros: 0.4.4 (/opt/ros/humble/share/octomap_ros/cmake)
+-- Found message_filters: 4.3.18 (/opt/ros/humble/share/message_filters/cmake)
+-- Found pcl_conversions: 2.4.5 (/opt/ros/humble/share/pcl_conversions/cmake)
+-- Eigen found (include: /usr/include/eigen3, version: 3.4.0)
+-- FLANN found (include: /usr/include, lib: /usr/lib/x86_64-linux-gnu/libflann_cpp.so)
+-- OpenNI found (version: 1.5.4.0, include: /usr/include/ni, lib: /usr/lib/libOpenNI.so;libusb::libusb)
+-- OpenNI2 found (version: 2.2.0.33, include: /usr/include/openni2, lib: /usr/lib/x86_64-linux-gnu/libOpenNI2.so;libusb::libusb)
+-- Eigen found (include: /usr/include/eigen3, version: 3.4.0)
+-- OpenNI found (version: 1.5.4.0, include: /usr/include/ni, lib: /usr/lib/libOpenNI.so;libusb::libusb)
+-- OpenNI2 found (version: 2.2.0.33, include: /usr/include/openni2, lib: /usr/lib/x86_64-linux-gnu/libOpenNI2.so;libusb::libusb)
+-- Found Qhull version 8.0.2
+-- OpenNI found (version: 1.5.4.0, include: /usr/include/ni, lib: /usr/lib/libOpenNI.so;libusb::libusb)
+-- Found ament_lint_auto: 0.12.15 (/opt/ros/humble/share/ament_lint_auto/cmake)
+-- Added test 'copyright' to check source files copyright and LICENSE
+-- Added test 'cppcheck' to perform static code analysis on C / C++ code
+-- Configured cppcheck include dirs: /home/hamdan/autonomous_drone/ros2_test/src/occupancy_map_cpp/include
+-- Configured cppcheck exclude dirs and/or files: 
+-- Added test 'cpplint' to check C / C++ code against the Google style
+-- Configured cpplint exclude dirs and/or files: 
+-- Added test 'lint_cmake' to check CMake code style
+-- Added test 'uncrustify' to check C / C++ code style
+-- Configured uncrustify additional arguments: 
+-- Added test 'xmllint' to check XML markup files
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/hamdan/autonomous_drone/ros2_test/build/occupancy_map_cpp
+[ 33%] [32mBuilding CXX object CMakeFiles/occupancy_map_node.dir/src/occupancy_map_node.cpp.o[0m
+[ 66%] [32mBuilding CXX object CMakeFiles/occupancy_map_node.dir/src/main.cpp.o[0m
+[100%] [32m[1mLinking CXX executable occupancy_map_node[0m
+[100%] Built target occupancy_map_node
+-- Install configuration: ""
+-- Execute custom install script
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/lib/occupancy_map_cpp/occupancy_map_node
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/include//occupancy_map_cpp/occupancy_map_node.hpp
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/ament_index/resource_index/package_run_dependencies/occupancy_map_cpp
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/ament_index/resource_index/parent_prefix_path/occupancy_map_cpp
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/environment/ament_prefix_path.sh
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/environment/ament_prefix_path.dsv
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/environment/path.sh
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/environment/path.dsv
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/local_setup.bash
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/local_setup.sh
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/local_setup.zsh
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/local_setup.dsv
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/package.dsv
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/ament_index/resource_index/packages/occupancy_map_cpp
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/cmake/occupancy_map_cppConfig.cmake
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/cmake/occupancy_map_cppConfig-version.cmake
+-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/package.xml

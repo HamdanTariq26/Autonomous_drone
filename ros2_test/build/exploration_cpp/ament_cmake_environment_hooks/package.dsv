@@ -1,0 +1,4 @@
+source;share/exploration_cpp/local_setup.bash
+source;share/exploration_cpp/local_setup.dsv
+source;share/exploration_cpp/local_setup.sh
+source;share/exploration_cpp/local_setup.zsh

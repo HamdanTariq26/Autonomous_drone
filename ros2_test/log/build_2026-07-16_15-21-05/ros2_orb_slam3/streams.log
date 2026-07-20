@@ -1,0 +1,48 @@
+[0.051s] Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3 -- -j12 -l12
+[0.205s] [  0%] Built target ament_cmake_python_symlink_ros2_orb_slam3
+[0.380s] [ 90%] Built target orb_slam3_lib
+[0.482s] [100%] Built target mono_node_cpp
+[0.938s] running egg_info
+[0.940s] writing ros2_orb_slam3.egg-info/PKG-INFO
+[0.940s] writing dependency_links to ros2_orb_slam3.egg-info/dependency_links.txt
+[0.941s] writing top-level names to ros2_orb_slam3.egg-info/top_level.txt
+[0.946s] reading manifest file 'ros2_orb_slam3.egg-info/SOURCES.txt'
+[0.948s] writing manifest file 'ros2_orb_slam3.egg-info/SOURCES.txt'
+[1.011s] [100%] Built target ament_cmake_python_build_ros2_orb_slam3_egg
+[1.044s] Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3 -- -j12 -l12
+[1.049s] Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3
+[1.069s] -- Install configuration: ""
+[1.070s] -- Execute custom install script
+[1.070s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/lib/libDBoW2.so
+[1.070s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/lib/libg2o.so
+[1.071s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/include/ros2_orb_slam3/common.hpp
+[1.072s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/environment/pythonpath.sh
+[1.072s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/environment/pythonpath.dsv
+[1.073s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/local/lib/python3.10/dist-packages/ros2_orb_slam3-1.5.0-py3.10.egg-info/PKG-INFO
+[1.074s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/local/lib/python3.10/dist-packages/ros2_orb_slam3-1.5.0-py3.10.egg-info/SOURCES.txt
+[1.075s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/local/lib/python3.10/dist-packages/ros2_orb_slam3-1.5.0-py3.10.egg-info/dependency_links.txt
+[1.075s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/local/lib/python3.10/dist-packages/ros2_orb_slam3-1.5.0-py3.10.egg-info/top_level.txt
+[1.076s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/local/lib/python3.10/dist-packages/ros2_orb_slam3/__init__.py
+[1.076s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/lib/ros2_orb_slam3/mono_driver_node.py
+[1.076s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ament_index/resource_index/package_run_dependencies/ros2_orb_slam3
+[1.077s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ament_index/resource_index/parent_prefix_path/ros2_orb_slam3
+[1.077s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/environment/ament_prefix_path.sh
+[1.078s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/environment/ament_prefix_path.dsv
+[1.079s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/environment/path.sh
+[1.080s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/environment/path.dsv
+[1.080s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/local_setup.bash
+[1.080s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/local_setup.sh
+[1.081s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/local_setup.zsh
+[1.081s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/local_setup.dsv
+[1.081s] -- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/package.dsv
+[1.105s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ament_index/resource_index/packages/ros2_orb_slam3
+[1.105s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/cmake/ament_cmake_export_include_directories-extras.cmake
+[1.105s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/cmake/ament_cmake_export_dependencies-extras.cmake
+[1.106s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/cmake/ros2_orb_slam3Config.cmake
+[1.106s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/cmake/ros2_orb_slam3Config-version.cmake
+[1.107s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/share/ros2_orb_slam3/package.xml
+[1.108s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/lib/ros2_orb_slam3/mono_node_cpp
+[1.109s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/lib/liborb_slam3_lib.so.
+[1.110s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/lib/liborb_slam3_lib.so
+[1.184s] Listing '/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/local/lib/python3.10/dist-packages/ros2_orb_slam3'...
+[1.202s] Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3

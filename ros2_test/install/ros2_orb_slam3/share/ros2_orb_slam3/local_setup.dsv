@@ -1,3 +1,1 @@
-source;share/ros2_orb_slam3/environment/ament_prefix_path.sh
-source;share/ros2_orb_slam3/environment/path.sh
-source;share/ros2_orb_slam3/environment/pythonpath.sh
+/home/hamdan/autonomous_drone/ros2_test/build/ros2_orb_slam3/ament_cmake_environment_hooks/local_setup.dsv

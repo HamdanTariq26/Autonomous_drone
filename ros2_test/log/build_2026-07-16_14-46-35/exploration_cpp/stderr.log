@@ -1,0 +1,31 @@
+/home/hamdan/autonomous_drone/ros2_test/src/exploration_cpp/src/rrt.cpp: In member function ‘virtual void nbvInspection::RrtTree::iterate(int)’:
+/home/hamdan/autonomous_drone/ros2_test/src/exploration_cpp/src/rrt.cpp:264:42: warning: unused parameter ‘iterations’ [-Wunused-parameter]
+  264 | void nbvInspection::RrtTree::iterate(int iterations)
+      |                                      ~~~~^~~~~~~~~~
+/home/hamdan/autonomous_drone/ros2_test/src/exploration_cpp/src/rrt.cpp: In member function ‘virtual void nbvInspection::RrtTree::initialize()’:
+/home/hamdan/autonomous_drone/ros2_test/src/exploration_cpp/src/rrt.cpp:344:17: warning: comparison of integer expressions of different signedness: ‘int’ and ‘std::vector<std::__cxx11::basic_string<char> >::size_type’ {aka ‘long unsigned int’} [-Wsign-compare]
+  344 |   for (i = 0; i < agentNames_.size(); i++) {
+      |               ~~^~~~~~~~~~~~~~~~~~~~
+/home/hamdan/autonomous_drone/ros2_test/src/exploration_cpp/src/rrt.cpp:349:9: warning: comparison of integer expressions of different signedness: ‘int’ and ‘std::vector<std::__cxx11::basic_string<char> >::size_type’ {aka ‘long unsigned int’} [-Wsign-compare]
+  349 |   if (i < agentNames_.size()) {
+      |       ~~^~~~~~~~~~~~~~~~~~~~
+In file included from /home/hamdan/autonomous_drone/ros2_test/src/exploration_cpp/include/exploration_cpp/nbvp.h:35,
+                 from /home/hamdan/autonomous_drone/ros2_test/src/exploration_cpp/include/exploration_cpp/nbvp.hpp:31,
+                 from /home/hamdan/autonomous_drone/ros2_test/src/exploration_cpp/src/nbv_planner_node.cpp:3:
+/home/hamdan/autonomous_drone/ros2_test/src/exploration_cpp/include/exploration_cpp/tree.hpp: In instantiation of ‘void nbvInspection::TreeBase<stateVec>::evade(const Segment&) [with stateVec = Eigen::Matrix<double, 4, 1>; tello_autonomy_msgs::msg::Segment = tello_autonomy_msgs::msg::Segment_<std::allocator<void> >]’:
+/home/hamdan/autonomous_drone/ros2_test/src/exploration_cpp/include/exploration_cpp/nbvp.hpp:140:38:   required from ‘nbvInspection::nbvPlanner<stateVec>::nbvPlanner(const rclcpp::NodeOptions&) [with stateVec = Eigen::Matrix<double, 4, 1>]’
+/usr/include/c++/11/ext/new_allocator.h:162:4:   required from ‘void __gnu_cxx::new_allocator<_Tp>::construct(_Up*, _Args&& ...) [with _Up = nbvInspection::nbvPlanner<Eigen::Matrix<double, 4, 1> >; _Args = {rclcpp::NodeOptions&}; _Tp = nbvInspection::nbvPlanner<Eigen::Matrix<double, 4, 1> >]’
+/usr/include/c++/11/bits/alloc_traits.h:516:17:   required from ‘static void std::allocator_traits<std::allocator<_CharT> >::construct(std::allocator_traits<std::allocator<_CharT> >::allocator_type&, _Up*, _Args&& ...) [with _Up = nbvInspection::nbvPlanner<Eigen::Matrix<double, 4, 1> >; _Args = {rclcpp::NodeOptions&}; _Tp = nbvInspection::nbvPlanner<Eigen::Matrix<double, 4, 1> >; std::allocator_traits<std::allocator<_CharT> >::allocator_type = std::allocator<nbvInspection::nbvPlanner<Eigen::Matrix<double, 4, 1> > >]’
+/usr/include/c++/11/bits/shared_ptr_base.h:519:39:   required from ‘std::_Sp_counted_ptr_inplace<_Tp, _Alloc, _Lp>::_Sp_counted_ptr_inplace(_Alloc, _Args&& ...) [with _Args = {rclcpp::NodeOptions&}; _Tp = nbvInspection::nbvPlanner<Eigen::Matrix<double, 4, 1> >; _Alloc = std::allocator<nbvInspection::nbvPlanner<Eigen::Matrix<double, 4, 1> > >; __gnu_cxx::_Lock_policy _Lp = __gnu_cxx::_S_atomic]’
+/usr/include/c++/11/bits/shared_ptr_base.h:650:16:   required from ‘std::__shared_count<_Lp>::__shared_count(_Tp*&, std::_Sp_alloc_shared_tag<_Alloc>, _Args&& ...) [with _Tp = nbvInspection::nbvPlanner<Eigen::Matrix<double, 4, 1> >; _Alloc = std::allocator<nbvInspection::nbvPlanner<Eigen::Matrix<double, 4, 1> > >; _Args = {rclcpp::NodeOptions&}; __gnu_cxx::_Lock_policy _Lp = __gnu_cxx::_S_atomic]’
+/usr/include/c++/11/bits/shared_ptr_base.h:1342:14:   required from ‘std::__shared_ptr<_Tp, _Lp>::__shared_ptr(std::_Sp_alloc_shared_tag<_Tp>, _Args&& ...) [with _Alloc = std::allocator<nbvInspection::nbvPlanner<Eigen::Matrix<double, 4, 1> > >; _Args = {rclcpp::NodeOptions&}; _Tp = nbvInspection::nbvPlanner<Eigen::Matrix<double, 4, 1> >; __gnu_cxx::_Lock_policy _Lp = __gnu_cxx::_S_atomic]’
+/usr/include/c++/11/bits/shared_ptr.h:409:59:   required from ‘std::shared_ptr<_Tp>::shared_ptr(std::_Sp_alloc_shared_tag<_Tp>, _Args&& ...) [with _Alloc = std::allocator<nbvInspection::nbvPlanner<Eigen::Matrix<double, 4, 1> > >; _Args = {rclcpp::NodeOptions&}; _Tp = nbvInspection::nbvPlanner<Eigen::Matrix<double, 4, 1> >]’
+/usr/include/c++/11/bits/shared_ptr.h:862:14:   required from ‘std::shared_ptr<_Tp> std::allocate_shared(const _Alloc&, _Args&& ...) [with _Tp = nbvInspection::nbvPlanner<Eigen::Matrix<double, 4, 1> >; _Alloc = std::allocator<nbvInspection::nbvPlanner<Eigen::Matrix<double, 4, 1> > >; _Args = {rclcpp::NodeOptions&}]’
+/usr/include/c++/11/bits/shared_ptr.h:878:39:   required from ‘std::shared_ptr<_Tp> std::make_shared(_Args&& ...) [with _Tp = nbvInspection::nbvPlanner<Eigen::Matrix<double, 4, 1> >; _Args = {rclcpp::NodeOptions&}]’
+/home/hamdan/autonomous_drone/ros2_test/src/exploration_cpp/src/nbv_planner_node.cpp:9:90:   required from here
+/home/hamdan/autonomous_drone/ros2_test/src/exploration_cpp/include/exploration_cpp/tree.hpp:93:16: warning: comparison of integer expressions of different signedness: ‘int’ and ‘std::vector<std::__cxx11::basic_string<char> >::size_type’ {aka ‘long unsigned int’} [-Wsign-compare]
+   93 |   for(i = 0; i < agentNames_.size(); i++) {
+      |              ~~^~~~~~~~~~~~~~~~~~~~
+/home/hamdan/autonomous_drone/ros2_test/src/exploration_cpp/include/exploration_cpp/tree.hpp:98:9: warning: comparison of integer expressions of different signedness: ‘int’ and ‘std::vector<std::__cxx11::basic_string<char> >::size_type’ {aka ‘long unsigned int’} [-Wsign-compare]
+   98 |   if (i == agentNames_.size()) {
+      |       ~~^~~~~~~~~~~~~~~~~~~~~

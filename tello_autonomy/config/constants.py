@@ -185,3 +185,33 @@ DEPTH_WORKER_NICE_VALUE = 10
 # worker process's result queue. Cheap non-blocking drain, so this can
 # be fairly frequent without any real cost.
 DEPTH_WORKER_RESULT_POLL_INTERVAL_SEC = 0.5
+
+
+# ----------------------------------------------------------------------
+# Goals Layer / Autonomous Navigation constants
+# ----------------------------------------------------------------------
+# Rate at which the mission controller checks trajectory error and 
+# sends velocity commands to the drone.
+GOALS_LOOP_RATE_HZ = 10.0
+
+# Acceptable distance to a waypoint to consider it "reached" and pop
+# it from the path queue. Increased to 0.35m so the drone doesn't slow
+# down to a crawl at every intermediate point.
+WAYPOINT_ACCEPTANCE_RADIUS_M = 0.35
+
+# Distance at which the drone starts braking (linearly scaling speed to
+# zero). Must be > WAYPOINT_ACCEPTANCE_RADIUS_M. Set larger for faster
+# max speeds to give the drone enough room to decelerate.
+BRAKING_RADIUS_M = 0.4
+
+# Maximum allowable velocities (0-100) for autonomous flight.
+# Increased to 60 for much faster flight.
+MAX_AUTO_SPEED_XY = 60
+MAX_AUTO_SPEED_Z  = 40
+MAX_AUTO_SPEED_YAW = 50
+
+# Proportional gain for the position P-controller.
+# Increased significantly so the drone accelerates hard toward waypoints.
+XY_P_GAIN  = 150.0
+Z_P_GAIN   = 100.0
+YAW_P_GAIN = 30.0

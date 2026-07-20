@@ -1,0 +1,205 @@
+[0.013s] Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/hamdan/autonomous_drone/ros2_test/src/tello_autonomy_msgs -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs
+[0.022s] -- Found ament_cmake: 1.3.14 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.145s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[0.151s] -- Found rosidl_default_generators: 1.2.1 (/opt/ros/humble/share/rosidl_default_generators/cmake)
+[0.152s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.154s] -- Found rosidl_adapter: 3.1.9 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[0.177s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.200s] -- Found std_msgs: 4.9.1 (/opt/ros/humble/share/std_msgs/cmake)
+[0.218s] -- Found geometry_msgs: 4.9.1 (/opt/ros/humble/share/geometry_msgs/cmake)
+[0.476s] -- Found ament_cmake_ros: 0.10.0 (/opt/ros/humble/share/ament_cmake_ros/cmake)
+[0.685s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.958s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.977s] -- Found python_cmake_module: 0.10.0 (/opt/ros/humble/share/python_cmake_module/cmake)
+[0.996s] -- Using PYTHON_EXECUTABLE: /usr/bin/python3
+[0.996s] -- Using PYTHON_INCLUDE_DIRS: /usr/include/python3.10
+[0.996s] -- Using PYTHON_LIBRARIES: /usr/lib/x86_64-linux-gnu/libpython3.10.so
+[1.092s] -- Found ament_lint_auto: 0.12.15 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[1.101s] -- Added test 'lint_cmake' to check CMake code style
+[1.102s] -- Added test 'xmllint' to check XML markup files
+[1.104s] -- Configuring done
+[1.138s] -- Generating done
+[1.149s] -- Build files have been written to: /home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs
+[1.156s] Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/hamdan/autonomous_drone/ros2_test/src/tello_autonomy_msgs -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs
+[1.158s] Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs -- -j12 -l12
+[1.195s] [35m[1mConsolidate compiler generated dependencies of target tello_autonomy_msgs__rosidl_generator_c[0m
+[1.204s] [  4%] Built target tello_autonomy_msgs__cpp
+[1.205s] [  4%] Built target tello_autonomy_msgs__rs
+[1.205s] [ 14%] Built target tello_autonomy_msgs__rosidl_generator_c
+[1.218s] [ 14%] Built target ament_cmake_python_symlink_tello_autonomy_msgs
+[1.218s] [35m[1mConsolidate compiler generated dependencies of target tello_autonomy_msgs__rosidl_typesupport_introspection_c[0m
+[1.219s] [35m[1mConsolidate compiler generated dependencies of target tello_autonomy_msgs__rosidl_typesupport_cpp[0m
+[1.219s] [35m[1mConsolidate compiler generated dependencies of target tello_autonomy_msgs__rosidl_typesupport_introspection_cpp[0m
+[1.219s] [35m[1mConsolidate compiler generated dependencies of target tello_autonomy_msgs__rosidl_typesupport_fastrtps_cpp[0m
+[1.219s] [35m[1mConsolidate compiler generated dependencies of target tello_autonomy_msgs__rosidl_typesupport_fastrtps_c[0m
+[1.219s] [35m[1mConsolidate compiler generated dependencies of target tello_autonomy_msgs__rosidl_typesupport_c[0m
+[1.229s] [ 25%] Built target tello_autonomy_msgs__rosidl_typesupport_introspection_c
+[1.232s] [ 35%] Built target tello_autonomy_msgs__rosidl_typesupport_c
+[1.232s] [ 45%] Built target tello_autonomy_msgs__rosidl_typesupport_cpp
+[1.235s] [ 64%] Built target tello_autonomy_msgs__rosidl_typesupport_fastrtps_c
+[1.235s] [ 75%] Built target tello_autonomy_msgs__rosidl_typesupport_introspection_cpp
+[1.235s] [ 77%] Built target tello_autonomy_msgs__rosidl_typesupport_fastrtps_cpp
+[1.254s] [ 77%] Built target tello_autonomy_msgs
+[1.274s] [ 79%] Built target tello_autonomy_msgs__py
+[1.285s] [35m[1mConsolidate compiler generated dependencies of target tello_autonomy_msgs__rosidl_generator_py[0m
+[1.299s] [ 87%] Built target tello_autonomy_msgs__rosidl_generator_py
+[1.310s] [35m[1mConsolidate compiler generated dependencies of target tello_autonomy_msgs__rosidl_typesupport_c__pyext[0m
+[1.310s] [35m[1mConsolidate compiler generated dependencies of target tello_autonomy_msgs__rosidl_typesupport_introspection_c__pyext[0m
+[1.310s] [35m[1mConsolidate compiler generated dependencies of target tello_autonomy_msgs__rosidl_typesupport_fastrtps_c__pyext[0m
+[1.323s] [100%] Built target tello_autonomy_msgs__rosidl_typesupport_c__pyext
+[1.323s] [100%] Built target tello_autonomy_msgs__rosidl_typesupport_fastrtps_c__pyext
+[1.323s] [100%] Built target tello_autonomy_msgs__rosidl_typesupport_introspection_c__pyext
+[1.448s] running egg_info
+[1.448s] writing tello_autonomy_msgs.egg-info/PKG-INFO
+[1.448s] writing dependency_links to tello_autonomy_msgs.egg-info/dependency_links.txt
+[1.448s] writing top-level names to tello_autonomy_msgs.egg-info/top_level.txt
+[1.450s] reading manifest file 'tello_autonomy_msgs.egg-info/SOURCES.txt'
+[1.451s] writing manifest file 'tello_autonomy_msgs.egg-info/SOURCES.txt'
+[1.472s] [100%] Built target ament_cmake_python_build_tello_autonomy_msgs_egg
+[1.484s] Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs -- -j12 -l12
+[1.485s] Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs
+[1.492s] -- Install configuration: ""
+[1.493s] -- Execute custom install script
+[1.493s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/ament_index/resource_index/rosidl_interfaces/tello_autonomy_msgs
+[1.493s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/msg/detail/segment__functions.h
+[1.493s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/msg/detail/segment__struct.h
+[1.493s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/msg/detail/segment__type_support.h
+[1.493s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/msg/rosidl_generator_c__visibility_control.h
+[1.493s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/msg/segment.h
+[1.493s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/srv/detail/nbv_plan__functions.h
+[1.494s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/srv/detail/nbv_plan__struct.h
+[1.494s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/srv/detail/nbv_plan__type_support.h
+[1.494s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/srv/detail/search_plan__functions.h
+[1.494s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/srv/detail/search_plan__struct.h
+[1.494s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/srv/detail/search_plan__type_support.h
+[1.494s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/srv/nbv_plan.h
+[1.495s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/srv/search_plan.h
+[1.495s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/environment/library_path.sh
+[1.495s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/environment/library_path.dsv
+[1.495s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/msg/detail/segment__rosidl_typesupport_fastrtps_c.h
+[1.496s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/msg/rosidl_typesupport_fastrtps_c__visibility_control.h
+[1.496s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/srv/detail/nbv_plan__rosidl_typesupport_fastrtps_c.h
+[1.496s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/srv/detail/search_plan__rosidl_typesupport_fastrtps_c.h
+[1.496s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/msg/detail/segment__rosidl_typesupport_introspection_c.h
+[1.496s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/msg/rosidl_typesupport_introspection_c__visibility_control.h
+[1.497s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/srv/detail/nbv_plan__rosidl_typesupport_introspection_c.h
+[1.497s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/srv/detail/search_plan__rosidl_typesupport_introspection_c.h
+[1.497s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/msg/detail/segment__builder.hpp
+[1.497s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/msg/detail/segment__struct.hpp
+[1.498s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/msg/detail/segment__traits.hpp
+[1.498s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/msg/detail/segment__type_support.hpp
+[1.498s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/msg/rosidl_generator_cpp__visibility_control.hpp
+[1.498s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/msg/segment.hpp
+[1.498s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/srv/detail/nbv_plan__builder.hpp
+[1.498s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/srv/detail/nbv_plan__struct.hpp
+[1.498s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/srv/detail/nbv_plan__traits.hpp
+[1.499s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/srv/detail/nbv_plan__type_support.hpp
+[1.499s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/srv/detail/search_plan__builder.hpp
+[1.499s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/srv/detail/search_plan__struct.hpp
+[1.499s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/srv/detail/search_plan__traits.hpp
+[1.499s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/srv/detail/search_plan__type_support.hpp
+[1.499s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/srv/nbv_plan.hpp
+[1.499s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/srv/search_plan.hpp
+[1.500s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/msg/detail/segment__rosidl_typesupport_fastrtps_cpp.hpp
+[1.500s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/msg/rosidl_typesupport_fastrtps_cpp__visibility_control.h
+[1.500s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/srv/detail/nbv_plan__rosidl_typesupport_fastrtps_cpp.hpp
+[1.501s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/srv/detail/search_plan__rosidl_typesupport_fastrtps_cpp.hpp
+[1.501s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/msg/detail/segment__rosidl_typesupport_introspection_cpp.hpp
+[1.501s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/srv/detail/nbv_plan__rosidl_typesupport_introspection_cpp.hpp
+[1.501s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/include/tello_autonomy_msgs/tello_autonomy_msgs/srv/detail/search_plan__rosidl_typesupport_introspection_cpp.hpp
+[1.502s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/environment/pythonpath.sh
+[1.502s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/environment/pythonpath.dsv
+[1.502s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages/tello_autonomy_msgs-0.0.0-py3.10.egg-info/PKG-INFO
+[1.502s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages/tello_autonomy_msgs-0.0.0-py3.10.egg-info/SOURCES.txt
+[1.503s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages/tello_autonomy_msgs-0.0.0-py3.10.egg-info/dependency_links.txt
+[1.503s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages/tello_autonomy_msgs-0.0.0-py3.10.egg-info/top_level.txt
+[1.504s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages/tello_autonomy_msgs/__init__.py
+[1.504s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages/tello_autonomy_msgs/_tello_autonomy_msgs_s.ep.rosidl_typesupport_c.c
+[1.504s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages/tello_autonomy_msgs/_tello_autonomy_msgs_s.ep.rosidl_typesupport_fastrtps_c.c
+[1.504s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages/tello_autonomy_msgs/_tello_autonomy_msgs_s.ep.rosidl_typesupport_introspection_c.c
+[1.504s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages/tello_autonomy_msgs/libtello_autonomy_msgs__rosidl_generator_py.so
+[1.504s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages/tello_autonomy_msgs/msg/__init__.py
+[1.505s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages/tello_autonomy_msgs/msg/_segment.py
+[1.505s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages/tello_autonomy_msgs/msg/_segment_s.c
+[1.505s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages/tello_autonomy_msgs/srv/__init__.py
+[1.505s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages/tello_autonomy_msgs/srv/_nbv_plan.py
+[1.505s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages/tello_autonomy_msgs/srv/_nbv_plan_s.c
+[1.505s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages/tello_autonomy_msgs/srv/_search_plan.py
+[1.506s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages/tello_autonomy_msgs/srv/_search_plan_s.c
+[1.506s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages/tello_autonomy_msgs/tello_autonomy_msgs_s__rosidl_typesupport_c.cpython-310-x86_64-linux-gnu.so
+[1.506s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages/tello_autonomy_msgs/tello_autonomy_msgs_s__rosidl_typesupport_fastrtps_c.cpython-310-x86_64-linux-gnu.so
+[1.506s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages/tello_autonomy_msgs/tello_autonomy_msgs_s__rosidl_typesupport_introspection_c.cpython-310-x86_64-linux-gnu.so
+[1.506s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages/tello_autonomy_msgs/tello_autonomy_msgs_s__rosidl_typesupport_fastrtps_c.cpython-310-x86_64-linux-gnu.so
+[1.507s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages/tello_autonomy_msgs/tello_autonomy_msgs_s__rosidl_typesupport_introspection_c.cpython-310-x86_64-linux-gnu.so
+[1.507s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages/tello_autonomy_msgs/tello_autonomy_msgs_s__rosidl_typesupport_c.cpython-310-x86_64-linux-gnu.so
+[1.507s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/ament_index/resource_index/rust_packages/tello_autonomy_msgs
+[1.508s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/rust/Cargo.toml
+[1.508s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/rust/build.rs
+[1.508s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/rust/src/lib.rs
+[1.508s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/rust/src/msg.rs
+[1.508s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/rust/src/msg/rmw.rs
+[1.509s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/rust/src/srv.rs
+[1.509s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/rust/src/srv/rmw.rs
+[1.509s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/srv/NbvPlan.idl
+[1.509s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/srv/SearchPlan.idl
+[1.509s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/msg/Segment.idl
+[1.510s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/srv/NbvPlan.srv
+[1.510s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/srv/NbvPlan_Request.msg
+[1.510s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/srv/NbvPlan_Response.msg
+[1.510s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/srv/SearchPlan.srv
+[1.510s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/srv/SearchPlan_Request.msg
+[1.510s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/srv/SearchPlan_Response.msg
+[1.510s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/msg/Segment.msg
+[1.510s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/ament_index/resource_index/package_run_dependencies/tello_autonomy_msgs
+[1.510s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/ament_index/resource_index/parent_prefix_path/tello_autonomy_msgs
+[1.511s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/environment/ament_prefix_path.sh
+[1.511s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/environment/ament_prefix_path.dsv
+[1.511s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/environment/path.sh
+[1.511s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/environment/path.dsv
+[1.511s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/local_setup.bash
+[1.511s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/local_setup.sh
+[1.511s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/local_setup.zsh
+[1.511s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/local_setup.dsv
+[1.511s] -- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/package.dsv
+[1.520s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/ament_index/resource_index/packages/tello_autonomy_msgs
+[1.521s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/cmake/rosidl_cmake-extras.cmake
+[1.521s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/cmake/ament_cmake_export_dependencies-extras.cmake
+[1.521s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/cmake/ament_cmake_export_include_directories-extras.cmake
+[1.521s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/cmake/ament_cmake_export_libraries-extras.cmake
+[1.521s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/cmake/ament_cmake_export_targets-extras.cmake
+[1.521s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/cmake/rosidl_cmake_export_typesupport_targets-extras.cmake
+[1.521s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/cmake/rosidl_cmake_export_typesupport_libraries-extras.cmake
+[1.522s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/cmake/rosidl_cmake_aggregate_target-extras.cmake
+[1.522s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/cmake/tello_autonomy_msgsConfig.cmake
+[1.522s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/cmake/tello_autonomy_msgsConfig-version.cmake
+[1.522s] -- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/package.xml
+[1.522s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib/libtello_autonomy_msgs__rosidl_generator_c.so
+[1.522s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib/libtello_autonomy_msgs__rosidl_typesupport_fastrtps_c.so
+[1.523s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib/libtello_autonomy_msgs__rosidl_typesupport_introspection_c.so
+[1.523s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib/libtello_autonomy_msgs__rosidl_typesupport_c.so
+[1.523s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib/libtello_autonomy_msgs__rosidl_typesupport_fastrtps_cpp.so
+[1.523s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib/libtello_autonomy_msgs__rosidl_typesupport_introspection_cpp.so
+[1.524s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib/libtello_autonomy_msgs__rosidl_typesupport_cpp.so
+[1.550s] Listing '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages/tello_autonomy_msgs'...
+[1.550s] Compiling '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages/tello_autonomy_msgs/__init__.py'...
+[1.550s] Listing '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages/tello_autonomy_msgs/msg'...
+[1.550s] Listing '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages/tello_autonomy_msgs/srv'...
+[1.553s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib/libtello_autonomy_msgs__rosidl_generator_py.so
+[1.554s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/cmake/export_tello_autonomy_msgs__rosidl_generator_cExport.cmake
+[1.554s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/cmake/export_tello_autonomy_msgs__rosidl_generator_cExport-noconfig.cmake
+[1.554s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/cmake/export_tello_autonomy_msgs__rosidl_typesupport_fastrtps_cExport.cmake
+[1.554s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/cmake/export_tello_autonomy_msgs__rosidl_typesupport_fastrtps_cExport-noconfig.cmake
+[1.554s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/cmake/tello_autonomy_msgs__rosidl_typesupport_introspection_cExport.cmake
+[1.554s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/cmake/tello_autonomy_msgs__rosidl_typesupport_introspection_cExport-noconfig.cmake
+[1.554s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/cmake/tello_autonomy_msgs__rosidl_typesupport_cExport.cmake
+[1.554s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/cmake/tello_autonomy_msgs__rosidl_typesupport_cExport-noconfig.cmake
+[1.554s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/cmake/export_tello_autonomy_msgs__rosidl_generator_cppExport.cmake
+[1.554s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/cmake/export_tello_autonomy_msgs__rosidl_typesupport_fastrtps_cppExport.cmake
+[1.554s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/cmake/export_tello_autonomy_msgs__rosidl_typesupport_fastrtps_cppExport-noconfig.cmake
+[1.554s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/cmake/tello_autonomy_msgs__rosidl_typesupport_introspection_cppExport.cmake
+[1.554s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/cmake/tello_autonomy_msgs__rosidl_typesupport_introspection_cppExport-noconfig.cmake
+[1.554s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/cmake/tello_autonomy_msgs__rosidl_typesupport_cppExport.cmake
+[1.554s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/cmake/tello_autonomy_msgs__rosidl_typesupport_cppExport-noconfig.cmake
+[1.555s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/cmake/export_tello_autonomy_msgs__rosidl_generator_pyExport.cmake
+[1.555s] -- Up-to-date: /home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/share/tello_autonomy_msgs/cmake/export_tello_autonomy_msgs__rosidl_generator_pyExport-noconfig.cmake
+[1.557s] Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs

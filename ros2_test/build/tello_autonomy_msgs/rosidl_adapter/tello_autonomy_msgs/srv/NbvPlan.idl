@@ -1,0 +1,17 @@
+// generated from rosidl_adapter/resource/srv.idl.em
+// with input from tello_autonomy_msgs/srv/NbvPlan.srv
+// generated code does not contain a copyright notice
+
+#include "geometry_msgs/msg/Pose.idl"
+#include "std_msgs/msg/Header.idl"
+
+module tello_autonomy_msgs {
+  module srv {
+    struct NbvPlan_Request {
+      std_msgs::msg::Header header;
+    };
+    struct NbvPlan_Response {
+      sequence<geometry_msgs::msg::Pose> path;
+    };
+  };
+};

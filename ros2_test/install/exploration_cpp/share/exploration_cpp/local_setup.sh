@@ -1,0 +1,1 @@
+/home/hamdan/autonomous_drone/ros2_test/build/exploration_cpp/ament_cmake_environment_hooks/local_setup.sh

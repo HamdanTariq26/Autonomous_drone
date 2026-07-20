@@ -1,0 +1,82 @@
+[0.010s] Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/occupancy_map_cpp': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/hamdan/autonomous_drone/ros2_test/src/occupancy_map_cpp -DCMAKE_INSTALL_PREFIX=/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp
+[0.023s] -- Found ament_cmake: 1.3.14 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.127s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[0.150s] -- Found rclcpp: 16.0.19 (/opt/ros/humble/share/rclcpp/cmake)
+[0.191s] -- Found rosidl_generator_c: 3.1.9 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[0.195s] -- Found rosidl_adapter: 3.1.9 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[0.204s] -- Found rosidl_generator_cpp: 3.1.9 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[0.217s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.232s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.275s] -- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[0.278s] -- Found rmw_fastrtps_cpp: 6.2.10 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)
+[0.374s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[0.436s] -- Found geometry_msgs: 4.9.1 (/opt/ros/humble/share/geometry_msgs/cmake)
+[0.451s] -- Found sensor_msgs: 4.9.1 (/opt/ros/humble/share/sensor_msgs/cmake)
+[0.468s] -- Found nav_msgs: 4.9.1 (/opt/ros/humble/share/nav_msgs/cmake)
+[0.487s] -- Found octomap_msgs: 2.0.1 (/opt/ros/humble/share/octomap_msgs/cmake)
+[0.503s] -- Found octomap_ros: 0.4.4 (/opt/ros/humble/share/octomap_ros/cmake)
+[0.514s] -- Found message_filters: 4.3.18 (/opt/ros/humble/share/message_filters/cmake)
+[0.517s] -- Found pcl_conversions: 2.4.5 (/opt/ros/humble/share/pcl_conversions/cmake)
+[0.554s] -- Eigen found (include: /usr/include/eigen3, version: 3.4.0)
+[0.592s] -- FLANN found (include: /usr/include, lib: /usr/lib/x86_64-linux-gnu/libflann_cpp.so)
+[0.947s] -- OpenNI found (version: 1.5.4.0, include: /usr/include/ni, lib: /usr/lib/libOpenNI.so;libusb::libusb)
+[0.952s] -- OpenNI2 found (version: 2.2.0.33, include: /usr/include/openni2, lib: /usr/lib/x86_64-linux-gnu/libOpenNI2.so;libusb::libusb)
+[1.065s] -- Eigen found (include: /usr/include/eigen3, version: 3.4.0)
+[1.070s] -- OpenNI found (version: 1.5.4.0, include: /usr/include/ni, lib: /usr/lib/libOpenNI.so;libusb::libusb)
+[1.075s] -- OpenNI2 found (version: 2.2.0.33, include: /usr/include/openni2, lib: /usr/lib/x86_64-linux-gnu/libOpenNI2.so;libusb::libusb)
+[1.182s] -- Found Qhull version 8.0.2
+[1.292s] -- OpenNI found (version: 1.5.4.0, include: /usr/include/ni, lib: /usr/lib/libOpenNI.so;libusb::libusb)
+[1.404s] [33mCMake Warning (dev) at CMakeLists.txt:22 (find_package):
+[1.405s]   Policy CMP0074 is not set: find_package uses <PackageName>_ROOT variables.
+[1.405s]   Run "cmake --help-policy CMP0074" for policy details.  Use the cmake_policy
+[1.405s]   command to set the policy and suppress this warning.
+[1.405s] 
+[1.405s]   CMake variable PCL_ROOT is set to:
+[1.405s] 
+[1.405s]     /usr
+[1.405s] 
+[1.405s]   For compatibility, CMake is ignoring the variable.
+[1.405s] This warning is for project developers.  Use -Wno-dev to suppress it.
+[1.405s] [0m
+[1.419s] -- Found ament_lint_auto: 0.12.15 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[1.484s] -- Added test 'copyright' to check source files copyright and LICENSE
+[1.486s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[1.486s] -- Configured cppcheck include dirs: /home/hamdan/autonomous_drone/ros2_test/src/occupancy_map_cpp/include
+[1.486s] -- Configured cppcheck exclude dirs and/or files: 
+[1.487s] -- Added test 'cpplint' to check C / C++ code against the Google style
+[1.487s] -- Configured cpplint exclude dirs and/or files: 
+[1.488s] -- Added test 'lint_cmake' to check CMake code style
+[1.489s] -- Added test 'uncrustify' to check C / C++ code style
+[1.489s] -- Configured uncrustify additional arguments: 
+[1.489s] -- Added test 'xmllint' to check XML markup files
+[1.491s] -- Configuring done
+[1.605s] -- Generating done
+[1.614s] -- Build files have been written to: /home/hamdan/autonomous_drone/ros2_test/build/occupancy_map_cpp
+[1.628s] Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/occupancy_map_cpp' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/hamdan/autonomous_drone/ros2_test/src/occupancy_map_cpp -DCMAKE_INSTALL_PREFIX=/home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp
+[1.630s] Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/occupancy_map_cpp': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/hamdan/autonomous_drone/ros2_test/build/occupancy_map_cpp
+[1.674s] [ 33%] [32mBuilding CXX object CMakeFiles/occupancy_map_node.dir/src/occupancy_map_node.cpp.o[0m
+[14.584s] [ 66%] [32mBuilding CXX object CMakeFiles/occupancy_map_node.dir/src/main.cpp.o[0m
+[17.010s] [100%] [32m[1mLinking CXX executable occupancy_map_node[0m
+[18.103s] [100%] Built target occupancy_map_node
+[18.113s] Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/occupancy_map_cpp' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/hamdan/autonomous_drone/ros2_test/build/occupancy_map_cpp
+[18.121s] Invoking command in '/home/hamdan/autonomous_drone/ros2_test/build/occupancy_map_cpp': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/hamdan/autonomous_drone/ros2_test/build/occupancy_map_cpp
+[18.127s] -- Install configuration: ""
+[18.127s] -- Execute custom install script
+[18.127s] -- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/lib/occupancy_map_cpp/occupancy_map_node
+[18.134s] -- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/include//occupancy_map_cpp/occupancy_map_node.hpp
+[18.141s] -- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/ament_index/resource_index/package_run_dependencies/occupancy_map_cpp
+[18.148s] -- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/ament_index/resource_index/parent_prefix_path/occupancy_map_cpp
+[18.155s] -- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/environment/ament_prefix_path.sh
+[18.162s] -- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/environment/ament_prefix_path.dsv
+[18.169s] -- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/environment/path.sh
+[18.176s] -- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/environment/path.dsv
+[18.183s] -- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/local_setup.bash
+[18.190s] -- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/local_setup.sh
+[18.197s] -- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/local_setup.zsh
+[18.204s] -- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/local_setup.dsv
+[18.211s] -- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/package.dsv
+[18.218s] -- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/ament_index/resource_index/packages/occupancy_map_cpp
+[18.224s] -- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/cmake/occupancy_map_cppConfig.cmake
+[18.231s] -- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/cmake/occupancy_map_cppConfig-version.cmake
+[18.238s] -- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/occupancy_map_cpp/share/occupancy_map_cpp/package.xml
+[18.247s] Invoked command in '/home/hamdan/autonomous_drone/ros2_test/build/occupancy_map_cpp' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/hamdan/autonomous_drone/ros2_test/build/occupancy_map_cpp

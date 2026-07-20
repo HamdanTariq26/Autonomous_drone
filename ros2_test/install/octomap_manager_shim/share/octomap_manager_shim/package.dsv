@@ -1,0 +1,11 @@
+source;share/octomap_manager_shim/hook/cmake_prefix_path.ps1
+source;share/octomap_manager_shim/hook/cmake_prefix_path.dsv
+source;share/octomap_manager_shim/hook/cmake_prefix_path.sh
+source;share/octomap_manager_shim/hook/ld_library_path_lib.ps1
+source;share/octomap_manager_shim/hook/ld_library_path_lib.dsv
+source;share/octomap_manager_shim/hook/ld_library_path_lib.sh
+source;share/octomap_manager_shim/local_setup.bash
+source;share/octomap_manager_shim/local_setup.dsv
+source;share/octomap_manager_shim/local_setup.ps1
+source;share/octomap_manager_shim/local_setup.sh
+source;share/octomap_manager_shim/local_setup.zsh

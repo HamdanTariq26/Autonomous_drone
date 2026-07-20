@@ -1,0 +1,1 @@
+/home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs/rosidl_typesupport_fastrtps_cpp/tello_autonomy_msgs/msg/detail/segment__rosidl_typesupport_fastrtps_cpp.hpp

@@ -1,0 +1,1 @@
+/home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs/ament_cmake_python/tello_autonomy_msgs/tello_autonomy_msgs.egg-info/SOURCES.txt

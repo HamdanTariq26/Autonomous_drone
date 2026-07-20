@@ -110,6 +110,10 @@ class ScaleFactorManager(Node):
         # Instance attribute (not class-level) - each ScaleFactorManager
         # instance has its own independent dict.
         self.current_scale_factors = {}
+        
+        # Callback fired when a new scale factor is successfully computed
+        # Signature: def on_scale_ready(map_id: int, scale_factor: float)
+        self.on_scale_ready = None
 
         # ---- long-lived worker process: started once here, not once
         # per recompute. The model loads ONCE inside the worker process
@@ -288,6 +292,10 @@ class ScaleFactorManager(Node):
                 continue
 
             self.current_scale_factors[map_id] = result["scale_factor"]
+            
+            if self.on_scale_ready is not None:
+                self.on_scale_ready(map_id, result["scale_factor"])
+                
             self.get_logger().info(
                 f"map_id {map_id}: scale_factor={result['scale_factor']:.6f} "
                 f"(from {result['num_points_used']} points across "

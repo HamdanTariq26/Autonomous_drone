@@ -1,0 +1,54 @@
+nbv_planner_node:
+  ros__parameters:
+    # --- Navigation frame must match what we publish poses in ---
+    tf_frame: "map"
+
+    # --- Workspace bounding box (meters, centered on takeoff point) ---
+    bbx.minX: -5.0
+    bbx.minY: -5.0
+    bbx.minZ: -0.5
+    bbx.maxX: 5.0
+    bbx.maxY: 5.0
+    bbx.maxZ: 3.0
+    bbx.softBounds: false
+
+    # --- Drone body bounding box for collision checking ---
+    # Tello: 98 x 92.5 x 41 mm. Add 5 cm safety margin on each side.
+    system.bbx.x: 0.20
+    system.bbx.y: 0.20
+    system.bbx.z: 0.14
+    system.bbx.overshoot: 0.10
+
+    # --- Max flight speed (m/s) and yaw rate (rad/s) ---
+    system.v_max: 0.3
+    system.dyaw_max: 0.5
+
+    # --- Tello camera: ~82 deg horizontal, ~60 deg vertical, 0 deg pitch ---
+    system.camera.pitch: [0.0]
+    system.camera.horizontal: [82.0]
+    system.camera.vertical: [60.0]
+
+    # --- RRT tree parameters ---
+    # extension_range: how far one RRT step can go (meters). Keep small indoors.
+    nbvp.tree.extension_range: 0.8
+    nbvp.tree.initial_iterations: 15
+    nbvp.tree.cuttoff_iterations: 2000
+    nbvp.tree.exact_root: true
+
+    # --- Information gain weights ---
+    # Only reward moving into unmapped space.
+    nbvp.gain.unmapped: 1.0
+    nbvp.gain.free: 0.0
+    nbvp.gain.occupied: 0.0
+    nbvp.gain.probabilistic: 0.0
+    nbvp.gain.area: 0.0
+    nbvp.gain.range: 1.0
+    nbvp.gain.degressive_coeff: 0.25
+    nbvp.gain.zero: 0.0
+
+    # --- Time step for path sampling ---
+    nbvp.dt: 0.1
+
+    # --- Logging (off by default) ---
+    nbvp.log.on: false
+    nbvp.log.throttle: 0.5

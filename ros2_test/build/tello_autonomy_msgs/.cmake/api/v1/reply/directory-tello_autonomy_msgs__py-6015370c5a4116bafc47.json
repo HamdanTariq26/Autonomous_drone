@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "tello_autonomy_msgs__py",
+		"source" : "/home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs/tello_autonomy_msgs__py"
+	}
+}
