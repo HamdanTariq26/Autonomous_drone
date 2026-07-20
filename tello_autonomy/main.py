@@ -128,7 +128,12 @@ def main():
     manual_control.on_rth_requested = lambda: mission_controller.start_mission_to_goal(0, 0, 1.0)
     
     # Notify user when scale factor is ready
-    scale_factor_manager.on_scale_ready = lambda map_id, scale: manual_control.show_message(f"SCALE READY: {scale:.2f}")
+    scale_factor_manager.on_scale_computing = lambda map_id: \
+        manual_control.set_scale_status("SCALE: Computing...", (0, 200, 255))   # yellow
+    scale_factor_manager.on_scale_ready = lambda map_id, scale: \
+        manual_control.set_scale_status(f"SCALE: Ready  {scale:.2f}", (0, 255, 0))  # green
+    scale_factor_manager.on_scale_lost = lambda: \
+        manual_control.set_scale_status("SCALE: Lost - Tracking Failure", (0, 0, 255))    # red
     
     command_handler.start_keepalive()
     telemetry.enable()

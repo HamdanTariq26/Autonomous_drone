@@ -103,7 +103,7 @@ configAck_publisher_ = this->create_publisher<std_msgs::msg::String>(pubconfigac
     keyframeTimestamps_publisher_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(pubKeyframeTimestampsName,10);
 
     //Added: Publisher when map changes (Hamdan)
-    mapTopologyChanged_publisher_ = this->create_publisher<std_msgs::msg::Bool>(pubMapTopologyChangedName, 10);
+    mapTopologyChanged_publisher_ = this->create_publisher<std_msgs::msg::Int32>(pubMapTopologyChangedName, 10);
 
     //Added: (Hamdan)
     currentPoseRaw_publisher_ = this->create_publisher<geometry_msgs::msg::PoseStamped>(pubCurrentPoseRawName, 10);
@@ -313,8 +313,8 @@ void MonocularMode::LiveCsvTimer_callback()
     keyframeTimestamps_publisher_->publish(msg);
 
     if (currentMapIds != prevMapIds_) {
-        auto topologyMsg = std_msgs::msg::Bool();
-        topologyMsg.data = true;
+        auto topologyMsg = std_msgs::msg::Int32();
+        topologyMsg.data = static_cast<int32_t>(currentMapIds.size());
         mapTopologyChanged_publisher_->publish(topologyMsg);
         RCLCPP_INFO(this->get_logger(), "Map topology changed: now %zu distinct map_id(s)", currentMapIds.size());
         prevMapIds_ = currentMapIds;

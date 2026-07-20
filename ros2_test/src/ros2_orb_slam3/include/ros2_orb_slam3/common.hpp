@@ -28,6 +28,7 @@
 #include "std_msgs/msg/float64_multi_array.hpp"
 #include <std_msgs/msg/string.hpp>
 #include <std_msgs/msg/bool.hpp>
+#include <std_msgs/msg/int32.hpp>
 #include "sensor_msgs/msg/image.hpp"
 
 //Added: (Hamdan)
@@ -105,7 +106,7 @@ class MonocularMode : public rclcpp::Node
         rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr subImgMsg_subscription_;
         rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr subTimestepMsg_subscription_;
         rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr keyframeTimestamps_publisher_; // Added: (Hamdan), To publish time stamps
-        rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr mapTopologyChanged_publisher_; //Added: Fires whenever the set of active maps_ids changes (new map, or merge/loop closure) //Hamdan
+        rclcpp::Publisher<std_msgs::msg::Int32>::SharedPtr mapTopologyChanged_publisher_; //Added: Fires whenever the set of active maps_ids changes (new map, or merge/loop closure) //Hamdan
         //Added: (Hamdan)
         rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr currentPoseRaw_publisher_;
         rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr currentPointsRaw_publisher_;

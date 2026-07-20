@@ -31,7 +31,9 @@ class MissionControllerNode(Node):
         self._current_z = 0.0
         self._current_yaw = 0.0
         self._has_pose = False
+        # Track if an NbvPlan or SearchPlan request is currently pending
         self._nbv_request_in_flight = False
+        self._search_request_in_flight = False
 
         # Subscriber for live pose
         self.create_subscription(
@@ -114,13 +116,17 @@ class MissionControllerNode(Node):
                 return
 
             # NbvPlan.srv response is geometry_msgs/Pose[] (NOT PoseStamped[]).
-            # Access position directly on each Pose object.
             waypoints = []
             for pose in response.path:
+                q = pose.orientation
+                # SLAM frame: Yaw is rotation around Y-axis
+                yaw = 2.0 * math.atan2(q.y, q.w)
+                
                 waypoints.append({
                     'x': pose.position.x,
                     'y': pose.position.y,
-                    'z': pose.position.z
+                    'z': pose.position.z,
+                    'yaw': yaw
                 })
 
             if len(waypoints) > 1:
@@ -138,11 +144,9 @@ class MissionControllerNode(Node):
         self._current_y = msg.pose.position.y
         self._current_z = msg.pose.position.z
 
-        # Extract yaw from quaternion
+        # Extract yaw from quaternion (SLAM frame: rotation around Y-axis)
         q = msg.pose.orientation
-        siny_cosp = 2.0 * (q.w * q.z + q.x * q.y)
-        cosy_cosp = 1.0 - 2.0 * (q.y * q.y + q.z * q.z)
-        self._current_yaw = math.atan2(siny_cosp, cosy_cosp)
+        self._current_yaw = 2.0 * math.atan2(q.y, q.w)
 
         self._has_pose = True
 
@@ -169,6 +173,9 @@ class MissionControllerNode(Node):
         """
         Request a path from search_cpp and start navigating to it.
         """
+        if self._search_request_in_flight:
+            return
+
         if not self._has_pose:
             self.get_logger().error("Cannot start mission: no live pose received yet.")
             return
@@ -189,10 +196,12 @@ class MissionControllerNode(Node):
         req.goal.pose.position.z = float(target_z)
 
         self.get_logger().info(f"Requesting path to ({target_x}, {target_y}, {target_z})...")
+        self._search_request_in_flight = True
         future = self._search_client.call_async(req)
         future.add_done_callback(self._on_search_plan_received)
 
     def _on_search_plan_received(self, future):
+        self._search_request_in_flight = False
         try:
             response = future.result()
             if not response.success or not response.path:
@@ -203,10 +212,15 @@ class MissionControllerNode(Node):
             # Convert PoseStamped[] path to dict format for tracker
             waypoints = []
             for pose_stamped in response.path:
+                q = pose_stamped.pose.orientation
+                # SLAM frame: Yaw is rotation around Y-axis
+                yaw = 2.0 * math.atan2(q.y, q.w)
+                
                 waypoints.append({
                     'x': pose_stamped.pose.position.x,
                     'y': pose_stamped.pose.position.y,
-                    'z': pose_stamped.pose.position.z
+                    'z': pose_stamped.pose.position.z,
+                    'yaw': yaw
                 })
             
             # The first point is usually the current position, pop it to avoid standing still

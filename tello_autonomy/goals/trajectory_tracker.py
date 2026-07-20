@@ -71,6 +71,12 @@ class TrajectoryTracker:
             distance_to_target = math.sqrt(dz**2 + dx**2 + dy**2)
 
             if distance_to_target < constants.WAYPOINT_ACCEPTANCE_RADIUS_M:
+                # If this is the LAST waypoint, ensure we are also facing the requested yaw
+                if len(self.path) == 1 and 'yaw' in target:
+                    yaw_err = target['yaw'] - current_yaw_rad
+                    yaw_err = (yaw_err + math.pi) % (2.0 * math.pi) - math.pi
+                    if abs(yaw_err) > 0.17:  # ~10 degrees
+                        break  # Do not pop it yet, we need to finish turning
                 self.path.pop(0)
             else:
                 break
@@ -100,19 +106,48 @@ class TrajectoryTracker:
         v_world_y = dy * effective_z_gain    # down    is +Y  → up = -Y
 
         # ---------------------------------------------------------------
-        # World → Body frame rotation around the gravity axis (world Y).
-        # ORB-SLAM3 yaw is a rotation about Y.
-        # After rotation:
-        #   body_forward  (+Z_body) =  world_Z*cos(yaw) + world_X*sin(yaw)
-        #   body_right    (+X_body) = -world_Z*sin(yaw) + world_X*cos(yaw)
-        #   body_up       (+Y_body) = -world_Y  (Y_world points down)
+        # Turn-Then-Move Logic:
+        # If the target is far enough away, ensure we face the direction
+        # of travel first. If the heading error is large, ONLY yaw.
         # ---------------------------------------------------------------
-        cos_yaw = math.cos(current_yaw_rad)
-        sin_yaw = math.sin(current_yaw_rad)
+        travel_yaw = math.atan2(dx, dz)
+        
+        # Determine the target yaw for this frame
+        if distance_to_target > constants.WAYPOINT_ACCEPTANCE_RADIUS_M:
+            # We are translating. Target the direction of travel.
+            target_yaw = travel_yaw
+        elif 'yaw' in target:
+            # We arrived at the last waypoint, turn to the planner's desired yaw.
+            target_yaw = target['yaw']
+        else:
+            # Fallback
+            target_yaw = travel_yaw
 
-        v_forward = v_world_z * cos_yaw + v_world_x * sin_yaw
-        v_right   = -v_world_z * sin_yaw + v_world_x * cos_yaw
-        v_up      = -v_world_y            # world Y is down; drone up_down is positive=up
+        yaw_err = target_yaw - current_yaw_rad
+        yaw_err = (yaw_err + math.pi) % (2.0 * math.pi) - math.pi
+        cmd_yaw = int(self._clamp(yaw_err * constants.YAW_P_GAIN, constants.MAX_AUTO_SPEED_YAW))
+
+        # If we need to turn significantly (> 25 degrees) to face the direction
+        # of travel, do NOT translate. Just turn.
+        if distance_to_target > constants.WAYPOINT_ACCEPTANCE_RADIUS_M and abs(yaw_err) > 0.43: # ~25 deg
+            v_forward = 0
+            v_right = 0
+            v_up = 0
+        else:
+            # ---------------------------------------------------------------
+            # World → Body frame rotation around the gravity axis (world Y).
+            # ORB-SLAM3 yaw is a rotation about Y.
+            # After rotation:
+            #   body_forward  (+Z_body) =  world_Z*cos(yaw) + world_X*sin(yaw)
+            #   body_right    (+X_body) = -world_Z*sin(yaw) + world_X*cos(yaw)
+            #   body_up       (+Y_body) = -world_Y  (Y_world points down)
+            # ---------------------------------------------------------------
+            cos_yaw = math.cos(current_yaw_rad)
+            sin_yaw = math.sin(current_yaw_rad)
+
+            v_forward = v_world_z * cos_yaw + v_world_x * sin_yaw
+            v_right   = -v_world_z * sin_yaw + v_world_x * cos_yaw
+            v_up      = -v_world_y            # world Y is down; drone up_down is positive=up
 
         # ---------------------------------------------------------------
         # Clamp to safe autonomous speeds
@@ -120,7 +155,6 @@ class TrajectoryTracker:
         cmd_fb  = int(self._clamp(v_forward, constants.MAX_AUTO_SPEED_XY))
         cmd_lr  = int(self._clamp(v_right,   constants.MAX_AUTO_SPEED_XY))
         cmd_ud  = int(self._clamp(v_up,      constants.MAX_AUTO_SPEED_Z))
-        cmd_yaw = 0   # hold yaw steady for safety
 
         return cmd_lr, cmd_fb, cmd_ud, cmd_yaw
 

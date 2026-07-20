@@ -56,9 +56,9 @@ SearchNode::SearchNode(const rclcpp::NodeOptions & options)
 
   // --- shim (no octree yet; will be set on first map message) ---
   shim_ = std::make_shared<octomap_manager_shim::OctomapManagerShim>();
-  // Allow search through unknown space. If false, the planner will refuse
-  // to plan if start or goal (e.g. 0,0,0) are slightly outside the mapped area.
-  shim_->setTreatUnknownAsOccupied(false);
+  // Keep conservative default: unknown space = blocked for path interiors.
+  // Start/goal endpoints are handled separately via isEndpointAcceptable().
+  shim_->setTreatUnknownAsOccupied(true);
 
   // --- map subscriber ---
   map_sub_ = this->create_subscription<octomap_msgs::msg::Octomap>(
@@ -112,21 +112,49 @@ void SearchNode::mapCallback(const octomap_msgs::msg::Octomap::SharedPtr msg)
 // ---------------------------------------------------------------------------
 bool SearchNode::isStateValid(
   const ob::State * state,
-  const std::shared_ptr<const octomap_manager_shim::OctomapManagerShim> & shim_snap) const
+  const std::shared_ptr<const octomap_manager_shim::OctomapManagerShim> & shim_snap,
+  bool allow_unknown) const
 {
   if (!shim_snap->hasOctree()) {
     return false;  // no map yet – treat everything as invalid (conservative)
   }
 
   const auto * se3 = state->as<ob::SE3StateSpace::StateType>();
-  const Eigen::Vector3d pos(
-    se3->getX(), se3->getY(), se3->getZ());
+  const Eigen::Vector3d pos(se3->getX(), se3->getY(), se3->getZ());
 
-  // A "point" check: call getLineStatusBoundingBox with start==end, which
-  // degenerates to checking the swept box at a single location.
-  // This ensures the drone's physical footprint fits at this state.
-  const auto status = shim_snap->getLineStatusBoundingBox(pos, pos, drone_bbox_);
-  return (status == octomap_manager_shim::CellStatus::kFree);
+  const double resolution = shim_snap->getResolution();
+  if (resolution <= 0.0) return false;
+
+  // Build the same grid that getLineStatusBoundingBox would, but call
+  // getCellProbabilityPoint directly — no zero-length ray involved.
+  const double eps = 0.001;
+  const Eigen::Vector3d half = drone_bbox_ * 0.5;
+
+  double dx = drone_bbox_.x() / std::ceil((drone_bbox_.x() + eps) / resolution);
+  double dy = drone_bbox_.y() / std::ceil((drone_bbox_.y() + eps) / resolution);
+  double dz = drone_bbox_.z() / std::ceil((drone_bbox_.z() + eps) / resolution);
+  if (dx <= 0.0) dx = resolution;
+  if (dy <= 0.0) dy = resolution;
+  if (dz <= 0.0) dz = resolution;
+
+  for (double x = -half.x(); x <= half.x() + eps; x += dx) {
+    for (double y = -half.y(); y <= half.y() + eps; y += dy) {
+      for (double z = -half.z(); z <= half.z() + eps; z += dz) {
+        const auto status = shim_snap->getCellProbabilityPoint(
+          pos + Eigen::Vector3d(x, y, z), nullptr);
+        if (status == octomap_manager_shim::CellStatus::kOccupied) {
+          return false;
+        }
+        // kUnknown with treat_unknown_as_occupied=true: getCellProbabilityPoint
+        // does NOT honor that flag (by design — see shim.hpp comment). We
+        // enforce it here explicitly unless allow_unknown is true (used near endpoints).
+        if (!allow_unknown && status == octomap_manager_shim::CellStatus::kUnknown) {
+          return false;  // conservative: unknown = blocked for interior states
+        }
+      }
+    }
+  }
+  return true;
 }
 
 // ---------------------------------------------------------------------------
@@ -149,7 +177,7 @@ void SearchNode::planCallback(
     // Snapshot: create a new shim sharing the same (immutable) octree ptr
     auto snap = std::make_shared<octomap_manager_shim::OctomapManagerShim>();
     snap->setOctree(octree_);
-    snap->setTreatUnknownAsOccupied(false);
+    snap->setTreatUnknownAsOccupied(true);  // conservative: interior path checks block on unknown
     shim_snap = snap;
   }
 
@@ -192,11 +220,23 @@ void SearchNode::planCallback(
   bounds.setLow(2, min_z);  bounds.setHigh(2, max_z);
   space->setBounds(bounds);
 
+  // Pre-calculate start and goal positions to use in the validity checker
+  const Eigen::Vector3d start_pos(req->start.pose.position.x, req->start.pose.position.y, req->start.pose.position.z);
+  const Eigen::Vector3d goal_pos(req->goal.pose.position.x, req->goal.pose.position.y, req->goal.pose.position.z);
+
   // --- 3. SpaceInformation + validity checker ---
   auto si = std::make_shared<ob::SpaceInformation>(space);
   si->setStateValidityChecker(
-    [this, shim_snap](const ob::State * s) {
-      return this->isStateValid(s, shim_snap);
+    [this, shim_snap, start_pos, goal_pos](const ob::State * s) {
+      // For states very close to the start or goal (< 0.2m), we allow kUnknown space.
+      // This is necessary because OMPL strictly evaluates the exact start and goal
+      // states against this checker, and they are often unscanned (e.g. launch point).
+      // If we don't allow unknown here, OMPL will instantly reject the start/goal 
+      // and refuse to plan. The rest of the path is strictly constrained.
+      const auto * se3 = s->as<ob::SE3StateSpace::StateType>();
+      Eigen::Vector3d pos(se3->getX(), se3->getY(), se3->getZ());
+      bool is_near_endpoint = (pos - start_pos).norm() < 0.2 || (pos - goal_pos).norm() < 0.2;
+      return this->isStateValid(s, shim_snap, is_near_endpoint);
     });
   si->setup();
 
@@ -219,14 +259,16 @@ void SearchNode::planCallback(
   goal->rotation().z = req->goal.pose.orientation.z;
   goal->rotation().w = req->goal.pose.orientation.w;
 
-  // Validate start/goal before handing to planner
-  if (!si->isValid(start.get())) {
-    RCLCPP_WARN(this->get_logger(), "SearchPlan: start state is in collision or unknown space");
+  // Validate start/goal using a narrow check before handing to OMPL.
+  // Unknown cells (never scanned) are accepted.
+  // Only hard-reject if they are explicitly KNOWN to be occupied (inside a wall).
+  if (!isEndpointAcceptable(start_pos, shim_snap)) {
+    RCLCPP_WARN(this->get_logger(), "SearchPlan: start state is in a known-occupied cell");
     res->success = false;
     return;
   }
-  if (!si->isValid(goal.get())) {
-    RCLCPP_WARN(this->get_logger(), "SearchPlan: goal state is in collision or unknown space");
+  if (!isEndpointAcceptable(goal_pos, shim_snap)) {
+    RCLCPP_WARN(this->get_logger(), "SearchPlan: goal state is in a known-occupied cell");
     res->success = false;
     return;
   }
@@ -300,6 +342,21 @@ std::vector<geometry_msgs::msg::PoseStamped> SearchNode::omplPathToMsg(
   }
 
   return out;
+}
+
+// ---------------------------------------------------------------------------
+// Endpoint acceptability check
+// ---------------------------------------------------------------------------
+bool SearchNode::isEndpointAcceptable(
+  const Eigen::Vector3d & pos,
+  const std::shared_ptr<const octomap_manager_shim::OctomapManagerShim> & shim) const
+{
+  // Accept if the position is free or unknown (never scanned).
+  // Only hard-reject positions that are KNOWN to be occupied — e.g. inside a wall.
+  // This lets the drone plan to its launch point (which may be unscanned)
+  // without opening interior path states to unknown space.
+  const auto status = shim->getCellProbabilityPoint(pos, nullptr);
+  return (status != octomap_manager_shim::CellStatus::kOccupied);
 }
 
 }  // namespace search_cpp

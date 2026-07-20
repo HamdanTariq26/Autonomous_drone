@@ -67,7 +67,14 @@ private:
   // ---- OMPL helpers ----
   bool isStateValid(
     const ob::State * state,
-    const std::shared_ptr<const octomap_manager_shim::OctomapManagerShim> & shim_snap) const;
+    const std::shared_ptr<const octomap_manager_shim::OctomapManagerShim> & shim_snap,
+    bool allow_unknown = false) const;
+
+  // Endpoint-only check: accepts unknown (unscanned) but rejects known-occupied.
+  // Used for start and goal states only — interior path states use isStateValid().
+  bool isEndpointAcceptable(
+    const Eigen::Vector3d & pos,
+    const std::shared_ptr<const octomap_manager_shim::OctomapManagerShim> & shim) const;
 
   std::vector<geometry_msgs::msg::PoseStamped> omplPathToMsg(
     const og::PathGeometric & path,

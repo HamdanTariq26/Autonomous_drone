@@ -38,7 +38,7 @@ import time
 
 import multiprocessing
 from rclpy.node import Node
-from std_msgs.msg import Bool
+from std_msgs.msg import Bool, Int32
 from sensor_msgs.msg import PointCloud2
 from sensor_msgs_py import point_cloud2
 
@@ -85,7 +85,7 @@ class ScaleFactorManager(Node):
             constants.TOPIC_KEYFRAME_POINTS, PointCloud2, self._on_keyframe_points
         )
         self._topics.get_subscription(
-            constants.TOPIC_MAP_TOPOLOGY_CHANGED, Bool, self._on_topology_changed
+            constants.TOPIC_MAP_TOPOLOGY_CHANGED, Int32, self._on_topology_changed
         )
 
         # map_id -> {"timer": rclpy Timer}
@@ -111,9 +111,12 @@ class ScaleFactorManager(Node):
         # instance has its own independent dict.
         self.current_scale_factors = {}
         
-        # Callback fired when a new scale factor is successfully computed
-        # Signature: def on_scale_ready(map_id: int, scale_factor: float)
+        # Callbacks
         self.on_scale_ready = None
+        self.on_scale_computing = None
+        self.on_scale_lost = None
+
+        self._last_known_map_count = 0
 
         # ---- long-lived worker process: started once here, not once
         # per recompute. The model loads ONCE inside the worker process
@@ -183,10 +186,12 @@ class ScaleFactorManager(Node):
             whose keyframe_points messages have gone stale (merged
             away, C++ side stopped publishing for them).
         """
-        self._prune_stale_map_ids()
+        old_count = self._last_known_map_count
+        self._last_known_map_count = msg.data
+        self._prune_stale_map_ids(old_count)
 
     # ****************************************************************************************
-    def _prune_stale_map_ids(self):
+    def _prune_stale_map_ids(self, prev_c_map_count=None):
         now = time.time()
         stale_map_ids = [
             map_id for map_id, last_seen in self._last_seen.items()
@@ -194,6 +199,14 @@ class ScaleFactorManager(Node):
         ]
         for map_id in stale_map_ids:
             self._stop_tracking(map_id)
+
+        # Fire on_scale_lost ONCE after all pruning, using count direction
+        # to distinguish loss from merge:
+        #   count went DOWN  -> merge (maps consolidated) -> no alarm
+        #   count same or UP -> loss (new map from restart) -> fire red
+        if stale_map_ids and self.on_scale_lost is not None and prev_c_map_count is not None:
+            if self._last_known_map_count >= prev_c_map_count:
+                self.on_scale_lost()
 
     # ****************************************************************************************
     def _start_tracking(self, map_id):
@@ -210,6 +223,8 @@ class ScaleFactorManager(Node):
             lambda: self._trigger_recompute(map_id),
         )
         self._map_state[map_id] = {"timer": timer}
+        if self.on_scale_computing is not None:
+            self.on_scale_computing(map_id)
         self._trigger_recompute(map_id)
 
     # ****************************************************************************************

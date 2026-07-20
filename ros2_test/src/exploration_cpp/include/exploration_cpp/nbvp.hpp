@@ -295,7 +295,7 @@ bool nbvInspection::nbvPlanner<stateVec>::setParams()
   params_.igArea_ = this->declare_parameter<double>("nbvp.gain.area", 1.0);
   params_.degressiveCoeff_ = this->declare_parameter<double>("nbvp.gain.degressive_coeff", 0.25);
   params_.extensionRange_ = this->declare_parameter<double>("nbvp.tree.extension_range", 1.0);
-  params_.initIterations_ = this->declare_parameter<int>("nbvp.tree.initial_iterations", 15);
+  params_.initIterations_ = this->declare_parameter<int>("nbvp.tree.initial_iterations", 150);
   params_.dt_ = this->declare_parameter<double>("nbvp.dt", 0.1);
   params_.gainRange_ = this->declare_parameter<double>("nbvp.gain.range", 1.0);
 
@@ -340,7 +340,13 @@ bool nbvInspection::nbvPlanner<stateVec>::setParams()
   params_.boundingBox_[1] = this->declare_parameter<double>("system.bbx.y", 0.5);
   params_.boundingBox_[2] = this->declare_parameter<double>("system.bbx.z", 0.3);
   params_.cuttoffIterations_ = this->declare_parameter<int>("nbvp.tree.cuttoff_iterations", 200);
-  params_.zero_gain_ = this->declare_parameter<double>("nbvp.gain.zero", 0.0);
+  // zero_gain_: minimum bestGain_ to consider the tree "good enough" to stop
+  // iterating. 0.0 means any single unmapped voxel satisfies gainFound() and
+  // the while loop exits after exactly initIterations_ — the tree never grows
+  // large. 0.5 is a meaningful threshold that requires multiple unmapped cells
+  // to be visible before stopping, giving the planner time to build a richer
+  // tree and pick a genuinely better frontier direction.
+  params_.zero_gain_ = this->declare_parameter<double>("nbvp.gain.zero", 0.5);
   params_.dOvershoot_ = this->declare_parameter<double>("system.bbx.overshoot", 0.5);
   params_.log_ = this->declare_parameter<bool>("nbvp.log.on", false);
   params_.log_throttle_ = this->declare_parameter<double>("nbvp.log.throttle", 0.5);

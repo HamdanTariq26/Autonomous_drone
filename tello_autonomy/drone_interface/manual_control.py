@@ -63,13 +63,13 @@ class ManualControl:
         # Called when 'h' is pressed to trigger Return-to-Home
         self.on_rth_requested = None
         
-        # Overlay text for UI messages
-        self._overlay_text = ""
-        self._overlay_expires = 0.0
+        # Persistent status text for scale factor
+        self._scale_status_text = "SLAM: Waiting..."
+        self._scale_status_color = (255, 255, 255)  # white
 
-    def show_message(self, text, duration=3.0):
-        self._overlay_text = text
-        self._overlay_expires = time.time() + duration
+    def set_scale_status(self, text, color):
+        self._scale_status_text = text
+        self._scale_status_color = color
 
     # ****************************************************************************************
     def start(self, window_name="Tello Manual Control", blocking=False):
@@ -156,9 +156,9 @@ class ManualControl:
             frame = self._frame_receiver.get_frame_bgr()
             if frame is not None:
                 display_frame = cv2.resize(frame, (640, 480))
-                if time.time() < self._overlay_expires and self._overlay_text:
-                    cv2.putText(display_frame, self._overlay_text, (20, 50), 
-                                cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0), 2, cv2.LINE_AA)
+                if self._scale_status_text:
+                    cv2.putText(display_frame, self._scale_status_text, (20, 50), 
+                                cv2.FONT_HERSHEY_SIMPLEX, 1.0, self._scale_status_color, 2, cv2.LINE_AA)
                 cv2.imshow(window_name, display_frame)
             cv2.waitKey(1)  # only paints/refreshes the window - not used for key state
 

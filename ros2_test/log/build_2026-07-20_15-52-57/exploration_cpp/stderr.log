@@ -1,0 +1,11 @@
+/home/hamdan/autonomous_drone/ros2_test/src/exploration_cpp/src/rrt.cpp: In member function ‘virtual void nbvInspection::RrtTree::iterate(int)’:
+/home/hamdan/autonomous_drone/ros2_test/src/exploration_cpp/src/rrt.cpp:264:42: warning: unused parameter ‘iterations’ [-Wunused-parameter]
+  264 | void nbvInspection::RrtTree::iterate(int iterations)
+      |                                      ~~~~^~~~~~~~~~
+/home/hamdan/autonomous_drone/ros2_test/src/exploration_cpp/src/rrt.cpp: In member function ‘virtual void nbvInspection::RrtTree::initialize()’:
+/home/hamdan/autonomous_drone/ros2_test/src/exploration_cpp/src/rrt.cpp:348:17: warning: comparison of integer expressions of different signedness: ‘int’ and ‘std::vector<std::__cxx11::basic_string<char> >::size_type’ {aka ‘long unsigned int’} [-Wsign-compare]
+  348 |   for (i = 0; i < agentNames_.size(); i++) {
+      |               ~~^~~~~~~~~~~~~~~~~~~~
+/home/hamdan/autonomous_drone/ros2_test/src/exploration_cpp/src/rrt.cpp:353:9: warning: comparison of integer expressions of different signedness: ‘int’ and ‘std::vector<std::__cxx11::basic_string<char> >::size_type’ {aka ‘long unsigned int’} [-Wsign-compare]
+  353 |   if (i < agentNames_.size()) {
+      |       ~~^~~~~~~~~~~~~~~~~~~~

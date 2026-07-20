@@ -1,0 +1,143 @@
+[0.000000] (-) TimerEvent: {}
+[0.000524] (-) JobUnselected: {'identifier': 'exploration_cpp'}
+[0.000818] (-) JobUnselected: {'identifier': 'occupancy_map_cpp'}
+[0.000882] (-) JobUnselected: {'identifier': 'octomap_manager_shim'}
+[0.000901] (-) JobUnselected: {'identifier': 'ros2_orb_slam3'}
+[0.000916] (-) JobUnselected: {'identifier': 'tello_autonomy_msgs'}
+[0.000934] (search_cpp) JobQueued: {'identifier': 'search_cpp', 'dependencies': OrderedDict([('octomap_manager_shim', '/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim'), ('tello_autonomy_msgs', '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs')])}
+[0.000961] (search_cpp) JobStarted: {'identifier': 'search_cpp'}
+[0.021534] (search_cpp) JobProgress: {'identifier': 'search_cpp', 'progress': 'cmake'}
+[0.022407] (search_cpp) JobProgress: {'identifier': 'search_cpp', 'progress': 'build'}
+[0.022977] (search_cpp) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/hamdan/autonomous_drone/ros2_test/build/search_cpp', '--', '-j12', '-l12'], 'cwd': '/home/hamdan/autonomous_drone/ros2_test/build/search_cpp', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('CHROME_DEVTOOLS_MCP_JS', '/home/hamdan/Downloads/Antigravity-x64/resources/app.asar.unpacked/node_modules/chrome-devtools-mcp/build/src/bin/chrome-devtools-mcp.js'), ('LANGUAGE', 'en_US:en'), ('USER', 'hamdan'), ('ANTIGRAVITY_SOURCE_METADATA', '{"tool":{"conversationId":"9a0acee7-ea50-461b-83ae-9391139d1dce", "stepIndex":1529, "toolCall":{"id":"1uaa1l1a", "name":"run_command", "argumentsJson":"{\\"CommandLine\\":\\"colcon build --packages-select search_cpp\\",\\"Cwd\\":\\"/home/hamdan/autonomous_drone/ros2_test\\",\\"WaitMsBeforeAsync\\":500,\\"toolAction\\":\\"Building search_cpp\\",\\"toolSummary\\":\\"Rebuild search_cpp\\"}", "thinkingSignature":"EqwFCqkFARFNMg9PJ+cvyq39KvJvUcmA0Us5n6KN/JhA6O0zh45AUTuu/t5rPMtIVtcytqtXj7kGmwIwn+6HcOOMJ1sHT+BQ8ix586xkDs0i+3c+wMOAJ+1xi/sNpvXEBr4nsZQ51X6kiY3MMeMArJ0JMsPO9bY9F5ki77IMYwNNZCU8zOP0sJAu2aPphZRljK4FkJQE/+vRJcOGlTChSaV4JKjpW+geSJTbiWQBAASzKoMG92PEJ8suJYCABoXSx+61qffxnlKCIcx056vBz4HhWSiuxqlhGpfa4l0gD9K1XAYj7tkb90Hpb8uUAp3/7uOCHPdmetuOPylQJNCD7EnVE7vnNX8I17V6rAJuZIh9hB970lf/htVXDRf4vy9VWmr9LdjcC0cAYQ6CpOcVohUetjsHq16BYt5IbNH2Cy0pnWgv/eW2zw+V/DgGez3l9nZCRdxAXJOM1OsYXjv853hADPariBEL9iDhQDLd3bEz0PxQaQcnLdH21+bu8zFv82Ksp3OU7fLG8uzQfV/de8GUUOySseJZKXCZtoXvaWY9TSQLz6vtABqLC/LqLeclmRpGnEGjpw88cL+iXykrFm4UQsAauDE/JV6oK9juTlEuMj2Cgtp8btSvrjXWvPqJegEpJDWBq2jlqeCzC+YLidlpwZ2S4KNGs/KVyQgSCyaXdUpj+Cy6fCGN+T8AKzR6vGF6m5Bx/VJPJueCHKRuFaBnqXCtwsbbjAraw4UNhevFfUdsB69s/cflL5PAH+RRRGBbrQRWzzrbhlcH3XHsKvVK0VwRKMsDwPusBUmMTR+y1z2D4Btf3wDe+JoCtYmQ7ZHbqN8f0GFqLaAv72WU3PgI5rgNpD88lQt9FC/XQAHeB/kFhpyx8fZRmZ2+qhXof1wUvsClorC1Raj3NIJ3", "originalName":"run_command"}}}'), ('LC_TIME', 'en_US.UTF-8'), ('XDG_SESSION_TYPE', 'wayland'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/lib:/usr/local/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/hamdan'), ('CHROME_DESKTOP', 'antigravity.desktop'), ('DISABLE_AUTO_UPDATE', 'true'), ('DESKTOP_SESSION', 'ubuntu'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('PAGER', 'cat'), ('LC_MONETARY', 'en_US.UTF-8'), ('MANAGERPID', '1426'), ('DBUS_STARTER_BUS_TYPE', 'session'), ('SYSTEMD_EXEC_PID', '1577'), ('IM_CONFIG_CHECK_ENV', '1'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus,guid=cfbccdf7e09a6ee9c1b84d636a5da925'), ('ANTIGRAVITY_AGENT', '1'), ('GIO_LAUNCHED_DESKTOP_FILE_PID', '2690'), ('AGY_BROWSER_ACTIVE_PORT_FILE', '/home/hamdan/.config/Antigravity/DevToolsActivePort'), ('IM_CONFIG_PHASE', '1'), ('WAYLAND_DISPLAY', 'wayland-0'), ('ROS_DISTRO', 'humble'), ('ZSH_TMUX_AUTOSTARTED', 'true'), ('LOGNAME', 'hamdan'), ('AGY_BROWSER_WS_URL', 'ws://127.0.0.1:43031/devtools/browser/7c374ae2-271b-4801-9f45-83b227e5ef7c'), ('_', '/usr/bin/colcon'), ('JOURNAL_STREAM', '8:11594'), ('ROS_VERSION', '2'), ('XDG_SESSION_CLASS', 'user'), ('USERNAME', 'hamdan'), ('TERM', 'dumb'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('FC_FONTATIONS', '1'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/home/hamdan/.gemini/antigravity/bin:/home/hamdan/.config/Antigravity/bin:/home/hamdan/.local/bin:/home/hamdan/.local/bin:/home/hamdan/.local/bin:/opt/ros/humble/bin:/home/hamdan/.local/bin:/home/hamdan/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin'), ('SESSION_MANAGER', 'local/Falcon:@/tmp/.ICE-unix/1577,unix/Falcon:/tmp/.ICE-unix/1577'), ('INVOCATION_ID', '2e2fd5a6043945f49909e255d1eb2477'), ('PAPERSIZE', 'letter'), ('XDG_MENU_PREFIX', 'gnome-'), ('LC_ADDRESS', 'en_US.UTF-8'), ('GNOME_SETUP_DISPLAY', ':1'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('GDK_BACKEND', 'wayland'), ('DISPLAY', ':0'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('ANTIGRAVITY_CONVERSATION_ID', '9a0acee7-ea50-461b-83ae-9391139d1dce'), ('LC_TELEPHONE', 'en_US.UTF-8'), ('XMODIFIERS', '@im=ibus'), ('XDG_SESSION_DESKTOP', 'ubuntu'), ('XAUTHORITY', '/run/user/1000/.mutter-Xwaylandauth.CLNQS3'), ('LS_COLORS', ''), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('AMENT_PREFIX_PATH', '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:/opt/ros/humble'), ('ANTIGRAVITY_PROJECT_ID', '1f300e4a-c5d8-48f7-b5d5-549d99c8b2b1'), ('SHELL', '/bin/bash'), ('ANTIGRAVITY_LS_ADDRESS', 'localhost:46359'), ('LC_NAME', 'en_US.UTF-8'), ('QT_ACCESSIBILITY', '1'), ('NO_AT_BRIDGE', '1'), ('GDMSESSION', 'ubuntu'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('LC_MEASUREMENT', 'en_US.UTF-8'), ('LC_IDENTIFICATION', 'en_US.UTF-8'), ('GIT_PAGER', 'cat'), ('QT_IM_MODULE', 'ibus'), ('ANTIGRAVITY_TRAJECTORY_ID', '8e18074b-c371-411b-9f98-9245476b57df'), ('PWD', '/home/hamdan/autonomous_drone/ros2_test/build/search_cpp'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('ZSH_TMUX_AUTOSTART', 'false'), ('DBUS_STARTER_ADDRESS', 'unix:path=/run/user/1000/bus,guid=cfbccdf7e09a6ee9c1b84d636a5da925'), ('XDG_DATA_DIRS', '/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('PYTHONPATH', '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('LC_NUMERIC', 'en_US.UTF-8'), ('LC_PAPER', 'en_US.UTF-8'), ('COLCON', '1'), ('ANTIGRAVITY_CSRF_TOKEN', '4b223412-46f3-4bf4-96f8-489c7ea8b4a7'), ('CMAKE_PREFIX_PATH', '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:/opt/ros/humble')]), 'shell': False}
+[0.099746] (-) TimerEvent: {}
+[0.117411] (search_cpp) StdoutLine: {'line': b'\x1b[35m\x1b[1mConsolidate compiler generated dependencies of target search_node\x1b[0m\n'}
+[0.177086] (search_cpp) StdoutLine: {'line': b'[ 50%] \x1b[32mBuilding CXX object CMakeFiles/search_node.dir/src/search_node.cpp.o\x1b[0m\n'}
+[0.199856] (-) TimerEvent: {}
+[0.300119] (-) TimerEvent: {}
+[0.400395] (-) TimerEvent: {}
+[0.500719] (-) TimerEvent: {}
+[0.600972] (-) TimerEvent: {}
+[0.701230] (-) TimerEvent: {}
+[0.801515] (-) TimerEvent: {}
+[0.901776] (-) TimerEvent: {}
+[1.002044] (-) TimerEvent: {}
+[1.102333] (-) TimerEvent: {}
+[1.202632] (-) TimerEvent: {}
+[1.302923] (-) TimerEvent: {}
+[1.403220] (-) TimerEvent: {}
+[1.503503] (-) TimerEvent: {}
+[1.603847] (-) TimerEvent: {}
+[1.704255] (-) TimerEvent: {}
+[1.804525] (-) TimerEvent: {}
+[1.904806] (-) TimerEvent: {}
+[2.005070] (-) TimerEvent: {}
+[2.105344] (-) TimerEvent: {}
+[2.205650] (-) TimerEvent: {}
+[2.305934] (-) TimerEvent: {}
+[2.406201] (-) TimerEvent: {}
+[2.506508] (-) TimerEvent: {}
+[2.606793] (-) TimerEvent: {}
+[2.707070] (-) TimerEvent: {}
+[2.807340] (-) TimerEvent: {}
+[2.907640] (-) TimerEvent: {}
+[3.007906] (-) TimerEvent: {}
+[3.108183] (-) TimerEvent: {}
+[3.208526] (-) TimerEvent: {}
+[3.308934] (-) TimerEvent: {}
+[3.409270] (-) TimerEvent: {}
+[3.509742] (-) TimerEvent: {}
+[3.610056] (-) TimerEvent: {}
+[3.710372] (-) TimerEvent: {}
+[3.810674] (-) TimerEvent: {}
+[3.910983] (-) TimerEvent: {}
+[4.011357] (-) TimerEvent: {}
+[4.111638] (-) TimerEvent: {}
+[4.211899] (-) TimerEvent: {}
+[4.312238] (-) TimerEvent: {}
+[4.412673] (-) TimerEvent: {}
+[4.513071] (-) TimerEvent: {}
+[4.613357] (-) TimerEvent: {}
+[4.713646] (-) TimerEvent: {}
+[4.813936] (-) TimerEvent: {}
+[4.914240] (-) TimerEvent: {}
+[5.014522] (-) TimerEvent: {}
+[5.114813] (-) TimerEvent: {}
+[5.215111] (-) TimerEvent: {}
+[5.315403] (-) TimerEvent: {}
+[5.415682] (-) TimerEvent: {}
+[5.515968] (-) TimerEvent: {}
+[5.616258] (-) TimerEvent: {}
+[5.716521] (-) TimerEvent: {}
+[5.816807] (-) TimerEvent: {}
+[5.917110] (-) TimerEvent: {}
+[6.017392] (-) TimerEvent: {}
+[6.117695] (-) TimerEvent: {}
+[6.218021] (-) TimerEvent: {}
+[6.318448] (-) TimerEvent: {}
+[6.418766] (-) TimerEvent: {}
+[6.519106] (-) TimerEvent: {}
+[6.619370] (-) TimerEvent: {}
+[6.719668] (-) TimerEvent: {}
+[6.819964] (-) TimerEvent: {}
+[6.920231] (-) TimerEvent: {}
+[7.020548] (-) TimerEvent: {}
+[7.120880] (-) TimerEvent: {}
+[7.221152] (-) TimerEvent: {}
+[7.321440] (-) TimerEvent: {}
+[7.421748] (-) TimerEvent: {}
+[7.522012] (-) TimerEvent: {}
+[7.622282] (-) TimerEvent: {}
+[7.722553] (-) TimerEvent: {}
+[7.822820] (-) TimerEvent: {}
+[7.923083] (-) TimerEvent: {}
+[8.023382] (-) TimerEvent: {}
+[8.124030] (-) TimerEvent: {}
+[8.224289] (-) TimerEvent: {}
+[8.324559] (-) TimerEvent: {}
+[8.424843] (-) TimerEvent: {}
+[8.525150] (-) TimerEvent: {}
+[8.625507] (-) TimerEvent: {}
+[8.725788] (-) TimerEvent: {}
+[8.826057] (-) TimerEvent: {}
+[8.926361] (-) TimerEvent: {}
+[9.026681] (-) TimerEvent: {}
+[9.126975] (-) TimerEvent: {}
+[9.227280] (-) TimerEvent: {}
+[9.327525] (-) TimerEvent: {}
+[9.427899] (-) TimerEvent: {}
+[9.528353] (-) TimerEvent: {}
+[9.628677] (-) TimerEvent: {}
+[9.728962] (-) TimerEvent: {}
+[9.829252] (-) TimerEvent: {}
+[9.832552] (search_cpp) StdoutLine: {'line': b'[100%] \x1b[32m\x1b[1mLinking CXX executable search_node\x1b[0m\n'}
+[9.929404] (-) TimerEvent: {}
+[10.029851] (-) TimerEvent: {}
+[10.130213] (-) TimerEvent: {}
+[10.230517] (-) TimerEvent: {}
+[10.278878] (search_cpp) StdoutLine: {'line': b'[100%] Built target search_node\n'}
+[10.290743] (search_cpp) CommandEnded: {'returncode': 0}
+[10.292239] (search_cpp) JobProgress: {'identifier': 'search_cpp', 'progress': 'install'}
+[10.300700] (search_cpp) Command: {'cmd': ['/usr/bin/cmake', '--install', '/home/hamdan/autonomous_drone/ros2_test/build/search_cpp'], 'cwd': '/home/hamdan/autonomous_drone/ros2_test/build/search_cpp', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('CHROME_DEVTOOLS_MCP_JS', '/home/hamdan/Downloads/Antigravity-x64/resources/app.asar.unpacked/node_modules/chrome-devtools-mcp/build/src/bin/chrome-devtools-mcp.js'), ('LANGUAGE', 'en_US:en'), ('USER', 'hamdan'), ('ANTIGRAVITY_SOURCE_METADATA', '{"tool":{"conversationId":"9a0acee7-ea50-461b-83ae-9391139d1dce", "stepIndex":1529, "toolCall":{"id":"1uaa1l1a", "name":"run_command", "argumentsJson":"{\\"CommandLine\\":\\"colcon build --packages-select search_cpp\\",\\"Cwd\\":\\"/home/hamdan/autonomous_drone/ros2_test\\",\\"WaitMsBeforeAsync\\":500,\\"toolAction\\":\\"Building search_cpp\\",\\"toolSummary\\":\\"Rebuild search_cpp\\"}", "thinkingSignature":"EqwFCqkFARFNMg9PJ+cvyq39KvJvUcmA0Us5n6KN/JhA6O0zh45AUTuu/t5rPMtIVtcytqtXj7kGmwIwn+6HcOOMJ1sHT+BQ8ix586xkDs0i+3c+wMOAJ+1xi/sNpvXEBr4nsZQ51X6kiY3MMeMArJ0JMsPO9bY9F5ki77IMYwNNZCU8zOP0sJAu2aPphZRljK4FkJQE/+vRJcOGlTChSaV4JKjpW+geSJTbiWQBAASzKoMG92PEJ8suJYCABoXSx+61qffxnlKCIcx056vBz4HhWSiuxqlhGpfa4l0gD9K1XAYj7tkb90Hpb8uUAp3/7uOCHPdmetuOPylQJNCD7EnVE7vnNX8I17V6rAJuZIh9hB970lf/htVXDRf4vy9VWmr9LdjcC0cAYQ6CpOcVohUetjsHq16BYt5IbNH2Cy0pnWgv/eW2zw+V/DgGez3l9nZCRdxAXJOM1OsYXjv853hADPariBEL9iDhQDLd3bEz0PxQaQcnLdH21+bu8zFv82Ksp3OU7fLG8uzQfV/de8GUUOySseJZKXCZtoXvaWY9TSQLz6vtABqLC/LqLeclmRpGnEGjpw88cL+iXykrFm4UQsAauDE/JV6oK9juTlEuMj2Cgtp8btSvrjXWvPqJegEpJDWBq2jlqeCzC+YLidlpwZ2S4KNGs/KVyQgSCyaXdUpj+Cy6fCGN+T8AKzR6vGF6m5Bx/VJPJueCHKRuFaBnqXCtwsbbjAraw4UNhevFfUdsB69s/cflL5PAH+RRRGBbrQRWzzrbhlcH3XHsKvVK0VwRKMsDwPusBUmMTR+y1z2D4Btf3wDe+JoCtYmQ7ZHbqN8f0GFqLaAv72WU3PgI5rgNpD88lQt9FC/XQAHeB/kFhpyx8fZRmZ2+qhXof1wUvsClorC1Raj3NIJ3", "originalName":"run_command"}}}'), ('LC_TIME', 'en_US.UTF-8'), ('XDG_SESSION_TYPE', 'wayland'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/lib:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim/lib:/usr/local/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/hamdan'), ('CHROME_DESKTOP', 'antigravity.desktop'), ('DISABLE_AUTO_UPDATE', 'true'), ('DESKTOP_SESSION', 'ubuntu'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('PAGER', 'cat'), ('LC_MONETARY', 'en_US.UTF-8'), ('MANAGERPID', '1426'), ('DBUS_STARTER_BUS_TYPE', 'session'), ('SYSTEMD_EXEC_PID', '1577'), ('IM_CONFIG_CHECK_ENV', '1'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus,guid=cfbccdf7e09a6ee9c1b84d636a5da925'), ('ANTIGRAVITY_AGENT', '1'), ('GIO_LAUNCHED_DESKTOP_FILE_PID', '2690'), ('AGY_BROWSER_ACTIVE_PORT_FILE', '/home/hamdan/.config/Antigravity/DevToolsActivePort'), ('IM_CONFIG_PHASE', '1'), ('WAYLAND_DISPLAY', 'wayland-0'), ('ROS_DISTRO', 'humble'), ('ZSH_TMUX_AUTOSTARTED', 'true'), ('LOGNAME', 'hamdan'), ('AGY_BROWSER_WS_URL', 'ws://127.0.0.1:43031/devtools/browser/7c374ae2-271b-4801-9f45-83b227e5ef7c'), ('_', '/usr/bin/colcon'), ('JOURNAL_STREAM', '8:11594'), ('ROS_VERSION', '2'), ('XDG_SESSION_CLASS', 'user'), ('USERNAME', 'hamdan'), ('TERM', 'dumb'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('FC_FONTATIONS', '1'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/home/hamdan/.gemini/antigravity/bin:/home/hamdan/.config/Antigravity/bin:/home/hamdan/.local/bin:/home/hamdan/.local/bin:/home/hamdan/.local/bin:/opt/ros/humble/bin:/home/hamdan/.local/bin:/home/hamdan/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin'), ('SESSION_MANAGER', 'local/Falcon:@/tmp/.ICE-unix/1577,unix/Falcon:/tmp/.ICE-unix/1577'), ('INVOCATION_ID', '2e2fd5a6043945f49909e255d1eb2477'), ('PAPERSIZE', 'letter'), ('XDG_MENU_PREFIX', 'gnome-'), ('LC_ADDRESS', 'en_US.UTF-8'), ('GNOME_SETUP_DISPLAY', ':1'), ('XDG_RUNTIME_DIR', '/run/user/1000'), ('GDK_BACKEND', 'wayland'), ('DISPLAY', ':0'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('ANTIGRAVITY_CONVERSATION_ID', '9a0acee7-ea50-461b-83ae-9391139d1dce'), ('LC_TELEPHONE', 'en_US.UTF-8'), ('XMODIFIERS', '@im=ibus'), ('XDG_SESSION_DESKTOP', 'ubuntu'), ('XAUTHORITY', '/run/user/1000/.mutter-Xwaylandauth.CLNQS3'), ('LS_COLORS', ''), ('SSH_AGENT_LAUNCHER', 'gnome-keyring'), ('SSH_AUTH_SOCK', '/run/user/1000/keyring/ssh'), ('AMENT_PREFIX_PATH', '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:/opt/ros/humble'), ('ANTIGRAVITY_PROJECT_ID', '1f300e4a-c5d8-48f7-b5d5-549d99c8b2b1'), ('SHELL', '/bin/bash'), ('ANTIGRAVITY_LS_ADDRESS', 'localhost:46359'), ('LC_NAME', 'en_US.UTF-8'), ('QT_ACCESSIBILITY', '1'), ('NO_AT_BRIDGE', '1'), ('GDMSESSION', 'ubuntu'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('LC_MEASUREMENT', 'en_US.UTF-8'), ('LC_IDENTIFICATION', 'en_US.UTF-8'), ('GIT_PAGER', 'cat'), ('QT_IM_MODULE', 'ibus'), ('ANTIGRAVITY_TRAJECTORY_ID', '8e18074b-c371-411b-9f98-9245476b57df'), ('PWD', '/home/hamdan/autonomous_drone/ros2_test/build/search_cpp'), ('XDG_CONFIG_DIRS', '/etc/xdg/xdg-ubuntu:/etc/xdg'), ('ZSH_TMUX_AUTOSTART', 'false'), ('DBUS_STARTER_ADDRESS', 'unix:path=/run/user/1000/bus,guid=cfbccdf7e09a6ee9c1b84d636a5da925'), ('XDG_DATA_DIRS', '/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('PYTHONPATH', '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs/local/lib/python3.10/dist-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('LC_NUMERIC', 'en_US.UTF-8'), ('LC_PAPER', 'en_US.UTF-8'), ('COLCON', '1'), ('ANTIGRAVITY_CSRF_TOKEN', '4b223412-46f3-4bf4-96f8-489c7ea8b4a7'), ('CMAKE_PREFIX_PATH', '/home/hamdan/autonomous_drone/ros2_test/install/tello_autonomy_msgs:/home/hamdan/autonomous_drone/ros2_test/install/octomap_manager_shim:/opt/ros/humble')]), 'shell': False}
+[10.309460] (search_cpp) StdoutLine: {'line': b'-- Install configuration: ""\n'}
+[10.310063] (search_cpp) StdoutLine: {'line': b'-- Execute custom install script\n'}
+[10.310500] (search_cpp) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/search_cpp/lib/search_cpp/search_node\n'}
+[10.310994] (search_cpp) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/search_cpp/include/search_cpp/search_node.hpp\n'}
+[10.311416] (search_cpp) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/ament_index/resource_index/package_run_dependencies/search_cpp\n'}
+[10.311834] (search_cpp) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/ament_index/resource_index/parent_prefix_path/search_cpp\n'}
+[10.312254] (search_cpp) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/search_cpp/environment/ament_prefix_path.sh\n'}
+[10.312370] (search_cpp) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/search_cpp/environment/ament_prefix_path.dsv\n'}
+[10.312557] (search_cpp) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/search_cpp/environment/path.sh\n'}
+[10.312742] (search_cpp) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/search_cpp/environment/path.dsv\n'}
+[10.312916] (search_cpp) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/search_cpp/local_setup.bash\n'}
+[10.313101] (search_cpp) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/search_cpp/local_setup.sh\n'}
+[10.313458] (search_cpp) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/search_cpp/local_setup.zsh\n'}
+[10.313575] (search_cpp) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/search_cpp/local_setup.dsv\n'}
+[10.313649] (search_cpp) StdoutLine: {'line': b'-- Symlinking: /home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/search_cpp/package.dsv\n'}
+[10.324098] (search_cpp) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/ament_index/resource_index/packages/search_cpp\n'}
+[10.324644] (search_cpp) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/search_cpp/cmake/search_cppConfig.cmake\n'}
+[10.325003] (search_cpp) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/search_cpp/cmake/search_cppConfig-version.cmake\n'}
+[10.325292] (search_cpp) StdoutLine: {'line': b'-- Up-to-date symlink: /home/hamdan/autonomous_drone/ros2_test/install/search_cpp/share/search_cpp/package.xml\n'}
+[10.327352] (search_cpp) CommandEnded: {'returncode': 0}
+[10.330576] (-) TimerEvent: {}
+[10.342375] (search_cpp) JobEnded: {'identifier': 'search_cpp', 'rc': 0}
+[10.342993] (-) EventReactorShutdown: {}

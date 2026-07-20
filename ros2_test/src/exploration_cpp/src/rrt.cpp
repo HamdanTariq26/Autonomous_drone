@@ -274,7 +274,11 @@ void nbvInspection::RrtTree::iterate(int iterations)
     }
     if (SQ(newState[0]) + SQ(newState[1]) + SQ(newState[2]) > pow(radius, 2.0))
       continue;
-    newState += rootNode_->state_;
+    // Use root_ (live drone position updated by every pose callback) rather
+    // than rootNode_->state_ (set once at initialize() and never updated
+    // mid-cycle). rootNode_->state_ may be the previous waypoint, not where
+    // the drone actually is right now — especially important with exact_root_.
+    newState += root_;
     if (!params_.softBounds_) {
       if (newState.x() < params_.minX_ + 0.5 * params_.boundingBox_.x()) {
         continue;
@@ -482,15 +486,25 @@ double nbvInspection::RrtTree::gain(StateVec state)
         if (dir.transpose().dot(dir) > rangeSq) {
           continue;
         }
+        
+        // Convert dir from SLAM frame (Z-fwd, X-right, Y-down) 
+        // to ROS frame (X-fwd, Y-left, Z-up) which the frustum expects
+        Eigen::Vector3d dir_ros(dir.z(), -dir.x(), -dir.y());
+
         bool insideAFieldOfView = false;
         for (typename std::vector<std::vector<Eigen::Vector3d>>::iterator itCBN = params_
             .camBoundNormals_.begin(); itCBN != params_.camBoundNormals_.end(); itCBN++) {
           bool inThisFieldOfView = true;
           for (typename std::vector<Eigen::Vector3d>::iterator itSingleCBN = itCBN->begin();
               itSingleCBN != itCBN->end(); itSingleCBN++) {
-            Eigen::Vector3d normal = Eigen::AngleAxisd(state[3], Eigen::Vector3d::UnitZ())
+            
+            // state[3] is yaw in SLAM frame (positive = turn right = -Z in ROS)
+            // So we rotate the frustum around UnitZ by -state[3]
+            Eigen::Vector3d normal = Eigen::AngleAxisd(-state[3], Eigen::Vector3d::UnitZ())
                 * (*itSingleCBN);
-            double val = dir.dot(normal.normalized());
+            
+            // Compare the ROS direction with the ROS normal
+            double val = dir_ros.dot(normal.normalized());
             if (val < SQRT2 * disc) {
               inThisFieldOfView = false;
               break;
@@ -701,7 +715,11 @@ std::vector<geometry_msgs::msg::Pose> nbvInspection::RrtTree::samplePath(StateVe
     if (yaw < -M_PI)
       yaw += 2.0 * M_PI;
     tf2::Quaternion quat;
-    quat.setEuler(0.0, 0.0, yaw);
+    // Set quaternion in SLAM frame (rotation around Y-axis)
+    quat.setX(0.0);
+    quat.setY(sin(yaw / 2.0));
+    quat.setZ(0.0);
+    quat.setW(cos(yaw / 2.0));
     origin = transform * origin;
     quat = transform * quat;
     tf2::Transform poseTF(quat, origin);
