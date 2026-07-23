@@ -125,7 +125,7 @@ def main():
     
     # Return to home hover point (0, 0, 1.0m height) when 'h' is pressed.
     # We don't use z=0 because the floor is mapped as occupied space at z=0!
-    manual_control.on_rth_requested = lambda: mission_controller.start_mission_to_goal(0, 0, 1.0)
+    manual_control.on_rth_requested = lambda: mission_controller.start_mission_to_goal(0.0, -1.0, 0.0)
     
     # Notify user when scale factor is ready
     scale_factor_manager.on_scale_computing = lambda map_id: \

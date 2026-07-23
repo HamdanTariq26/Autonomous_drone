@@ -154,7 +154,10 @@ class RosBridge(Node):
         self._img_pub.publish(img_msg)
         self._timestep_pub.publish(timestep_msg)
 
-        filename = f"frame_{raw_timestamp:.6f}_{self._frame_id:06d}.png"
+        # Use .jpg! PNG compression takes 15-25ms per frame and holds the GIL!
+        # Saving 30 PNGs a second burns ~700ms of CPU every second, which completely
+        # starves the background video decoding thread and causes the massive video lag.
+        filename = f"frame_{raw_timestamp:.6f}_{self._frame_id:06d}.jpg"
         filepath = os.path.join(constants.SAVE_FRAMES_DIR, filename)
         try:
             cv2.imwrite(filepath, frame_bgr)

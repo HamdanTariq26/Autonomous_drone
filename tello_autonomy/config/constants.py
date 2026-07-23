@@ -81,23 +81,38 @@ CLEANUP_INTERVAL_SEC = 2.0
 # ----------------------------------------------------------------------
 # SLAM / scale-factor constants
 # ----------------------------------------------------------------------
-MIN_KEYFRAMES_FOR_SCALE_FACTOR = 15
-PERIODIC_RECALIBRATION_SECONDS = 15
+# Minimum keyframes before the first scale computation is attempted.
+# Lowered to 8 (was 15): fewer are needed for a usable first estimate
+# and waiting for 15 on a slow CPU adds a full extra minute of delay.
+MIN_KEYFRAMES_FOR_SCALE_FACTOR = 8
+
+# How often the scale factor is periodically recomputed (seconds).
+# Raised to 30s (was 15s): each CPU inference run takes ~30-40s total
+# anyway, so triggering a new run every 15s was just queuing up
+# redundant work that never finished before the next tick.
+PERIODIC_RECALIBRATION_SECONDS = 30
 
 # --- NEW (added for perception/scale_factor_manager.py) ---
 # How many of the MOST RECENT keyframes (by keyframe_id) for a given
-# map_id to use on each (re)computation - both the first computation
-# and every periodic one after it. Deliberately NOT "every keyframe
-# from the last PERIODIC_RECALIBRATION_SECONDS seconds" - a keyframe
-# count is used instead of a time window, so behavior doesn't change
-# based on how fast keyframes happen to be arriving at the moment.
-# Should generally be >= MIN_KEYFRAMES_FOR_SCALE_FACTOR.
-SCALE_FACTOR_RECENT_KEYFRAME_COUNT = 30
- 
+# map_id to use on each (re)computation. Lowered to 8 (was 30):
+# 30 × ~4-8s CPU inference = 2-4 minutes per compute cycle.
+# 8 × ~4-8s = 30-60 seconds, which fits inside the 30s recompute
+# window and gives a usable result within the first minute of flight.
+# Must be >= MIN_KEYFRAMES_FOR_SCALE_FACTOR.
+SCALE_FACTOR_RECENT_KEYFRAME_COUNT = 8
+
 # Points with SLAM depth below this are skipped when computing ratios -
 # avoids divide-by-near-zero ratio blowups (ported from the old
 # compute_scale_factor.py CLI script's --min_slam_depth default).
 MIN_SLAM_DEPTH = 1e-3
+
+# Subsampling stride for Depth Anything inference inside each compute
+# cycle. stride=2 means only 1 in every 2 matched keyframes actually
+# runs the model; stride=1 disables subsampling (all frames inferred).
+# Adjacent SLAM keyframes share ~80-90% of their visible scene, so
+# skipping every other one has negligible effect on the median ratio
+# while halving inference time. Raise to 3 if CPU is still too slow.
+DEPTH_INFERENCE_STRIDE = 2
  
  
 # ----------------------------------------------------------------------

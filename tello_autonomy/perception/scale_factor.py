@@ -30,7 +30,7 @@ import numpy as np
 from config import constants
 
 
-FRAME_FILENAME_RE = re.compile(r"frame_(\d+\.\d+)_(\d+)\.png$")
+FRAME_FILENAME_RE = re.compile(r"frame_(\d+\.\d+)_(\d+)\.jpg$")
 
 
 # ---------------------------------------------------------------------------
@@ -41,7 +41,7 @@ def build_frame_index(frames_dir=None):
     """
         Maps timestamp (float, seconds) -> filepath for every saved
         frame image, using the timestamp embedded directly in the
-        filename (frame_<timestamp>_<frame_id>.png - see
+        filename (frame_<timestamp>_<frame_id>.jpg - see
         middleware.ros_bridge / message_types.current_timestamp_msg
         for where that filename format comes from).
 
@@ -49,7 +49,7 @@ def build_frame_index(frames_dir=None):
     """
     frames_dir = frames_dir or constants.SAVE_FRAMES_DIR
     index = {}
-    for filepath in glob.glob(os.path.join(frames_dir, "frame_*.png")):
+    for filepath in glob.glob(os.path.join(frames_dir, "frame_*.jpg")):
         filename = os.path.basename(filepath)
         match = FRAME_FILENAME_RE.match(filename)
         if not match:
@@ -162,6 +162,7 @@ def compute_scale_factor_for_recent_keyframes(
     recent_count=None,
     frame_match_tolerance=None,
     min_slam_depth=None,
+    inference_stride=None,
 ):
     """
         Computes a scale factor for a single map_id, using only its
@@ -207,6 +208,10 @@ def compute_scale_factor_for_recent_keyframes(
         else constants.KEYFRAME_MATCH_TOLERANCE_SEC
     )
     min_slam_depth = min_slam_depth if min_slam_depth is not None else constants.MIN_SLAM_DEPTH
+    # inference_stride: run Depth Anything on 1 in every N matched keyframes.
+    # Adjacent keyframes overlap heavily so skipping them barely hurts accuracy
+    # but cuts inference time by 1/stride. Default 2 = half as many model calls.
+    inference_stride = inference_stride if inference_stride is not None else constants.DEPTH_INFERENCE_STRIDE
 
     map_rows = keyframe_df[keyframe_df["map_id"] == map_id]
     keyframe_ids = sorted(map_rows["keyframe_id"].unique())
@@ -215,6 +220,7 @@ def compute_scale_factor_for_recent_keyframes(
     ratios_by_keyframe = []
     keyframes_used = 0
     keyframes_skipped = 0
+    matched_count = 0  # count of keyframes that found a saved image
 
     for kf_id in recent_keyframe_ids:
         kf_rows = map_rows[map_rows["keyframe_id"] == kf_id]
@@ -222,6 +228,15 @@ def compute_scale_factor_for_recent_keyframes(
 
         image_path = find_matching_frame(kf_timestamp, frame_index, tolerance=frame_match_tolerance)
         if image_path is None:
+            keyframes_skipped += 1
+            continue
+
+        # --- Frame subsampling: only run expensive model inference on
+        # every Nth matched keyframe (stride=1 means all, stride=2 means
+        # every other one, etc). Skipped frames still count toward the
+        # keyframe budget but don't contribute ratios.
+        matched_count += 1
+        if (matched_count - 1) % inference_stride != 0:
             keyframes_skipped += 1
             continue
 

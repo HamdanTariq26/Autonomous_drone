@@ -68,6 +68,10 @@ nbvInspection::nbvPlanner<stateVec>::nbvPlanner(const rclcpp::NodeOptions & opti
     "/tello_autonomy/occupancy_grid", 10,
     std::bind(&nbvInspection::nbvPlanner<stateVec>::occupancyMapCallback, this, _1));
 
+  slamPointsClient_ = this->create_subscription<sensor_msgs::msg::PointCloud2>(
+    "/tello_autonomy/current_points_metric", 10,
+    std::bind(&nbvInspection::nbvPlanner<stateVec>::slamPointsCallback, this, _1));
+
   if (!setParams()) {
     RCLCPP_ERROR(this->get_logger(), "Could not start the planner. Parameters missing!");
   }
@@ -193,6 +197,15 @@ void nbvInspection::nbvPlanner<stateVec>::occupancyMapCallback(
 }
 
 template<typename stateVec>
+void nbvInspection::nbvPlanner<stateVec>::slamPointsCallback(
+    const sensor_msgs::msg::PointCloud2::SharedPtr msg)
+{
+  if (tree_) {
+    ((RrtTree*)tree_)->setLiveSlamPoints(msg);
+  }
+}
+
+template<typename stateVec>
 void nbvInspection::nbvPlanner<stateVec>::plannerCallback(
     const std::shared_ptr<tello_autonomy_msgs::srv::NbvPlan::Request> req,
     std::shared_ptr<tello_autonomy_msgs::srv::NbvPlan::Response> res)
@@ -294,6 +307,7 @@ bool nbvInspection::nbvPlanner<stateVec>::setParams()
   params_.igUnmapped_ = this->declare_parameter<double>("nbvp.gain.unmapped", 1.0);
   params_.igArea_ = this->declare_parameter<double>("nbvp.gain.area", 1.0);
   params_.degressiveCoeff_ = this->declare_parameter<double>("nbvp.gain.degressive_coeff", 0.25);
+  params_.yawPenalty_ = this->declare_parameter<double>("nbvp.gain.yaw_penalty", 0.5);
   params_.extensionRange_ = this->declare_parameter<double>("nbvp.tree.extension_range", 1.0);
   params_.initIterations_ = this->declare_parameter<int>("nbvp.tree.initial_iterations", 150);
   params_.dt_ = this->declare_parameter<double>("nbvp.dt", 0.1);

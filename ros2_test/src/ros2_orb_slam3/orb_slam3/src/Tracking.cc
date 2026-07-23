@@ -3093,7 +3093,14 @@ bool Tracking::TrackLocalMap()
     }
     else
     {
-        if(mnMatchesInliers<30)
+        // MODIFIED: Lowered from 30 to 15 for monocular drone use-case.
+        // The default 30 caused false tracking-loss declarations while rotating
+        // into new areas where the local map is still sparse. 15 inliers is
+        // geometrically sufficient for a slow-flying drone and matches the
+        // IMU_STEREO threshold (line 3087). The keyframe insertion policy
+        // (thRefRatio=0.9 for monocular, line 3182) will still aggressively
+        // create new keyframes before matches drop this low.
+        if(mnMatchesInliers<15)
             return false;
         else
             return true;

@@ -327,6 +327,16 @@ void MonocularMode::PublishCurrentPoseAndPoints(const Sophus::SE3f& Tcw)
 {
     if (pAgent == nullptr) return;
 
+    // Do NOT publish stale/invalid poses if tracking is lost.
+    // If we publish while LOST, the Python mission controller will see
+    // a continuous stream of frozen poses, preventing its tracking-loss
+    // watchdog from triggering and causing the PID loop to spin indefinitely.
+    // Tracking state 2 = OK, 3 = RECENTLY_LOST. 4 = LOST.
+    int trackingState = pAgent->GetTrackingState();
+    if (trackingState >= 3 || trackingState <= 1) {
+        return;
+    }
+
     long unsigned int mapId = pAgent->GetAtlas()->GetCurrentMap()->GetId();
     std::string frameIdStr = "slam_map_" + std::to_string(mapId);  // must match config.constants.SLAM_MAP_FRAME_ID_PREFIX
 

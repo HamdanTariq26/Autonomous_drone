@@ -13,6 +13,7 @@ from tello_autonomy_msgs.srv import SearchPlan
 from config import constants
 from goals.trajectory_tracker import TrajectoryTracker
 import math
+import time
 
 class MissionState:
     IDLE = 0
@@ -34,6 +35,21 @@ class MissionControllerNode(Node):
         # Track if an NbvPlan or SearchPlan request is currently pending
         self._nbv_request_in_flight = False
         self._search_request_in_flight = False
+
+        # --- Tracking-loss recovery sweep ---
+        # When SLAM loses tracking, the drone steps through 90-degree yaw
+        # increments (N, E, S, W) and holds each heading long enough for
+        # ORB-SLAM3 to scan for features. The instant a fresh pose arrives
+        # the sweep ends and normal flight resumes.
+        self._last_pose_time = None          # wall-clock time of last fresh pose
+        self._tracking_lost = False          # True while we are in recovery mode
+        self._TRACKING_TIMEOUT_SEC = 0.5     # declare loss after this gap
+        self._RECOVERY_YAW_SPEED = 20        # yaw command (0-100) while turning
+        self._RECOVERY_HOLD_SEC = 1.5        # seconds to hold each 90° heading
+        self._recovery_step = 0              # which 90° step we are currently on (0-3)
+        self._recovery_step_start = None     # monotonic time the current step started
+        self._recovery_turning = False       # True = still rotating to next step
+        self._recovery_yaw_elapsed = 0.0     # seconds we have been turning this step
 
         # Subscriber for live pose
         self.create_subscription(
@@ -149,6 +165,13 @@ class MissionControllerNode(Node):
         self._current_yaw = 2.0 * math.atan2(q.y, q.w)
 
         self._has_pose = True
+        self._last_pose_time = time.monotonic()
+
+        # If we were in recovery sweep mode, tracking just came back - exit immediately.
+        if self._tracking_lost:
+            self.get_logger().info("Tracking recovered! Resuming mission.")
+            self._tracking_lost = False
+            self._recovery_yaw_accumulated = 0.0
 
         # Relay pose to exploration_cpp which expects PoseWithCovarianceStamped.
         # Covariance is all zeros - exploration only uses the mean position.
@@ -249,11 +272,64 @@ class MissionControllerNode(Node):
         if self._state == MissionState.IDLE:
             return
 
+        # ---- Tracking-loss detection ----
+        # If we have never received a pose yet, just hover.
         if not self._has_pose:
-            self.get_logger().warn("Lost pose while navigating! Hovering.")
             self._command_handler.send_rc_control(0, 0, 0, 0)
             return
 
+        # Check staleness of the last pose.
+        now = time.monotonic()
+        pose_age = now - self._last_pose_time
+
+        if pose_age > self._TRACKING_TIMEOUT_SEC:
+            # Tracking is lost. Enter (or stay in) recovery sweep mode.
+            if not self._tracking_lost:
+                self.get_logger().warn(
+                    "SLAM tracking lost! Starting 90-degree step sweep to relocalize."
+                )
+                self._tracking_lost = True
+                self._recovery_step = 0
+                self._recovery_step_start = now
+                self._recovery_turning = True
+                self._recovery_yaw_elapsed = 0.0
+
+            dt = 1.0 / constants.GOALS_LOOP_RATE_HZ
+
+            # --- Turning phase: rotate toward the next 90-degree heading ---
+            # Tello at 20% yaw ≈ ~36 deg/s → 90° takes ~2.5s
+            _TURN_DURATION_SEC = 2.5
+            if self._recovery_turning:
+                self._recovery_yaw_elapsed += dt
+                if self._recovery_yaw_elapsed >= _TURN_DURATION_SEC:
+                    # Finished turning to this heading — now hold it.
+                    self._recovery_turning = False
+                    self._recovery_step_start = now
+                    self.get_logger().info(
+                        f"Recovery: reached heading step {self._recovery_step + 1}/4, "
+                        f"holding for {self._RECOVERY_HOLD_SEC:.1f}s..."
+                    )
+                self._command_handler.send_rc_control(0, 0, 0, self._RECOVERY_YAW_SPEED)
+                return
+
+            # --- Hold phase: stay still so the camera can see features ---
+            hold_elapsed = now - self._recovery_step_start
+            if hold_elapsed < self._RECOVERY_HOLD_SEC:
+                # Hovering — send zero so the drone holds its position.
+                self._command_handler.send_rc_control(0, 0, 0, 0)
+                return
+
+            # Hold done — advance to next 90° step.
+            self._recovery_step = (self._recovery_step + 1) % 4
+            self._recovery_turning = True
+            self._recovery_yaw_elapsed = 0.0
+            self.get_logger().info(
+                f"Recovery: turning to heading step {self._recovery_step + 1}/4..."
+            )
+            self._command_handler.send_rc_control(0, 0, 0, self._RECOVERY_YAW_SPEED)
+            return
+
+        # ---- Normal flight ----
         if self._tracker.is_done():
             if self._state == MissionState.EXPLORING:
                 self.get_logger().info("Reached end of exploration path. Requesting next view...")
@@ -270,7 +346,7 @@ class MissionControllerNode(Node):
             self._current_x, self._current_y, self._current_z, self._current_yaw
         )
 
-        # Send to drone
+        # Send to drone.
         # send_rc_control silently fails (returns False) if a takeoff/land is in progress,
         # which is exactly the safety behavior we want.
         self._command_handler.send_rc_control(cmd_lr, cmd_fb, cmd_ud, cmd_yaw)

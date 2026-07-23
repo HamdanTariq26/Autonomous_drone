@@ -1,1 +1,0 @@
-/home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs/rosidl_generator_c/tello_autonomy_msgs/msg/rosidl_generator_c__visibility_control.h

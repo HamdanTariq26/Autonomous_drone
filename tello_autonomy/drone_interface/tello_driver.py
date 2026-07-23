@@ -94,11 +94,61 @@ class TelloDriver:
         with self.cmd_lock:
             self.tello.streamon()
 
-        # Background thread (owned by djitellopy) keeps exactly ONE
-        # decoded frame around, overwriting rather than queueing - so
-        # reading it from multiple threads (frame_receiver.py) is safe
-        # without needing cmd_lock.
+        # FIX: Both the Tello viewer and SLAM viewer lag because they both read
+        # from BackgroundFrameRead._frame, which is produced by PyAV's decode loop.
+        #
+        # ROOT CAUSE (proven by source code inspection):
+        # H264 uses B-frames (bidirectional predicted frames). B-frames cannot be
+        # decoded until the NEXT I/P frame arrives, so FFMPEG holds frames in its
+        # internal Decoded Picture Buffer (DPB) waiting for the future reference frame.
+        # With thread_count=0 (FFMPEG auto-selects, typically 4-8 threads), FFMPEG
+        # creates a multi-frame pipeline: it buffers 4-8 frames INSIDE the decoder
+        # before yielding ANY to Python. Every time the Python GIL is busy (5 ROS
+        # executor threads, cv2.imshow, disk I/O), the decode thread wakes up late,
+        # FFMPEG has accumulated more frames in the DPB, and it outputs them IN ORDER
+        # from the front of the buffer - it cannot skip to the latest. The lag
+        # grows over the entire session because backpressure compounds.
+        #
+        # THE FIX:
+        # 1. fflags=nobuffer + flags=low_delay: stop FFMPEG buffering at the
+        #    network/demuxer level (already applied).
+        # 2. After av.open(), set skip_frame='BIDIR' on the codec context: tells
+        #    FFMPEG to SKIP B-frames entirely - no look-ahead needed, no DPB buildup.
+        # 3. Set thread_count=1: eliminates the multi-thread pipeline delay.
+        #    With 1 thread, FFMPEG decodes one frame at a time with no internal queue.
+        #
+        # skip_frame='BIDIR' verified working by:
+        #   ctx = av.codec.CodecContext.create('h264', 'r')
+        #   ctx.skip_frame = 'BIDIR'  -> prints 'BIDIR' (no exception)
+        import av
+        original_av_open = av.open
+
+        def custom_av_open(file, format=None, options=None, *args, **kwargs):
+            if options is None:
+                options = {}
+            options.update({
+                'fflags': 'nobuffer',
+                'flags': 'low_delay',
+                'strict': 'experimental',
+            })
+            container = original_av_open(file, format=format, options=options, *args, **kwargs)
+
+            # After the container is open, patch the video stream's codec context
+            # to eliminate DPB pipeline delay. This must happen BEFORE decode() is
+            # called (decode() is called inside update_frame() which starts after
+            # BackgroundFrameRead.start() is called, which is after __init__ returns).
+            try:
+                for stream in container.streams.video:
+                    stream.codec_context.skip_frame = 'BIDIR'  # skip B-frames
+                    stream.codec_context.thread_count = 1       # no multi-thread pipeline
+            except Exception as e:
+                print(f"[tello_driver] Warning: could not set codec_context options: {e}")
+
+            return container
+
+        av.open = custom_av_open
         self.frame_reader = self.tello.get_frame_read()
+        av.open = original_av_open  # restore original
 
         self._connected = True
 
@@ -119,6 +169,30 @@ class TelloDriver:
                 self.tello.streamoff()
         except Exception:
             pass
+
+        # PROOF-BASED FIX: djitellopy's BackgroundFrameRead.stop() only sets a
+        # boolean flag. The background thread checks that flag only BETWEEN frames,
+        # but it is permanently blocked on container.decode() which is a blocking
+        # generator. If the stream dies or we quit, decode() never yields and the
+        # flag is never seen, leaving the thread (and its OS socket on port 11111)
+        # alive after the process should have shut down cleanly.
+        #
+        # Calling container.close() directly forces FFMPEG to abort the decode
+        # immediately, which raises an exception in the generator, which breaks
+        # the for-loop, which lets the thread exit and release the socket.
+        # This is the root cause of the "non-existing PPS 0 referenced / no frame"
+        # errors seen on the next restart: the old run's socket was still bound.
+        if self.frame_reader is not None:
+            try:
+                bgfr = self.frame_reader
+                bgfr.stopped = True
+                if hasattr(bgfr, 'container') and bgfr.container is not None:
+                    bgfr.container.close()
+                if hasattr(bgfr, 'worker') and bgfr.worker.is_alive():
+                    bgfr.worker.join(timeout=2.0)
+            except Exception:
+                pass
+
         try:
             with self.cmd_lock:
                 self.tello.end()

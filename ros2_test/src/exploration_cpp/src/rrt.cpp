@@ -261,6 +261,17 @@ void nbvInspection::RrtTree::setPeerStateFromPoseMsg(
   }
 }
 
+#include <sensor_msgs/point_cloud2_iterator.hpp>
+void nbvInspection::RrtTree::setLiveSlamPoints(const sensor_msgs::msg::PointCloud2::SharedPtr& msg) {
+  liveSlamPoints_.clear();
+  sensor_msgs::PointCloud2ConstIterator<float> iter_x(*msg, "x");
+  sensor_msgs::PointCloud2ConstIterator<float> iter_y(*msg, "y");
+  sensor_msgs::PointCloud2ConstIterator<float> iter_z(*msg, "z");
+  for (; iter_x != iter_x.end(); ++iter_x, ++iter_y, ++iter_z) {
+    liveSlamPoints_.push_back(Eigen::Vector3d(*iter_x, *iter_y, *iter_z));
+  }
+}
+
 void nbvInspection::RrtTree::iterate(int iterations)
 {
   StateVec newState;
@@ -315,19 +326,116 @@ void nbvInspection::RrtTree::iterate(int iterations)
   newState[0] = origin[0] + direction[0];
   newState[1] = origin[1] + direction[1];
   newState[2] = origin[2] + direction[2];
-  if (octomap_manager_shim::CellStatus::kFree
-      == manager_->getLineStatusBoundingBox(
-          origin, direction + origin + direction.normalized() * params_.dOvershoot_,
-          params_.boundingBox_)
-      && !multiagent::isInCollision(newParent->state_, newState, params_.boundingBox_, segments_)) {
-    newState[3] = 2.0 * M_PI * (((double) rand()) / ((double) RAND_MAX) - 0.5);
+
+  // --- Adaptive Extension Range ---
+  // Instead of discarding branches that collide, binary-search along the
+  // direction vector to find the longest collision-free sub-segment.
+  // This lets the RRT tree pack into narrow hallways and corners instead
+  // of failing thousands of times against walls.
+  bool isFree = false;
+  double usedFraction = 1.0;  // fraction of `direction` we actually use
+
+  if (newParent == rootNode_) {
+    // Root Collision Escape: if the root is technically "inside" an obstacle due to drift or noise,
+    // only check if the destination is free to allow the tree to grow out of the collision.
+    Eigen::Vector3d target(newState[0], newState[1], newState[2]);
+    double probability;
+    isFree = (octomap_manager_shim::CellStatus::kFree == manager_->getCellProbabilityPoint(target, &probability));
+
+    if (!isFree) {
+      // Binary search: try shorter distances
+      double lo = 0.0, hi = 1.0;
+      for (int step = 0; step < 5; step++) {
+        double mid = (lo + hi) * 0.5;
+        Eigen::Vector3d midPoint = origin + direction * mid;
+        isFree = (octomap_manager_shim::CellStatus::kFree == manager_->getCellProbabilityPoint(midPoint, &probability));
+        if (isFree) {
+          lo = mid;  // midpoint is free, try further
+        } else {
+          hi = mid;  // midpoint is blocked, try closer
+        }
+      }
+      usedFraction = lo;
+      // Accept only if the free segment is at least 10cm
+      isFree = (usedFraction * direction.norm() >= 0.10);
+    }
+  } else {
+    Eigen::Vector3d endpoint = direction + origin + direction.normalized() * params_.dOvershoot_;
+    isFree = (octomap_manager_shim::CellStatus::kFree
+        == manager_->getLineStatusBoundingBox(
+            origin, endpoint,
+            params_.boundingBox_)
+        && !multiagent::isInCollision(newParent->state_, newState, params_.boundingBox_, segments_));
+
+    if (!isFree) {
+      // Binary search: find max collision-free fraction of `direction`
+      double lo = 0.0, hi = 1.0;
+      for (int step = 0; step < 5; step++) {
+        double mid = (lo + hi) * 0.5;
+        Eigen::Vector3d midDir = direction * mid;
+        Eigen::Vector3d midEndpoint = midDir + origin + midDir.normalized() * params_.dOvershoot_;
+        StateVec midState = newParent->state_;
+        midState[0] = origin[0] + midDir[0];
+        midState[1] = origin[1] + midDir[1];
+        midState[2] = origin[2] + midDir[2];
+
+        bool midFree = (octomap_manager_shim::CellStatus::kFree
+            == manager_->getLineStatusBoundingBox(
+                origin, midEndpoint,
+                params_.boundingBox_)
+            && !multiagent::isInCollision(newParent->state_, midState, params_.boundingBox_, segments_));
+
+        if (midFree) {
+          lo = mid;  // this fraction is free, try further
+        } else {
+          hi = mid;  // this fraction collides, try closer
+        }
+      }
+      usedFraction = lo;
+      // Accept only if the free segment is at least 10cm
+      isFree = (usedFraction * direction.norm() >= 0.10);
+    }
+  }
+
+  if (isFree) {
+    // Apply the (possibly shortened) direction
+    if (usedFraction < 1.0) {
+      direction *= usedFraction;
+      newState[0] = origin[0] + direction[0];
+      newState[1] = origin[1] + direction[1];
+      newState[2] = origin[2] + direction[2];
+    }
+
+    // --- Hybrid Yaw Sampling ---
+    // 50% chance: face the direction of travel (smooth forward flight in open space)
+    // 50% chance: face a random direction (allows the drone to look around at dead ends)
+    // The gain function will naturally pick the best yaw — travel-direction paths
+    // win in open hallways, random-direction paths win at dead ends.
+    double r = ((double) rand()) / ((double) RAND_MAX);
+    if (r < 0.5) {
+      // Direction of travel yaw (SLAM frame: Z forward, X right)
+      newState[3] = atan2(direction[0], direction[2]);
+    } else {
+      // Random yaw in [-pi, pi]
+      newState[3] = 2.0 * M_PI * (((double) rand()) / ((double) RAND_MAX) - 0.5);
+    }
+
     nbvInspection::Node<StateVec> * newNode = new nbvInspection::Node<StateVec>;
     newNode->state_ = newState;
     newNode->parent_ = newParent;
     newNode->distance_ = newParent->distance_ + direction.norm();
     newParent->children_.push_back(newNode);
+    
+    // Penalize sharp yaw changes to stop "pirouetting" (spinning in circles)
+    double yaw_diff = newNode->state_[3] - newParent->state_[3];
+    yaw_diff = fmod(yaw_diff + M_PI, 2.0 * M_PI);
+    if (yaw_diff < 0) yaw_diff += 2.0 * M_PI;
+    yaw_diff -= M_PI;
+    double yaw_penalty = params_.yawPenalty_ * abs(yaw_diff);
+
     newNode->gain_ = newParent->gain_
-        + gain(newNode->state_) * exp(-params_.degressiveCoeff_ * newNode->distance_);
+        + gain(newNode->state_) * exp(-params_.degressiveCoeff_ * newNode->distance_)
+        - yaw_penalty;
 
     kd_insert3(kdTree_, newState.x(), newState.y(), newState.z(), newNode);
 
@@ -365,7 +473,7 @@ void nbvInspection::RrtTree::initialize()
 
   rootNode_ = new Node<StateVec>;
   rootNode_->distance_ = 0.0;
-  rootNode_->gain_ = params_.zero_gain_;
+  rootNode_->gain_ = 0.0;
   rootNode_->parent_ = NULL;
 
   if (params_.exact_root_) {
@@ -401,12 +509,22 @@ void nbvInspection::RrtTree::initialize()
     newState[0] = origin[0] + direction[0];
     newState[1] = origin[1] + direction[1];
     newState[2] = origin[2] + direction[2];
-    if (octomap_manager_shim::CellStatus::kFree
-        == manager_->getLineStatusBoundingBox(
-            origin, direction + origin + direction.normalized() * params_.dOvershoot_,
-            params_.boundingBox_)
-        && !multiagent::isInCollision(newParent->state_, newState, params_.boundingBox_,
-                                      segments_)) {
+    bool isFree = false;
+    if (newParent == rootNode_) {
+      // Root Collision Escape
+      Eigen::Vector3d target(newState[0], newState[1], newState[2]);
+      double probability;
+      isFree = (octomap_manager_shim::CellStatus::kFree == manager_->getCellProbabilityPoint(target, &probability));
+    } else {
+      isFree = (octomap_manager_shim::CellStatus::kFree
+          == manager_->getLineStatusBoundingBox(
+              origin, direction + origin + direction.normalized() * params_.dOvershoot_,
+              params_.boundingBox_)
+          && !multiagent::isInCollision(newParent->state_, newState, params_.boundingBox_,
+                                        segments_));
+    }
+
+    if (isFree) {
       nbvInspection::Node<StateVec> * newNode = new nbvInspection::Node<StateVec>;
       newNode->state_ = newState;
       newNode->parent_ = newParent;
@@ -465,6 +583,10 @@ std::vector<geometry_msgs::msg::Pose> nbvInspection::RrtTree::getBestEdge(std::s
     ret = samplePath(current->parent_->state_, current->state_, targetFrame);
     history_.push(current->parent_->state_);
     exact_root_ = current->state_;
+
+    // Record this waypoint so gain() can penalise it in future RRT cycles.
+    Eigen::Vector3d wp(current->state_[0], current->state_[1], current->state_[2]);
+    visitedPositions_.push_back(wp);
   }
   return ret;
 }
@@ -549,6 +671,24 @@ double nbvInspection::RrtTree::gain(StateVec state)
     transform.setRotation(quaternion);
     gain += params_.igArea_ * mesh_->computeInspectableArea(transform);
   }
+
+  // -----------------------------------------------------------------------
+  // Visited-position penalty: subtract a fixed penalty for each previously-
+  // visited position that is within VISITED_PENALTY_RADIUS of this candidate
+  // node. This discourages the planner from re-sending the drone over
+  // already-explored space. If the best gain is 0 (fully mapped region)
+  // the penalty ensures that genuinely unvisited candidates win even if
+  // they also have low raw gain from the occupancy map.
+  // -----------------------------------------------------------------------
+  const double VISITED_PENALTY_RADIUS = 1.0;  // metres - covers drone bounding box
+  const double VISITED_PENALTY        = 0.5;  // subtracted per overlapping past position
+  Eigen::Vector3d candidatePos(state[0], state[1], state[2]);
+  for (const Eigen::Vector3d& vp : visitedPositions_) {
+    if ((candidatePos - vp).norm() < VISITED_PENALTY_RADIUS) {
+      gain -= VISITED_PENALTY;
+    }
+  }
+
   return gain;
 }
 

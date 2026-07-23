@@ -1,1 +1,0 @@
-/home/hamdan/autonomous_drone/ros2_test/src/exploration_cpp/include/exploration_cpp/tree.h

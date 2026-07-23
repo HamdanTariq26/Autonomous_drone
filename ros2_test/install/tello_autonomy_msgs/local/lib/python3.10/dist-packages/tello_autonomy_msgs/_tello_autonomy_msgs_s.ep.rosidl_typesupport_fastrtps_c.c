@@ -1,1 +1,0 @@
-/home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs/rosidl_generator_py/tello_autonomy_msgs/_tello_autonomy_msgs_s.ep.rosidl_typesupport_fastrtps_c.c

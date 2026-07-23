@@ -1,3 +1,0 @@
-/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/lib/ros2_orb_slam3/mono_node_cpp
-/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/lib/liborb_slam3_lib.so.
-/home/hamdan/autonomous_drone/ros2_test/install/ros2_orb_slam3/lib/liborb_slam3_lib.so

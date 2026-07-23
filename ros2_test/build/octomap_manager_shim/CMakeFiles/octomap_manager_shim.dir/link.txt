@@ -1,1 +1,0 @@
-/usr/bin/c++ -fPIC -shared -Wl,-soname,liboctomap_manager_shim.so -o liboctomap_manager_shim.so CMakeFiles/octomap_manager_shim.dir/src/octomap_manager_shim.cpp.o  /usr/lib/x86_64-linux-gnu/liboctomap.so /usr/lib/x86_64-linux-gnu/liboctomath.so 

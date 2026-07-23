@@ -27,6 +27,7 @@ struct Params
   double igUnmapped_;
   double igArea_;
   double gainRange_;
+  double yawPenalty_;
   double degressiveCoeff_;
   double zero_gain_;
 

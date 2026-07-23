@@ -10,6 +10,7 @@
 #include <kdtree/kdtree.h>
 #include <exploration_cpp/tree.h>
 #include <exploration_cpp/mesh_structure.h>
+#include <sensor_msgs/msg/point_cloud2.hpp>
 
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/transform_listener.h>
@@ -41,6 +42,7 @@ class RrtTree : public TreeBase<Eigen::Vector4d>
   double gain(StateVec state);
   std::vector<geometry_msgs::msg::Pose> samplePath(StateVec start, StateVec end,
                                                    std::string targetFrame);
+  void setLiveSlamPoints(const sensor_msgs::msg::PointCloud2::SharedPtr& msg);
  protected:
   rclcpp::Node * node_;
   std::shared_ptr<tf2_ros::Buffer> tf_buffer_;
@@ -56,6 +58,10 @@ class RrtTree : public TreeBase<Eigen::Vector4d>
   std::fstream fileResponse_;
   std::string logFilePath_;
   std::vector<double> inspectionThrottleTime_;
+  std::vector<Eigen::Vector3d> liveSlamPoints_;
+  // History of positions the drone has actually flown to, used to penalize
+  // re-visiting already-explored areas in gain().
+  std::vector<Eigen::Vector3d> visitedPositions_;
 };
 }
 

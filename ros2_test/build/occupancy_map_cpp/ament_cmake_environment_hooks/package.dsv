@@ -1,4 +1,0 @@
-source;share/occupancy_map_cpp/local_setup.bash
-source;share/occupancy_map_cpp/local_setup.dsv
-source;share/occupancy_map_cpp/local_setup.sh
-source;share/occupancy_map_cpp/local_setup.zsh

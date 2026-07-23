@@ -1,1 +1,0 @@
-/home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs/rosidl_generator_py/tello_autonomy_msgs/srv/_nbv_plan.py

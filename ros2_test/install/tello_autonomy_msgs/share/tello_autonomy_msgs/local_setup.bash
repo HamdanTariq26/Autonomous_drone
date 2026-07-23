@@ -1,1 +1,0 @@
-/home/hamdan/autonomous_drone/ros2_test/build/tello_autonomy_msgs/ament_cmake_environment_hooks/local_setup.bash

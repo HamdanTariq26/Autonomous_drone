@@ -85,8 +85,8 @@ class FrameCleanupNode(Node):
         self.current_keyframe_timestamps = []     # latest list received from C++ node
         self.have_received_keyframe_list = False  # gate: don't delete anything until we've heard from C++ at least once
 
-        # filenames look like: frame_1783539824.595438_000123.png
-        self._frame_filename_re = re.compile(r"frame_(\d+\.\d+)_(\d+)\.png$")
+        # filenames look like: frame_1783539824.595438_000123.jpg
+        self._frame_filename_re = re.compile(r"frame_(\d+\.\d+)_(\d+)\.jpg$")
 
         self._topics = TopicManager(self)
         self._topics.get_subscription(
@@ -133,7 +133,7 @@ class FrameCleanupNode(Node):
             return
 
         now = time.time()
-        pattern = os.path.join(self.save_frames_dir, "frame_*.png")
+        pattern = os.path.join(self.save_frames_dir, "frame_*.jpg")
         deleted_this_pass = 0
 
         for filepath in glob.glob(pattern):

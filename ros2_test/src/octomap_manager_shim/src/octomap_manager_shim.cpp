@@ -191,9 +191,10 @@ CellStatus OctomapManagerShim::getLineStatusBoundingBox(
 
   const Eigen::Vector3d half_size = bounding_box_size * 0.5;
 
-  for (double x = -half_size.x(); x <= half_size.x(); x += x_disc) {
-    for (double y = -half_size.y(); y <= half_size.y(); y += y_disc) {
-      for (double z = -half_size.z(); z <= half_size.z(); z += z_disc) {
+  const double epsilon_loop = 1e-4;
+  for (double x = -half_size.x(); x <= half_size.x() + epsilon_loop; x += x_disc) {
+    for (double y = -half_size.y(); y <= half_size.y() + epsilon_loop; y += y_disc) {
+      for (double z = -half_size.z(); z <= half_size.z() + epsilon_loop; z += z_disc) {
         const Eigen::Vector3d offset(x, y, z);
         const CellStatus status = getLineStatus(start + offset, end + offset);
         if (status != CellStatus::kFree) {

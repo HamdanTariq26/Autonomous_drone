@@ -61,6 +61,7 @@ class nbvPlanner : public rclcpp::Node
   // occupancy_map_cpp already owns point-cloud insertion (Section 12.2) and
   // publishes the finished octree here - this node only ever reads it.
   rclcpp::Subscription<octomap_msgs::msg::Octomap>::SharedPtr occupancyMapClient_;
+  rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr slamPointsClient_;
 
   Params params_;
   mesh::StlMesh * mesh_;
@@ -79,6 +80,7 @@ class nbvPlanner : public rclcpp::Node
   void posCallback(const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr pose);
   void odomCallback(const nav_msgs::msg::Odometry::SharedPtr pose);
   void occupancyMapCallback(const octomap_msgs::msg::Octomap::SharedPtr msg);
+  void slamPointsCallback(const sensor_msgs::msg::PointCloud2::SharedPtr msg);
   void plannerCallback(
     const std::shared_ptr<tello_autonomy_msgs::srv::NbvPlan::Request> req,
     std::shared_ptr<tello_autonomy_msgs::srv::NbvPlan::Response> res);
