@@ -1,0 +1,27 @@
+# Ignore bytecode / Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore captured images
+*.png
+*.jpg
+*.jpeg
+frame_images/
+**/frame_images/
+
+# Ignore build, install, and log folders (ROS 2)
+build/
+install/
+log/
+ros2_test/build/
+ros2_test/install/
+ros2_test/log/
+
+# Ignore temporary files/diffs
+*.txt
+*.sh
+!CMakeLists.txt
+autonomous_drone_src.tar.gz
+autonomous_drone_src.tar.gz
+*.tar.gz

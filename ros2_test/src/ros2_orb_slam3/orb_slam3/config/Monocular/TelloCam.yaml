@@ -1,0 +1,52 @@
+%YAML:1.0
+File.version: "1.0"
+Camera.type: "PinHole"
+
+# Camera calibration and distortion parameters (OpenCV Pinhole Model)
+Camera1.fx: 914.498673
+Camera1.fy: 907.342960
+Camera1.cx: 492.510781
+Camera1.cy: 388.956389
+
+Camera1.k1: -0.003809
+Camera1.k2: -0.271768
+Camera1.p1: 0.006616
+Camera1.p2: 0.007182
+
+# Image resolution
+Camera.width: 960
+Camera.height: 720
+
+# Camera frames per second.
+# NOTE: This value sets mMaxFrames in Tracking.cc (line 621), which controls
+# how many frames must pass before a keyframe is FORCED. Lowering this from
+# 30 to 15 means a forced keyframe every ~0.5s instead of ~1s. During a
+# rotation into a new area this halves the time before new map points are
+# created, dramatically reducing tracking loss in new environments.
+Camera.fps: 15
+
+# Color order of the images (0: BGR, 1: RGB)
+Camera.RGB: 1
+
+#--------------------------------------------------------------------------------------------
+# ORB Extractor Parameters
+#--------------------------------------------------------------------------------------------
+ORBextractor.nFeatures: 3000
+ORBextractor.scaleFactor: 1.2
+ORBextractor.nLevels: 8
+ORBextractor.iniThFAST: 10
+ORBextractor.minThFAST: 3
+
+#--------------------------------------------------------------------------------------------
+# Viewer Parameters
+#--------------------------------------------------------------------------------------------
+Viewer.KeyFrameSize: 0.05
+Viewer.KeyFrameLineWidth: 1.0
+Viewer.GraphLineWidth: 0.9
+Viewer.PointSize: 2.0
+Viewer.CameraSize: 0.08
+Viewer.CameraLineWidth: 3.0
+Viewer.ViewpointX: 0.0
+Viewer.ViewpointY: -0.7
+Viewer.ViewpointZ: -1.8
+Viewer.ViewpointF: 500.0

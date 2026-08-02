@@ -1,0 +1,159 @@
+Panels:
+  - Class: rviz_common/Displays
+    Help Height: 78
+    Name: Displays
+    Property Tree Widget:
+      Expanded:
+        - /Global Options1
+        - /Status1
+        - /OccupancyGrid1
+        - /MetricPointCloud1
+        - /MetricPose1
+      Splitter Ratio: 0.5
+    Tree Height: 550
+  - Class: rviz_common/Views
+    Expanded:
+      - /Current View1
+    Name: Views
+    Splitter Ratio: 0.5
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Alpha: 1
+      Cell Size: 1
+      Class: rviz_default_plugins/Grid
+      Color: 160; 160; 160
+      Enabled: true
+      Line Style:
+        Line Width: 0.03
+        Value: Lines
+      Name: Grid
+      Normal Cell Count: 0
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Plane: XY
+      Plane Cell Count: 20
+      Reference Frame: <Fixed Frame>
+      Value: true
+    - Class: octomap_rviz_plugins/OccupancyGrid
+      Color: 0; 255; 0
+      Coloring Scheme: Cell Color
+      Enabled: true
+      Max Color: 255; 0; 0
+      Min Color: 0; 0; 255
+      Name: OccupancyGrid
+      Octomap Render Type: Occupied Voxels
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /tello_autonomy/occupancy_grid
+      Value: true
+    - Class: rviz_default_plugins/PointCloud2
+      Alpha: 0.8
+      Autocompute Intensity Bounds: true
+      Color: 255; 255; 255
+      Color Transformer: FlatColor
+      Enabled: true
+      Flat Color: 0; 170; 255
+      Name: MetricPointCloud
+      Position Transformer: XYZ
+      Size (Pixels): 3
+      Size (m): 0.05
+      Style: Flat Squares
+      Topic:
+        Depth: 10
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+        Value: /tello_autonomy/current_points_metric
+      Value: true
+    - Class: rviz_default_plugins/Pose
+      Alpha: 1
+      Axes Length: 0.3
+      Axes Radius: 0.03
+      Color: 255; 0; 0
+      Enabled: true
+      Head Length: 0.1
+      Head Radius: 0.05
+      Name: MetricPose
+      Shape: Axes
+      Shaft Length: 0.2
+      Shaft Radius: 0.02
+      Topic:
+        Depth: 10
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+        Value: /tello_autonomy/current_pose_metric
+      Value: true
+    - Class: rviz_default_plugins/TF
+      Enabled: true
+      Frame Timeout: 15
+      Frames:
+        All Enabled: true
+      Marker Scale: 0.3
+      Name: TF
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Value: true
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: GroundTruthMaze
+      Topic:
+        Depth: 10
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /simulated_maze_visualization
+      Value: true
+    - Class: rviz_default_plugins/Marker
+      Enabled: true
+      Name: InspectionPath
+      Topic:
+        Depth: 1000
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: inspectionPath
+      Value: true
+    - Class: rviz_default_plugins/Marker
+      Enabled: true
+      Name: Drone3DBoundingBox
+      Topic:
+        Depth: 10
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /drone_bounding_box
+      Value: true
+  Enabled: true
+  Global Options:
+    Background Color: 30; 30; 30
+    Fixed Frame: map_ros
+    Frame Rate: 30
+  Name: main
+  Tools:
+    - Class: rviz_default_plugins/Interact
+      Hide Inactive Objects: true
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/Select
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Distance: 6.0
+      Enable Zero Axis: true
+      Focal Point:
+        X: 0
+        Y: 0
+        Z: 0
+      Focal Shape Fixed Size: true
+      Focal Shape Size: 0.05
+      Name: Orbit
+      Pitch: 0.6
+      Value: Orbit (rviz)
+      Yaw: 0.8

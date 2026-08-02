@@ -1,0 +1,487 @@
+#ifndef _MESH_STRUCTURE_CPP_
+#define _MESH_STRUCTURE_CPP_
+
+#include <Eigen/Dense>
+#include <rclcpp/rclcpp.hpp>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
+#include <exploration_cpp/mesh_structure.h>
+#include <float.h>
+#include <sstream>
+#include <string>
+#include <vector>
+
+mesh::StlMesh::StlMesh()
+    : isLeaf_(true),
+      isHead_(true),
+      isInspected_(false)
+{
+}
+
+mesh::StlMesh::StlMesh(const Eigen::Vector3d x1, const Eigen::Vector3d x2, const Eigen::Vector3d x3)
+    : x1_(x1),
+      x2_(x2),
+      x3_(x3),
+      isLeaf_(true),
+      isHead_(true),
+      isInspected_(false),
+      normal_((x3 - x2).cross(x1 - x2) / 2.0)
+{
+}
+
+mesh::StlMesh::StlMesh(std::fstream& file)
+    : isLeaf_(true),
+      isHead_(true),
+      isInspected_(false),
+      x1_(0.0, 0.0, 0.0),
+      x2_(0.0, 0.0, 0.0),
+      x3_(0.0, 0.0, 0.0)
+{
+  assert(file.is_open());
+  double maxX = -DBL_MAX;
+  double maxY = -DBL_MAX;
+  double maxZ = -DBL_MAX;
+  double minX = DBL_MAX;
+  double minY = DBL_MAX;
+  double minZ = DBL_MAX;
+
+  std::string line;
+  if (!std::getline(file, line)) {
+    RCLCPP_ERROR(rclcpp::get_logger("mesh_structure"), "Invalid or empty STL mesh file!");
+    return;
+  }
+
+  if (line.find("solid") == std::string::npos) {
+    RCLCPP_ERROR(rclcpp::get_logger("mesh_structure"), "Invalid mesh file! Make sure the STL file is given in ascii-format.");
+    return;
+  }
+
+  int k = 0;
+  while (std::getline(file, line) && rclcpp::ok()) {
+    if (line.find("endsolid") != std::string::npos) {
+      break;
+    }
+
+    size_t start = line.find_first_not_of(" \t\r\n");
+    if (start == std::string::npos) continue;
+    std::string trimmed = line.substr(start);
+
+    if (trimmed.rfind("facet", 0) == 0) {
+      mesh::StlMesh* newNode = new mesh::StlMesh;
+      newNode->isHead_ = true;
+      std::vector<Eigen::Vector3d*> vertices = { &(newNode->x1_), &(newNode->x2_), &(newNode->x3_) };
+      int vertexCount = 0;
+
+      while (vertexCount < 3 && std::getline(file, line) && rclcpp::ok()) {
+        size_t vstart = line.find_first_not_of(" \t\r\n");
+        if (vstart == std::string::npos) continue;
+        std::string vline = line.substr(vstart);
+        if (vline.rfind("vertex", 0) == 0) {
+          std::stringstream ss(vline);
+          std::string tag;
+          double vx, vy, vz;
+          if (ss >> tag >> vx >> vy >> vz) {
+            const double yawTrafo = 0.0;
+            const double scaleFactor = 1.0;
+            const double offsetX = 0.0;
+            const double offsetY = 0.0;
+            const double offsetZ = 0.0;
+
+            double xtmp = vx / scaleFactor;
+            double ytmp = vy / scaleFactor;
+            vertices[vertexCount]->x() = cos(yawTrafo) * xtmp - sin(yawTrafo) * ytmp - offsetX;
+            vertices[vertexCount]->y() = sin(yawTrafo) * xtmp + cos(yawTrafo) * ytmp - offsetY;
+            vertices[vertexCount]->z() = vz / scaleFactor - offsetZ;
+
+            if (maxX < vertices[vertexCount]->x()) maxX = vertices[vertexCount]->x();
+            if (maxY < vertices[vertexCount]->y()) maxY = vertices[vertexCount]->y();
+            if (maxZ < vertices[vertexCount]->z()) maxZ = vertices[vertexCount]->z();
+            if (minX > vertices[vertexCount]->x()) minX = vertices[vertexCount]->x();
+            if (minY > vertices[vertexCount]->y()) minY = vertices[vertexCount]->y();
+            if (minZ > vertices[vertexCount]->z()) minZ = vertices[vertexCount]->z();
+
+            vertexCount++;
+          }
+        }
+      }
+      newNode->normal_ = (newNode->x3_ - newNode->x2_).cross(newNode->x1_ - newNode->x2_) / 2.0;
+      children_.push_back(newNode);
+      k++;
+    }
+  }
+  file.close();
+  if (k > 0)
+    isLeaf_ = false;
+  RCLCPP_INFO(
+      rclcpp::get_logger("mesh_structure"),
+      "STL file read. Contains %i elements located inside (%2.2f,%2.2f)x(%2.2f,%2.2f)x(%2.2f,%2.2f)",
+      k, minX, maxX, minY, maxY, minZ, maxZ);
+}
+
+mesh::StlMesh::~StlMesh()
+{
+  for (typename std::vector<StlMesh*>::iterator it = children_.begin(); it != children_.end(); it++)
+    delete (*it);
+}
+
+void mesh::StlMesh::setCameraParams(std::vector<double> cameraPitch,
+                                    std::vector<double> cameraHorizontalFoV,
+                                    std::vector<double> cameraVerticalFoV, double maxDist)
+{
+  cameraPitch_ = cameraPitch;
+  cameraHorizontalFoV_ = cameraHorizontalFoV;
+  cameraVerticalFoV_ = cameraVerticalFoV;
+  maxDist_ = maxDist;
+  camBoundNormals_.clear();
+  for (int i = 0; i < cameraPitch_.size(); i++) {
+    double pitch = M_PI * cameraPitch_[i] / 180.0;
+    double camTop = (pitch - M_PI * cameraVerticalFoV_[i] / 360.0) + M_PI / 2.0;
+    double camBottom = (pitch + M_PI * cameraVerticalFoV_[i] / 360.0) - M_PI / 2.0;
+    double side = M_PI * (cameraHorizontalFoV_[i]) / 360.0 - M_PI / 2.0;
+    Eigen::Vector3d bottom(cos(camBottom), 0.0, -sin(camBottom));
+    Eigen::Vector3d top(cos(camTop), 0.0, -sin(camTop));
+    Eigen::Vector3d right(cos(side), sin(side), 0.0);
+    Eigen::Vector3d left(cos(side), -sin(side), 0.0);
+    Eigen::AngleAxisd m = Eigen::AngleAxisd(pitch, Eigen::Vector3d::UnitY());
+    Eigen::Vector3d rightR = m * right;
+    Eigen::Vector3d leftR = m * left;
+    rightR.normalize();
+    leftR.normalize();
+    std::vector<tf2::Vector3> camBoundNormals;
+    camBoundNormals.push_back(tf2::Vector3(bottom.x(), bottom.y(), bottom.z()));
+    camBoundNormals.push_back(tf2::Vector3(top.x(), top.y(), top.z()));
+    camBoundNormals.push_back(tf2::Vector3(rightR.x(), rightR.y(), rightR.z()));
+    camBoundNormals.push_back(tf2::Vector3(leftR.x(), leftR.y(), leftR.z()));
+    camBoundNormals_.push_back(camBoundNormals);
+  }
+}
+
+void mesh::StlMesh::setPeerPose(const geometry_msgs::msg::Pose& pose, int n_peer)
+{
+  if (peer_vehicles_.size() > n_peer) {
+    peer_vehicles_[n_peer] = tf2::Vector3(pose.position.x, pose.position.y, pose.position.z);
+    return;
+  }
+  while (peer_vehicles_.size() <= n_peer) {
+    peer_vehicles_.push_back(tf2::Vector3(pose.position.x, pose.position.y, pose.position.z));
+  }
+}
+
+void mesh::StlMesh::incorporateViewFromPoseMsg(const geometry_msgs::msg::Pose& pose, int n_peer)
+{
+  tf2::Transform transform;
+  tf2::fromMsg(pose, transform);
+  bool inAllFoV = true;
+  std::vector<bool> unobstructed;
+  for (typename std::vector<std::vector<tf2::Vector3>>::iterator itCBN = camBoundNormals_.begin();
+      itCBN != camBoundNormals_.end(); itCBN++) {
+    bool anyInFoV = false;
+    for (int it = 0; it < peer_vehicles_.size(); it++) {
+      if (it == n_peer) {
+        continue;
+      }
+      bool inFoV = true;
+      tf2::Vector3 viewDirection = peer_vehicles_[it]
+          - tf2::Vector3(pose.position.x, pose.position.y, pose.position.z);
+      
+      // Calculate yaw from quaternion
+      tf2::Quaternion q(pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w);
+      double roll, pitch, yaw;
+      tf2::Matrix3x3(q).getRPY(roll, pitch, yaw);
+      
+      // rotate around Z axis to convert from world to body frame
+      viewDirection = tf2::Transform(tf2::Quaternion(tf2::Vector3(0,0,1), -yaw)) * viewDirection;
+
+      for (std::vector<tf2::Vector3>::iterator itFoVCBN = itCBN->begin(); itFoVCBN != itCBN->end();
+          itFoVCBN++) {
+        if (itFoVCBN->dot(viewDirection) < 0.0) {
+          inFoV = false;
+          break;
+        }
+      }
+      if (inFoV) {
+        anyInFoV = true;
+        break;
+      }
+    }
+    unobstructed.push_back(!anyInFoV);
+    inAllFoV &= anyInFoV;
+  }
+  if (!inAllFoV) {
+    incorporateViewFromTf(transform, unobstructed);
+  }
+  collapse();
+}
+
+void mesh::StlMesh::assembleMarkerArray(visualization_msgs::msg::Marker& inspected,
+                                        visualization_msgs::msg::Marker& uninspected) const
+{
+  if (isLeaf_) {
+    if (isInspected_) {
+      geometry_msgs::msg::Point point;
+      point.x = x1_.x(); point.y = x1_.y(); point.z = x1_.z();
+      inspected.points.push_back(point);
+      point.x = x2_.x(); point.y = x2_.y(); point.z = x2_.z();
+      inspected.points.push_back(point);
+      point.x = x3_.x(); point.y = x3_.y(); point.z = x3_.z();
+      inspected.points.push_back(point);
+      std_msgs::msg::ColorRGBA color;
+      color.r = 1.0; color.g = 0.0; color.b = 0.0; color.a = 1.0;
+      inspected.colors.push_back(color);
+      inspected.colors.push_back(color);
+      inspected.colors.push_back(color);
+    } else {
+      geometry_msgs::msg::Point point;
+      point.x = x1_.x(); point.y = x1_.y(); point.z = x1_.z();
+      uninspected.points.push_back(point);
+      point.x = x2_.x(); point.y = x2_.y(); point.z = x2_.z();
+      uninspected.points.push_back(point);
+      point.x = x3_.x(); point.y = x3_.y(); point.z = x3_.z();
+      uninspected.points.push_back(point);
+      std_msgs::msg::ColorRGBA color;
+      color.r = 0.0; color.g = 0.0; color.b = 1.0; color.a = 1.0;
+      uninspected.colors.push_back(color);
+      uninspected.colors.push_back(color);
+      uninspected.colors.push_back(color);
+    }
+  } else {
+    for (typename std::vector<mesh::StlMesh*>::const_iterator it = children_.begin();
+        it != children_.end(); it++) {
+      (*it)->assembleMarkerArray(inspected, uninspected);
+    }
+  }
+}
+
+void mesh::StlMesh::incorporateViewFromTf(const tf2::Transform& transform,
+                                          const std::vector<bool>& unobstructed)
+{
+  for (typename std::vector<mesh::StlMesh*>::iterator it = children_.begin(); it != children_.end();
+      it++) {
+    mesh::StlMesh* currentNode = *it;
+    if (currentNode->isInspected_)
+      continue;
+    bool partialVisibility = false;
+    if (currentNode->getVisibility(transform, partialVisibility, true, unobstructed)) {
+      currentNode->isInspected_ = true;
+      if (!currentNode->isLeaf_) {
+        for (typename std::vector<mesh::StlMesh*>::iterator currentChild = currentNode->children_.begin(); 
+             currentChild != currentNode->children_.end(); currentChild++)
+          delete *currentChild;
+        currentNode->children_.clear();
+        currentNode->isLeaf_ = true;
+      }
+    } else if (partialVisibility) {
+      if (currentNode->isLeaf_ && currentNode->normal_.norm() > 0.25 * resolution_) {
+        currentNode->split();
+      }
+      currentNode->incorporateViewFromTf(transform, unobstructed);
+    }
+  }
+}
+
+double mesh::StlMesh::computeInspectableArea(const tf2::Transform& transform)
+{
+  if (isLeaf_) {
+    if (isInspected_)
+      return 0.0;
+    bool partiallyVisible;
+    if (getVisibility(transform, partiallyVisible, false)) {
+      return normal_.norm();
+    } else if (partiallyVisible) {
+      if (normal_.norm() < 0.25 * resolution_)
+        return 0.0;
+      split();
+    } else {
+      return 0.0;
+    }
+  }
+
+  double ret = 0.0;
+  for (typename std::vector<mesh::StlMesh*>::const_iterator it = children_.begin();
+      it != children_.end(); it++)
+    ret += (*it)->computeInspectableArea(transform);
+  return ret;
+}
+
+void mesh::StlMesh::split()
+{
+  assert(!isInspected_);
+  isLeaf_ = false;
+  // #1
+  mesh::StlMesh * tmpNode = new mesh::StlMesh;
+  tmpNode->x1_ = x1_;
+  tmpNode->x2_ = 0.5 * (x1_ + x2_);
+  tmpNode->x3_ = 0.5 * (x1_ + x3_);
+  tmpNode->normal_ = normal_ / 4.0;
+  tmpNode->isHead_ = false;
+  tmpNode->isInspected_ = false;
+  children_.push_back(tmpNode);
+  // #2
+  tmpNode = new mesh::StlMesh;
+  tmpNode->x1_ = x2_;
+  tmpNode->x2_ = 0.5 * (x2_ + x3_);
+  tmpNode->x3_ = 0.5 * (x2_ + x1_);
+  tmpNode->normal_ = normal_ / 4.0;
+  tmpNode->isHead_ = false;
+  tmpNode->isInspected_ = false;
+  children_.push_back(tmpNode);
+  // #3
+  tmpNode = new mesh::StlMesh;
+  tmpNode->x1_ = x3_;
+  tmpNode->x2_ = 0.5 * (x3_ + x1_);
+  tmpNode->x3_ = 0.5 * (x3_ + x2_);
+  tmpNode->normal_ = normal_ / 4.0;
+  tmpNode->isHead_ = false;
+  tmpNode->isInspected_ = false;
+  children_.push_back(tmpNode);
+  // #4
+  tmpNode = new mesh::StlMesh;
+  tmpNode->x1_ = 0.5 * (x1_ + x2_);
+  tmpNode->x2_ = 0.5 * (x2_ + x3_);
+  tmpNode->x3_ = 0.5 * (x3_ + x1_);
+  tmpNode->normal_ = normal_ / 4.0;
+  tmpNode->isHead_ = false;
+  tmpNode->isInspected_ = false;
+  children_.push_back(tmpNode);
+}
+
+bool mesh::StlMesh::collapse()
+{
+  bool collapsible = true;
+  if (isLeaf_)
+    return true;
+  for (typename std::vector<StlMesh*>::iterator it = children_.begin(); it != children_.end();
+      it++) {
+    if (!(*it)->collapse())
+      collapsible = false;
+  }
+  if (collapsible) {
+    bool state = true;
+    for (typename std::vector<StlMesh*>::iterator it = children_.begin(); it != children_.end();
+        it++) {
+      if ((*it)->isHead_)
+        return false;
+      if ((*it)->isInspected_ != state)
+        return false;
+    }
+    for (typename std::vector<StlMesh*>::iterator it = children_.begin(); it != children_.end();
+        it++)
+      delete (*it);
+    children_.clear();
+    isInspected_ = state;
+    isLeaf_ = true;
+  }
+  return true;
+}
+
+bool mesh::StlMesh::getVisibility(const tf2::Transform& transform, bool& partialVisibility,
+                                  bool stop_at_unknown_cell,
+                                  const std::vector<bool>& unobstructed) const
+{
+  bool ret = true;
+  partialVisibility = false;
+  
+  double roll, pitch, yaw;
+  tf2::Matrix3x3(transform.getRotation()).getRPY(roll, pitch, yaw);
+  tf2::Vector3 originTransf = transform.getOrigin();
+  
+  if (normal_.dot(x1_ - Eigen::Vector3d(originTransf.x(), originTransf.y(), originTransf.z()))
+      >= 0.0)
+    return false;
+  for (int i = 0; i < camBoundNormals_.size(); i++) {
+    if (unobstructed.size() > 0 && !unobstructed[i]) {
+      continue;
+    }
+    bool iterPartialVisibility = false;
+    tf2::Vector3 transformedX1 = transform.inverse() * tf2::Vector3(x1_.x(), x1_.y(), x1_.z());
+    if (transformedX1.length() > maxDist_
+        || manager_->getVisibility(
+            Eigen::Vector3d(originTransf.x(), originTransf.y(), originTransf.z()),
+            Eigen::Vector3d(x1_.x(), x1_.y(), x1_.z()), stop_at_unknown_cell)
+            != octomap_manager_shim::CellStatus::kFree) {
+      ret = false;
+    } else {
+      bool visibility1 = true;
+      for (typename std::vector<tf2::Vector3>::iterator it = camBoundNormals_[i].begin();
+          it != camBoundNormals_[i].end(); it++) {
+        if (it->dot(transformedX1) < 0.0) {
+          visibility1 = false;
+          break;
+        }
+      }
+      if (visibility1) {
+        iterPartialVisibility = true;
+      } else {
+        ret = false;
+      }
+    }
+    tf2::Vector3 transformedX2 = transform.inverse() * tf2::Vector3(x2_.x(), x2_.y(), x2_.z());
+    if (transformedX2.length() > maxDist_
+        || manager_->getVisibility(
+            Eigen::Vector3d(originTransf.x(), originTransf.y(), originTransf.z()),
+            Eigen::Vector3d(x2_.x(), x2_.y(), x2_.z()), stop_at_unknown_cell)
+            != octomap_manager_shim::CellStatus::kFree) {
+      ret = false;
+    } else {
+      bool visibility2 = true;
+      for (typename std::vector<tf2::Vector3>::iterator it = camBoundNormals_[i].begin();
+          it != camBoundNormals_[i].end(); it++) {
+        if (it->dot(transformedX2) < 0.0) {
+          visibility2 = false;
+          break;
+        }
+      }
+      if (visibility2) {
+        iterPartialVisibility = true;
+      } else {
+        ret = false;
+      }
+    }
+    if (iterPartialVisibility && !ret) {
+      partialVisibility = true;
+      ret = true;
+      continue;
+    }
+    tf2::Vector3 transformedX3 = transform.inverse() * tf2::Vector3(x3_.x(), x3_.y(), x3_.z());
+    if (transformedX3.length() > maxDist_
+        || manager_->getVisibility(
+            Eigen::Vector3d(originTransf.x(), originTransf.y(), originTransf.z()),
+            Eigen::Vector3d(x3_.x(), x3_.y(), x3_.z()), stop_at_unknown_cell)
+            != octomap_manager_shim::CellStatus::kFree) {
+      ret = false;
+    } else {
+      bool visibility3 = true;
+      for (typename std::vector<tf2::Vector3>::iterator it = camBoundNormals_[i].begin();
+          it != camBoundNormals_[i].end(); it++) {
+        if (it->dot(transformedX3) < 0.0) {
+          visibility3 = false;
+          break;
+        }
+      }
+      if (visibility3) {
+        iterPartialVisibility = true;
+      } else {
+        ret = false;
+      }
+    }
+    if (iterPartialVisibility) {
+      partialVisibility = true;
+    }
+    if (ret) {
+      return true;
+    } else {
+      ret = true;
+    }
+  }
+  return false;
+}
+
+double mesh::StlMesh::resolution_ = 0.001;
+std::vector<double> mesh::StlMesh::cameraPitch_ = { };
+std::vector<double> mesh::StlMesh::cameraHorizontalFoV_ = { };
+std::vector<double> mesh::StlMesh::cameraVerticalFoV_ = { };
+double mesh::StlMesh::maxDist_ = 5;
+std::vector<std::vector<tf2::Vector3> > mesh::StlMesh::camBoundNormals_ = { };
+octomap_manager_shim::OctomapManagerShim * mesh::StlMesh::manager_ = NULL;
+std::vector<tf2::Vector3> mesh::StlMesh::peer_vehicles_ = { };
+
+#endif // _MESH_STRUCTURE_CPP_

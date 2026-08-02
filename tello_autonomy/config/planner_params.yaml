@@ -1,0 +1,75 @@
+nbv_planner_node:
+  ros__parameters:
+    # --- Navigation frame must match what we publish poses in ---
+    tf_frame: "map"
+
+    # --- Workspace bounding box (meters, centered on takeoff point) ---
+    bbx.minX: -5.0
+    bbx.maxX: 5.0
+    bbx.minY: -2.2
+    bbx.maxY: 0.4
+    bbx.minZ: -5.0
+    bbx.maxZ: 5.0
+    # when the drone flies past the 5-meter mark (e.g. into another room).
+    bbx.softBounds: false   #<- recommend switching this so the above numbers actually get enforced
+
+    # --- Drone body bounding box for collision checking ---
+    # Tello: 98 x 92.5 x 41 mm. Add 5 cm safety margin on each side.
+    system.bbx.x: 0.20
+    system.bbx.y: 0.20
+    system.bbx.z: 0.14
+    system.bbx.overshoot: 0.10
+
+    # --- Max flight speed (m/s) and yaw rate (rad/s) ---
+    system.v_max: 0.3
+    system.dyaw_max: 0.5
+
+    # --- Tello camera: ~82 deg horizontal, ~60 deg vertical, 0 deg pitch ---
+    system.camera.pitch: [0.0]
+    system.camera.horizontal: [82.0]
+    system.camera.vertical: [60.0]
+
+    # --- RRT tree parameters ---
+    # extension_range increased to 1.5m: new PC can handle bigger steps.
+    # Still safe because collision checking via getLineStatusBoundingBox is active.
+    nbvp.tree.extension_range: 1.5
+    nbvp.tree.initial_iterations: 150
+    nbvp.tree.cuttoff_iterations: 3000
+    nbvp.tree.exact_root: true
+
+    # --- Information gain weights ---
+    # Only reward moving into unmapped space.
+    nbvp.gain.unmapped: 1.0
+    nbvp.gain.free: 0.0
+    nbvp.gain.occupied: 0.0
+    nbvp.gain.probabilistic: 0.0
+    nbvp.gain.area: 0.0
+    nbvp.gain.yaw_penalty: 0.5
+    # Range at which the camera can "see" unmapped space.
+    # MUST remain at 1.0. Increasing this scales O(N^3) and causes massive stalls.
+    nbvp.gain.range: 1.0
+    # Makes close gain much better than far gain.
+    # Reduced to 0.05 to encourage exploring far-away frontiers (e.g. through doors)
+    # instead of obsessively mapping nearby corners.
+    nbvp.gain.degressive_coeff: 0.05
+    # Threshold for gain to be considered valid
+    # Set to -1000.0 so the planner ALWAYS finds a "valid" gain and never aborts.
+    # It will just pick the highest relative gain (i.e. the straightest path).
+    nbvp.gain.zero: -1000.0
+
+    # --- Time step for path sampling ---
+    nbvp.dt: 0.1
+
+    # --- Logging (off by default) ---
+    nbvp.log.on: false
+    nbvp.log.throttle: 0.5
+
+occupancy_map_node:
+  ros__parameters:
+    resolution: 0.10
+    max_sensor_range: 3.5
+    prob_hit: 0.90
+    prob_miss: 0.35
+    clamping_min: 0.012
+    clamping_max: 0.97
+    occupancy_thres: 0.50
