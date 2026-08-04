@@ -65,6 +65,7 @@ _TOPIC_QOS = {
     constants.TOPIC_EXP_SETTINGS_ACK: HANDSHAKE_QOS,
     constants.TOPIC_IMG_MSG: SLAM_STREAM_QOS,
     constants.TOPIC_TIMESTEP_MSG: SLAM_STREAM_QOS,
+    constants.TOPIC_RECENT_FRAME: SLAM_STREAM_QOS,  # same cadence/reliability as IMG_MSG
     constants.TOPIC_KEYFRAME_TIMESTAMPS: DEFAULT_QOS,
     constants.TOPIC_MAP_TOPOLOGY_CHANGED: DEFAULT_QOS,
     # NEW - per-frame pose/points stream, same cadence/reliability

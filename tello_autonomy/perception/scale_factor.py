@@ -179,7 +179,7 @@ def compute_scale_factor_from_ratios(ratios_by_keyframe, ratio_min=None, ratio_m
 def compute_scale_factor_for_recent_keyframes(
     keyframe_df,
     map_id,
-    frame_index,
+    matched_frames,
     infer_metric_depth_fn,
     recent_count=None,
     frame_match_tolerance=None,
@@ -201,7 +201,7 @@ def compute_scale_factor_for_recent_keyframes(
             WriteKeyframeDataToFile - see handoff doc, Section 8).
         map_id: which map_id to compute for. Rows are filtered to this
             map_id ONLY.
-        frame_index: dict from build_frame_index(), timestamp -> filepath.
+        matched_frames: dict mapping keyframe_id -> frame_bgr array.
         infer_metric_depth_fn: callable(image_bgr) -> (H, W) metric
             depth array in meters. Callers pass
             perception.depth.depth_anything_v2.infer_metric_depth here
@@ -244,12 +244,13 @@ def compute_scale_factor_for_recent_keyframes(
     keyframes_skipped = 0
     matched_count = 0  # count of keyframes that found a saved image
 
+    matched_frames = matched_frames if matched_frames is not None else {}
+
     for kf_id in recent_keyframe_ids:
         kf_rows = map_rows[map_rows["keyframe_id"] == kf_id]
-        kf_timestamp = kf_rows["timestamp"].iloc[0]
 
-        image_path = find_matching_frame(kf_timestamp, frame_index, tolerance=frame_match_tolerance)
-        if image_path is None:
+        image_bgr = matched_frames.get(kf_id)
+        if image_bgr is None:
             keyframes_skipped += 1
             continue
 
@@ -259,11 +260,6 @@ def compute_scale_factor_for_recent_keyframes(
         # keyframe budget but don't contribute ratios.
         matched_count += 1
         if (matched_count - 1) % inference_stride != 0:
-            keyframes_skipped += 1
-            continue
-
-        image_bgr = cv2.imread(image_path)
-        if image_bgr is None:
             keyframes_skipped += 1
             continue
 

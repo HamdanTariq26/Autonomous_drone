@@ -113,19 +113,22 @@ class MissionControllerNode(Node):
         self._current_map_id = None
 
         # --- Tracking-loss recovery sweep ---
-        # When SLAM loses tracking, the drone steps through 90-degree yaw
-        # increments (N, E, S, W) and holds each heading long enough for
-        # ORB-SLAM3 to scan for features. The instant a fresh pose arrives
-        # the sweep ends and normal flight resumes.
+        # When SLAM loses tracking the drone rotates in small steps, dwelling
+        # at each heading long enough for ORB-SLAM3 to attempt relocalization
+        # or map re-initialization. Recovery is detected passively: if a fresh
+        # pose arrives during the dwell, _pose_callback clears _tracking_lost
+        # and the pose_age check at the top of _control_loop exits the branch
+        # naturally - no separate polling logic needed.
         self._last_pose_time = None          # wall-clock time of last fresh pose
         self._tracking_lost = False          # True while we are in recovery mode
         self._TRACKING_TIMEOUT_SEC = 0.5     # declare loss after this gap
         self._RECOVERY_YAW_SPEED = 20        # yaw command (0-100) while turning
-        self._RECOVERY_HOLD_SEC = 1.5        # seconds to hold each 90° heading
-        self._recovery_step = 0              # which 90° step we are currently on (0-3)
-        self._recovery_step_start = None     # monotonic time the current step started
-        self._recovery_turning = False       # True = still rotating to next step
-        self._recovery_yaw_elapsed = 0.0     # seconds we have been turning this step
+        self._RECOVERY_YAW_STEP_DEG = 35     # smaller step than old 90° — finer search
+        self._RECOVERY_STEP_HOLD_SEC = 5.0   # dwell time to let SLAM attempt reloc/init
+        self._recovery_map_id_at_loss = None         # map_id active when loss was declared
+        self._recovery_step_start = None             # monotonic time the current step started
+        self._recovery_turning = False               # True = currently rotating to next step
+        self._recovery_yaw_elapsed = 0.0             # seconds spent turning this step
 
         # Subscriber for live pose
         self.create_subscription(
@@ -289,11 +292,29 @@ class MissionControllerNode(Node):
         self._has_pose = True
         self._last_pose_time = time.monotonic()
 
-        # If we were in recovery sweep mode, tracking just came back - exit immediately.
+        # If we were in recovery sweep mode, tracking just came back.
+        # Distinguish same-map re-localization from new-map initialization so
+        # we can log the right reason; in both cases clear the flag and
+        # auto-resume exploration (instead of waiting for the user to press 'e').
         if self._tracking_lost:
-            self.get_logger().info("Tracking recovered! Resuming mission.")
+            if incoming_map_id == self._recovery_map_id_at_loss:
+                # Re-localized on the SAME map - coordinate frame is unchanged,
+                # safe to resume immediately.
+                self.get_logger().info(
+                    f"Re-localized on same map (map_id={incoming_map_id}). "
+                    "Auto-resuming exploration."
+                )
+            else:
+                # New map_id - cancel_mission() already fired in the map-reinit
+                # block above. Exploration will start fresh on the new map.
+                self.get_logger().info(
+                    f"New map {incoming_map_id} initializing after loss. "
+                    "Auto-resuming exploration on new map."
+                )
             self._tracking_lost = False
-            self._recovery_yaw_accumulated = 0.0
+            self._recovery_map_id_at_loss = None
+            # Auto-resume: don't make the user press 'e' after every tracking loss.
+            self.start_exploration()
 
         # Relay pose to exploration_cpp which expects PoseWithCovarianceStamped.
         # Covariance is all zeros - exploration only uses the mean position.
@@ -407,48 +428,54 @@ class MissionControllerNode(Node):
         pose_age = now - self._last_pose_time
 
         if pose_age > self._TRACKING_TIMEOUT_SEC:
-            # Tracking is lost. Enter (or stay in) recovery sweep mode.
+            # Tracking is lost. Enter (or stay in) recovery step/hold/check loop.
             if not self._tracking_lost:
                 self.get_logger().warn(
-                    "SLAM tracking lost! Starting 90-degree step sweep to relocalize."
+                    "SLAM tracking lost! Starting step-check-repeat sweep "
+                    f"({self._RECOVERY_YAW_STEP_DEG}° steps, "
+                    f"{self._RECOVERY_STEP_HOLD_SEC:.1f}s hold each)."
                 )
                 self._tracking_lost = True
-                self._recovery_step = 0
-                self._recovery_step_start = now
+                self._recovery_map_id_at_loss = self._current_map_id
                 self._recovery_turning = True
                 self._recovery_yaw_elapsed = 0.0
+                self._recovery_step_start = now
 
             dt = 1.0 / constants.GOALS_LOOP_RATE_HZ
 
-            # --- Turning phase: rotate toward the next 90-degree heading ---
-            # Tello at 20% yaw ≈ ~36 deg/s → 90° takes ~2.5s
-            _TURN_DURATION_SEC = 2.5
+            # Tello at yaw_speed=20 ≈ ~36 deg/s. Scale turn duration from
+            # the empirical 90°/2.5s rate: deg / 36 deg_per_sec.
+            _TURN_DURATION_SEC = self._RECOVERY_YAW_STEP_DEG / 36.0
+
+            # --- Turning phase: rotate the next small step ---
             if self._recovery_turning:
                 self._recovery_yaw_elapsed += dt
                 if self._recovery_yaw_elapsed >= _TURN_DURATION_SEC:
-                    # Finished turning to this heading — now hold it.
+                    # Done rotating — begin the hold/check dwell.
                     self._recovery_turning = False
                     self._recovery_step_start = now
                     self.get_logger().info(
-                        f"Recovery: reached heading step {self._recovery_step + 1}/4, "
-                        f"holding for {self._RECOVERY_HOLD_SEC:.1f}s..."
+                        f"Recovery: holding {self._RECOVERY_STEP_HOLD_SEC:.1f}s "
+                        "to check for relocalization..."
                     )
                 self._send_rc_control(0, 0, 0, self._RECOVERY_YAW_SPEED)
                 return
 
-            # --- Hold phase: stay still so the camera can see features ---
+            # --- Hold/check phase: hover while SLAM tries to re-acquire ---
+            # If _pose_callback fires during this window it clears _tracking_lost,
+            # and the pose_age check at the top of the next tick will be False,
+            # exiting this branch without any extra detection logic here.
             hold_elapsed = now - self._recovery_step_start
-            if hold_elapsed < self._RECOVERY_HOLD_SEC:
-                # Hovering — send zero so the drone holds its position.
+            if hold_elapsed < self._RECOVERY_STEP_HOLD_SEC:
                 self._send_rc_control(0, 0, 0, 0)
                 return
 
-            # Hold done — advance to next 90° step.
-            self._recovery_step = (self._recovery_step + 1) % 4
+            # Dwell finished and still lost — rotate another small step.
             self._recovery_turning = True
             self._recovery_yaw_elapsed = 0.0
             self.get_logger().info(
-                f"Recovery: turning to heading step {self._recovery_step + 1}/4..."
+                f"Still lost after {self._RECOVERY_STEP_HOLD_SEC:.1f}s — "
+                f"rotating another {self._RECOVERY_YAW_STEP_DEG}°..."
             )
             self._send_rc_control(0, 0, 0, self._RECOVERY_YAW_SPEED)
             return

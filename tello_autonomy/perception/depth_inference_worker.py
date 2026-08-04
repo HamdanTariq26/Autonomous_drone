@@ -90,20 +90,17 @@ def run_worker(request_queue, result_queue):
 
         map_id = request["map_id"]
         rows = request["rows"]
+        matched_frames = request.get("matched_frames", {})
 
         try:
-            import cv2
-
             df = pd.DataFrame(rows)
             df["map_id"] = map_id
 
-            frame_index = scale_factor.build_frame_index(constants.SAVE_FRAMES_DIR)
-
-            # --- Scale factor computation (existing behaviour, unchanged) ---
+            # --- Scale factor computation ---
             result = scale_factor.compute_scale_factor_for_recent_keyframes(
                 keyframe_df=df,
                 map_id=map_id,
-                frame_index=frame_index,
+                matched_frames=matched_frames,
                 infer_metric_depth_fn=lambda img: depth_anything_v2.infer_metric_depth(
                     img, intrinsics=intrinsics
                 ),
@@ -136,14 +133,11 @@ def run_worker(request_queue, result_queue):
                 for kf_id in recent_kf_ids:
                     kf_rows = map_rows[map_rows["keyframe_id"] == kf_id]
                     kf_timestamp = kf_rows["timestamp"].iloc[0]
-                    image_path = scale_factor.find_matching_frame(kf_timestamp, frame_index)
-                    if image_path is None:
+                    image_bgr = matched_frames.get(kf_id)
+                    if image_bgr is None:
                         continue
                     matched_count += 1
                     if (matched_count - 1) % stride != 0:
-                        continue
-                    image_bgr = cv2.imread(image_path)
-                    if image_bgr is None:
                         continue
                     # This re-runs inference for the last eligible keyframe only.
                     # Since compute_scale_factor_for_recent_keyframes already ran inference

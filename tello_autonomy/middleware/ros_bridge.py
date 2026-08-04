@@ -18,9 +18,6 @@ built) is responsible for constructing TelloDriver + FrameReceiver
 first and handing the FrameReceiver in here.
 """
 
-import os
-
-import cv2
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import Image
@@ -39,9 +36,8 @@ HANDSHAKE_RETRY_INTERVAL_SEC = 1.0
 class RosBridge(Node):
     """
         ROS2 node that performs the SLAM handshake, then publishes
-        camera frames + timestamps on a fixed-rate timer, saving each
-        published frame to disk under a timestamp-matched filename for
-        later keyframe/depth matching (see perception/, Section 7).
+        camera frames + timestamps on a fixed-rate timer, publishing each
+        frame in-memory for downstream keyframe/depth matching.
     """
 
     def __init__(self, frame_receiver, node_name="tello_ros_bridge"):
@@ -62,8 +58,6 @@ class RosBridge(Node):
         self._handshake_timer = None
         self._publish_timer = None
 
-        os.makedirs(constants.SAVE_FRAMES_DIR, exist_ok=True)
-
         # Handshake pub/sub.
         self._settings_pub = self._topics.get_publisher(
             constants.TOPIC_EXPERIMENT_SETTINGS, String
@@ -75,6 +69,7 @@ class RosBridge(Node):
         # Steady-state frame publishers.
         self._img_pub = self._topics.get_publisher(constants.TOPIC_IMG_MSG, Image)
         self._timestep_pub = self._topics.get_publisher(constants.TOPIC_TIMESTEP_MSG, Float64)
+        self._recent_frame_pub = self._topics.get_publisher(constants.TOPIC_RECENT_FRAME, Image)
 
         self._start_handshake()
 
@@ -151,18 +146,18 @@ class RosBridge(Node):
 
         timestep_msg, raw_timestamp = message_types.current_timestamp_msg()
 
+        # Stamp the image header with raw_timestamp - the same value the C++
+        # SLAM node will store as kf->mTimeStamp (via the timestep Float64).
+        # CvBridge leaves header.stamp=0 by default, which would cause
+        # _on_recent_frame to key every frame at 0.0 in _recent_frames, making
+        # _find_recent_frame unable to match any real keyframe timestamp.
+        secs = int(raw_timestamp)
+        img_msg.header.stamp.sec = secs
+        img_msg.header.stamp.nanosec = int((raw_timestamp - secs) * 1e9)
+
         self._img_pub.publish(img_msg)
         self._timestep_pub.publish(timestep_msg)
-
-        # Use .jpg! PNG compression takes 15-25ms per frame and holds the GIL!
-        # Saving 30 PNGs a second burns ~700ms of CPU every second, which completely
-        # starves the background video decoding thread and causes the massive video lag.
-        filename = f"frame_{raw_timestamp:.6f}_{self._frame_id:06d}.jpg"
-        filepath = os.path.join(constants.SAVE_FRAMES_DIR, filename)
-        try:
-            cv2.imwrite(filepath, frame_bgr)
-        except Exception as e:
-            self.get_logger().warn(f"Failed to save frame {filepath}: {e}")
+        self._recent_frame_pub.publish(img_msg)
 
         self._frame_id += 1
 

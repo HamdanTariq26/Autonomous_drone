@@ -25,11 +25,6 @@ LIVE_KEYFRAME_CSV = os.path.join(HOME_DIR, "live_sparse_map_points.csv")
 FINAL_KEYFRAME_CSV = os.path.join(HOME_DIR, "SparseMapPoints.csv")
 KEYFRAME_TRAJECTORY_TXT = os.path.join(HOME_DIR, "KeyFrameTrajectory.txt")
 
-# Where drone_interface saves every frame (for later depth/scale
-# matching by timestamp), and where any cleanup logic deletes from.
-SAVE_FRAMES_DIR = "frame_images"
-
-
 # ----------------------------------------------------------------------
 # ROS2 topic names - must match whatever the C++ SLAM node and any
 # ROS2 nodes in this package actually publish/subscribe to.
@@ -40,6 +35,30 @@ TOPIC_IMG_MSG = "/mono_py_driver/img_msg"
 TOPIC_TIMESTEP_MSG = "/mono_py_driver/timestep_msg"
 TOPIC_KEYFRAME_TIMESTAMPS = "/mono_py_driver/keyframe_timestamps"
 TOPIC_MAP_TOPOLOGY_CHANGED = "/mono_py_driver/map_topology_changed"
+
+# NEW - raw BGR frames published in-memory instead of saved to disk.
+# Replaces SAVE_FRAMES_DIR + FrameCleanupNode entirely (pipeline_audit.md
+# finding: cv2.imwrite at 30Hz + FrameCleanupNode's periodic glob/delete
+# were both competing with FFMPEG's decode thread for the GIL, causing
+# stochastic SLAM-viewer lag that would build up then sometimes drain).
+TOPIC_RECENT_FRAME = "/tello_autonomy/recent_frame"
+
+# Ring buffer bound in ScaleFactorManager: max age of a frame kept in
+# memory before it's evicted, regardless of whether it was ever used.
+# Must comfortably exceed the worst-case lookup window: a keyframe's
+# timestamp can lag PERIODIC_RECALIBRATION_SECONDS behind "now" before
+# it's ever matched against a frame, plus KEYFRAME_MATCH_TOLERANCE_SEC
+# slop. 90s gives margin above PERIODIC_RECALIBRATION_SECONDS (15s)
+# without accumulating unbounded memory.
+RECENT_FRAME_BUFFER_MAX_AGE_SEC = 90.0
+
+# Hard cap on buffer size regardless of age - the actual memory bound.
+# At CAMERA_WIDTH x CAMERA_HEIGHT x 3 bytes (BGR8, no compression) this
+# is the real ceiling: 960x720x3 ~= 2MB/frame, so 150 frames ~= 300MB
+# worst case. Age-based eviction (above) will normally keep the buffer
+# far smaller than this; this cap is the backstop if publish rate ever
+# spikes relative to eviction/consumption.
+RECENT_FRAME_BUFFER_MAX_COUNT = 150
 
 # Reserved for future layers (occupancy_map / exploration / search /
 # goals) - not yet published by anything, named here ahead of time so
@@ -71,11 +90,9 @@ CAMERA_HEIGHT = 720
 
 
 # ----------------------------------------------------------------------
-# Frame cleanup constants
+# Frame matching constants
 # ----------------------------------------------------------------------
 KEYFRAME_MATCH_TOLERANCE_SEC = 0.01
-DELETION_GRACE_PERIOD_SEC = 3.0
-CLEANUP_INTERVAL_SEC = 2.0
 
 
 # ----------------------------------------------------------------------
@@ -370,7 +387,7 @@ TOF_MAX_VALID_CM = 800
 
 # Rolling window size (valid samples) kept per map_id in
 # tof_scale_estimator.py for smoothing and noise checks.
-TOF_SCALE_ROLLING_WINDOW = 30
+TOF_SCALE_ROLLING_WINDOW = 15
 
 # Auto-mode primary gate: if the raw ToF readings (cm) in the rolling
 # window have a standard deviation above this, the ToF estimate is

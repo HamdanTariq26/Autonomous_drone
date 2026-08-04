@@ -56,7 +56,6 @@ from drone_interface.telemetry import TelemetryMonitor
 from drone_interface.command_handler import CommandHandler
 from drone_interface.manual_control import ManualControl
 from middleware.ros_bridge import RosBridge
-from middleware.frame_cleanup import FrameCleanupNode
 from middleware.telemetry_bridge import TelemetryBridge
 from perception.scale_factor_manager import ScaleFactorManager
 from perception.live_scaler import LiveScaler
@@ -102,7 +101,6 @@ def main():
     rclpy.init()
 
     ros_bridge = RosBridge(frame_receiver, node_name="tello_ros_bridge")
-    frame_cleanup = FrameCleanupNode(node_name="frame_cleanup_node")
     telemetry_bridge = TelemetryBridge(telemetry, node_name="telemetry_bridge")
     tof_scale_estimator = ToFScaleEstimator(node_name="tof_scale_estimator")
     scale_factor_manager = ScaleFactorManager(
@@ -113,7 +111,6 @@ def main():
 
     runners = [
         NodeRunner(ros_bridge),
-        NodeRunner(frame_cleanup),
         NodeRunner(telemetry_bridge),
         NodeRunner(tof_scale_estimator),
         NodeRunner(scale_factor_manager),

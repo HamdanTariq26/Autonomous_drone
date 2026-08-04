@@ -35,14 +35,16 @@ that logic below, only the dispatch mechanism changed.
 
 import queue as queue_module
 import time
+from collections import OrderedDict
 
 import multiprocessing
 from rclpy.node import Node
 from std_msgs.msg import Bool, Float64, Int32, String
-from sensor_msgs.msg import PointCloud2
+from sensor_msgs.msg import PointCloud2, Image
 from sensor_msgs_py import point_cloud2
 from nav_msgs.msg import Path
 from geometry_msgs.msg import PoseStamped
+from cv_bridge import CvBridge
 
 from config import constants
 from middleware.topic_manager import TopicManager
@@ -110,6 +112,16 @@ class ScaleFactorManager(Node):
         )
         self._dense_pose_pub = self.create_publisher(
             PoseStamped, "/tello_autonomy/dense_pose_metric", 10
+        )
+
+        self._frame_bridge = CvBridge()
+        # timestamp -> frame_bgr, ordered by insertion (== arrival order, since
+        # frames publish in increasing-timestamp order). Bounded on two axes:
+        # age (evicted lazily on each insert) and count (hard cap, backstop).
+        self._recent_frames = OrderedDict()
+
+        self._topics.get_subscription(
+            constants.TOPIC_RECENT_FRAME, Image, self._on_recent_frame
         )
         self._topics.get_subscription(
             constants.TOPIC_KEYFRAME_POINTS, PointCloud2, self._on_keyframe_points
@@ -199,6 +211,46 @@ class ScaleFactorManager(Node):
             f"and {constants.TOPIC_MAP_TOPOLOGY_CHANGED}. Depth inference worker "
             f"process started (pid={self._worker_process.pid})."
         )
+
+    # ****************************************************************************************
+    def _on_recent_frame(self, msg: Image):
+        try:
+            frame_bgr = self._frame_bridge.imgmsg_to_cv2(msg, desired_encoding="bgr8")
+        except Exception as e:
+            self.get_logger().warn(f"Failed to convert recent frame: {e}")
+            return
+
+        timestamp = msg.header.stamp.sec + msg.header.stamp.nanosec * 1e-9
+        self._recent_frames[timestamp] = frame_bgr
+        self._evict_stale_frames()
+
+    def _evict_stale_frames(self):
+        now = time.time()
+        # Age-based eviction: drop anything older than the max lookback
+        # window - it can never be matched by a keyframe anymore anyway.
+        while self._recent_frames:
+            oldest_ts = next(iter(self._recent_frames))
+            if (now - oldest_ts) <= constants.RECENT_FRAME_BUFFER_MAX_AGE_SEC:
+                break
+            self._recent_frames.popitem(last=False)
+
+        # Hard count cap - backstop against age eviction falling behind a
+        # publish-rate spike. OrderedDict + insertion-order publishing means
+        # popping from the front always drops the oldest.
+        while len(self._recent_frames) > constants.RECENT_FRAME_BUFFER_MAX_COUNT:
+            self._recent_frames.popitem(last=False)
+
+    def _find_recent_frame(self, target_timestamp, tolerance=None):
+        """In-memory equivalent of perception.scale_factor.find_matching_frame()."""
+        tolerance = tolerance if tolerance is not None else constants.KEYFRAME_MATCH_TOLERANCE_SEC
+        best_ts, best_diff = None, None
+        for ts in self._recent_frames:
+            diff = abs(ts - target_timestamp)
+            if best_diff is None or diff < best_diff:
+                best_ts, best_diff = ts, diff
+        if best_diff is not None and best_diff <= tolerance:
+            return self._recent_frames[best_ts]
+        return None
 
     # ****************************************************************************************
     def _on_keyframe_points(self, msg: PointCloud2):
@@ -344,8 +396,20 @@ class ScaleFactorManager(Node):
             )
             return
 
+        # NEW - attach matched frames for the keyframes the worker will use,
+        # keyed by keyframe_id, instead of letting the worker cv2.imread()
+        # them from disk (there is no disk copy anymore).
+        keyframe_ids = sorted({row["keyframe_id"] for row in rows})
+        recent_ids = keyframe_ids[-constants.SCALE_FACTOR_RECENT_KEYFRAME_COUNT:]
+        matched_frames = {}
+        for kf_id in recent_ids:
+            kf_ts = next(r["timestamp"] for r in rows if r["keyframe_id"] == kf_id)
+            frame = self._find_recent_frame(kf_ts)
+            if frame is not None:
+                matched_frames[kf_id] = frame
+
         self._in_flight_map_ids.add(map_id)
-        self._request_queue.put({"map_id": map_id, "rows": rows})
+        self._request_queue.put({"map_id": map_id, "rows": rows, "matched_frames": matched_frames})
 
     # ****************************************************************************************
     def _poll_results(self):
