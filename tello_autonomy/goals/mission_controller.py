@@ -98,6 +98,7 @@ class MissionControllerNode(Node):
         # Track if an NbvPlan or SearchPlan request is currently pending
         self._nbv_request_in_flight = False
         self._search_request_in_flight = False
+        self._last_auto_cmd_time = None
         
         #To fix frame_id mismatch between rivz2 and in coming messages
         
@@ -169,6 +170,22 @@ class MissionControllerNode(Node):
 
         self.get_logger().info("MissionController initialized.")
 
+    def is_active(self):
+        return (
+            self._state != MissionState.IDLE
+            or self._nbv_request_in_flight
+            or self._search_request_in_flight
+        )
+
+    def time_since_last_cmd(self):
+        if self._last_auto_cmd_time is None:
+            return float('inf')
+        return time.monotonic() - self._last_auto_cmd_time
+
+    def _send_rc_control(self, lr, fb, ud, yaw):
+        self._last_auto_cmd_time = time.monotonic()
+        return self._command_handler.send_rc_control(lr, fb, ud, yaw)
+
     def _explore_callback(self, msg):
         self.get_logger().info("Triggering exploration mode...")
         self.start_exploration()
@@ -194,6 +211,7 @@ class MissionControllerNode(Node):
         
         self.get_logger().info("Requesting Next-Best-View path...")
         self._nbv_request_in_flight = True
+        self._last_auto_cmd_time = time.monotonic()
         future = self._nbv_client.call_async(req)
         future.add_done_callback(self._on_nbv_plan_received)
 
@@ -324,6 +342,7 @@ class MissionControllerNode(Node):
 
         self.get_logger().info(f"Requesting path to ({target_x}, {target_y}, {target_z})...")
         self._search_request_in_flight = True
+        self._last_auto_cmd_time = time.monotonic()
         future = self._search_client.call_async(req)
         future.add_done_callback(self._on_search_plan_received)
 
@@ -368,7 +387,7 @@ class MissionControllerNode(Node):
             self._tracker.clear_path()
             self._state = MissionState.IDLE
             # Send zero velocity to stop immediately
-            self._command_handler.send_rc_control(0, 0, 0, 0)
+            self._send_rc_control(0, 0, 0, 0)
 
     def _control_loop(self):
         """
@@ -380,7 +399,7 @@ class MissionControllerNode(Node):
         # ---- Tracking-loss detection ----
         # If we have never received a pose yet, just hover.
         if not self._has_pose:
-            self._command_handler.send_rc_control(0, 0, 0, 0)
+            self._send_rc_control(0, 0, 0, 0)
             return
 
         # Check staleness of the last pose.
@@ -414,14 +433,14 @@ class MissionControllerNode(Node):
                         f"Recovery: reached heading step {self._recovery_step + 1}/4, "
                         f"holding for {self._RECOVERY_HOLD_SEC:.1f}s..."
                     )
-                self._command_handler.send_rc_control(0, 0, 0, self._RECOVERY_YAW_SPEED)
+                self._send_rc_control(0, 0, 0, self._RECOVERY_YAW_SPEED)
                 return
 
             # --- Hold phase: stay still so the camera can see features ---
             hold_elapsed = now - self._recovery_step_start
             if hold_elapsed < self._RECOVERY_HOLD_SEC:
                 # Hovering — send zero so the drone holds its position.
-                self._command_handler.send_rc_control(0, 0, 0, 0)
+                self._send_rc_control(0, 0, 0, 0)
                 return
 
             # Hold done — advance to next 90° step.
@@ -431,7 +450,7 @@ class MissionControllerNode(Node):
             self.get_logger().info(
                 f"Recovery: turning to heading step {self._recovery_step + 1}/4..."
             )
-            self._command_handler.send_rc_control(0, 0, 0, self._RECOVERY_YAW_SPEED)
+            self._send_rc_control(0, 0, 0, self._RECOVERY_YAW_SPEED)
             return
 
         # ---- Normal flight ----
@@ -439,12 +458,12 @@ class MissionControllerNode(Node):
             if self._state == MissionState.EXPLORING:
                 self.get_logger().info("Reached end of exploration path. Requesting next view...")
                 # Temporarily hover while waiting for next path
-                self._command_handler.send_rc_control(0, 0, 0, 0)
+                self._send_rc_control(0, 0, 0, 0)
                 self.start_exploration()
             else:
                 self.get_logger().info("Mission complete! Hovering.")
                 self._state = MissionState.IDLE
-                self._command_handler.send_rc_control(0, 0, 0, 0)
+                self._send_rc_control(0, 0, 0, 0)
             return
 
         cmd_lr, cmd_fb, cmd_ud, cmd_yaw = self._tracker.compute_velocity_commands(
@@ -454,7 +473,7 @@ class MissionControllerNode(Node):
         # Send to drone.
         # send_rc_control silently fails (returns False) if a takeoff/land is in progress,
         # which is exactly the safety behavior we want.
-        self._command_handler.send_rc_control(cmd_lr, cmd_fb, cmd_ud, cmd_yaw)
+        self._send_rc_control(cmd_lr, cmd_fb, cmd_ud, cmd_yaw)
 
     def _broadcast_identity_frame(self, frame_id: str):
         """

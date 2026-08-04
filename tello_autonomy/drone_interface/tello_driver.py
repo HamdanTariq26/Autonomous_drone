@@ -35,7 +35,7 @@ class TelloDriver:
         command_handler, and call disconnect() once at shutdown.
     """
 
-    def __init__(self, resolution="", fps="", bitrate=constants.TELLO_VIDEO_BITRATE):
+    def __init__(self, resolution="high", fps="high", bitrate=constants.TELLO_VIDEO_BITRATE):
         """
             resolution: "high" (720p) / "low" (480p) / "" for drone default
             fps: "high"/"middle"/"low" (30/15/5fps) / "" for drone default

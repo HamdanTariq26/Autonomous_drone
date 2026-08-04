@@ -119,6 +119,7 @@ def run_worker(request_queue, result_queue):
             # so the existing scale-factor path is never broken by this new step.
             result["dense_points_cam"] = None
             result["dense_kf_id"] = None
+            result["dense_kf_timestamp"] = None
 
             if intrinsics is not None:
                 map_rows = df[df["map_id"] == map_id]
@@ -130,6 +131,7 @@ def run_worker(request_queue, result_queue):
                 matched_count = 0
                 best_depth_map = None
                 best_kf_id = None
+                best_kf_timestamp = None
 
                 for kf_id in recent_kf_ids:
                     kf_rows = map_rows[map_rows["keyframe_id"] == kf_id]
@@ -149,6 +151,7 @@ def run_worker(request_queue, result_queue):
                     # extra call does not significantly increase latency.
                     best_depth_map = depth_anything_v2.infer_metric_depth(image_bgr, intrinsics=intrinsics)
                     best_kf_id = int(kf_id)
+                    best_kf_timestamp = float(kf_timestamp)
 
                 if best_depth_map is not None:
                     points_cam = backproject_depth_to_camera_points(
@@ -157,6 +160,7 @@ def run_worker(request_queue, result_queue):
                     )
                     result["dense_points_cam"] = points_cam
                     result["dense_kf_id"] = best_kf_id
+                    result["dense_kf_timestamp"] = best_kf_timestamp
 
         except Exception as e:
             result = {
@@ -168,6 +172,7 @@ def run_worker(request_queue, result_queue):
                 "error": str(e),
                 "dense_points_cam": None,
                 "dense_kf_id": None,
+                "dense_kf_timestamp": None,
             }
 
         result_queue.put(result)

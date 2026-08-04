@@ -87,6 +87,14 @@ class LiveScaler(Node):
             self.get_logger().info(
                 f"LiveScaler: dropped {self._dropped_no_scale_factor} message(s) so far ({reason})"
             )
+
+    def _note_depth_filtered(self, count):
+        self._depth_filtered_total = getattr(self, "_depth_filtered_total", 0) + count
+        if self._depth_filtered_total % 500 < count:  # log occasionally, not every message
+            self.get_logger().info(
+                f"LiveScaler: filtered {self._depth_filtered_total} near-degenerate-depth "
+                f"point(s) so far (depth <= {constants.MIN_LIVE_POINT_DEPTH_M}m)"
+            )
     # ****************************************************************************************
 
     # ****************************************************************************************
@@ -128,6 +136,21 @@ class LiveScaler(Node):
         ).astype(np.float64)
 
         scaled_points = points * scale
+
+        # Reject points with near-degenerate triangulation depth. Z = forward
+        # in this project's SLAM convention (see trajectory_tracker.py's
+        # coordinate-frame docstring). Points at or below this depth are
+        # almost always triangulation noise near the epipole, not real
+        # nearby geometry - see MIN_LIVE_POINT_DEPTH_M's comment in
+        # config/constants.py.
+        depth_mask = scaled_points[:, 2] > constants.MIN_LIVE_POINT_DEPTH_M
+        num_rejected = scaled_points.shape[0] - int(depth_mask.sum())
+        if num_rejected > 0:
+            self._note_depth_filtered(num_rejected)
+        scaled_points = scaled_points[depth_mask]
+
+        if scaled_points.shape[0] == 0:
+            return
 
         scaled_msg = point_cloud2.create_cloud_xyz32(msg.header, scaled_points.tolist())
         self._points_pub.publish(scaled_msg)

@@ -50,6 +50,19 @@ class ManualControl:
         self._loop_thread = None
         self._shutdown = threading.Event()
 
+        # Called to check if an autonomous mission currently owns the RC
+        # channel. When this returns True and no manual key is held, this
+        # loop must NOT call send_rc_control at all - mission_controller's
+        # own 10Hz loop is already sending real velocity commands, and a
+        # second unconditional zero-command from here would race it and
+        # intermittently overwrite real commands with hover-zero.
+        self.is_autonomous_active = None
+
+        # Optional: callable returning seconds since the autonomous layer last sent
+        # an RC command. If autonomous is active but hasn't sent a command for >10s
+        # (e.g. planner is computing), manual_control will send a (0,0,0,0) keepalive.
+        self.get_auto_time_since_last_cmd = None
+
         # Called (if set) once landing completes and this loop is about
         # to stop - lets the owning program (e.g. a ROS2 node) shut
         # itself down too, without this module needing to know anything
@@ -199,9 +212,28 @@ class ManualControl:
                 if "j" in self._held_keys: yv = -self.manual_speed
                 if "l" in self._held_keys: yv = self.manual_speed
 
-                # Always send every tick - including (0,0,0,0) hover.
-                # This continuously resets the Tello's 15-second auto-land timer.
-                self._command_handler.send_rc_control(lr, fb, ud, yv)
+                any_key_held = (lr != 0 or fb != 0 or ud != 0 or yv != 0)
+                autonomous_active = (
+                    self.is_autonomous_active is not None
+                    and self.is_autonomous_active()
+                )
+
+                auto_silent_timeout = False
+                if autonomous_active and self.get_auto_time_since_last_cmd is not None:
+                    if self.get_auto_time_since_last_cmd() > 10.0:
+                        auto_silent_timeout = True
+
+                if any_key_held or not autonomous_active or auto_silent_timeout:
+                    # Either the human is actively flying, or nothing
+                    # autonomous is running, or autonomous has been silent
+                    # for >10 seconds (resettable watchdog) - this loop
+                    # is the sole authority over the RC channel and must keep
+                    # sending every tick (including hover-zero) to reset
+                    # the Tello's 15s auto-land watchdog.
+                    self._command_handler.send_rc_control(lr, fb, ud, yv)
+                # else: an autonomous mission owns the channel and no key
+                # is held - stay silent so mission_controller's own 10Hz
+                # loop is the only thing writing to send_rc_control.
 
             self._shutdown.wait(timeout=loop_period)
 

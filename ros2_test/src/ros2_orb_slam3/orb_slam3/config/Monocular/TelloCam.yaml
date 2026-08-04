@@ -50,3 +50,13 @@ Viewer.ViewpointX: 0.0
 Viewer.ViewpointY: -0.7
 Viewer.ViewpointZ: -1.8
 Viewer.ViewpointF: 500.0
+
+#--------------------------------------------------------------------------------------------
+# Tracking Parameters
+#--------------------------------------------------------------------------------------------
+# How long (seconds) the tracker stays in RECENTLY_LOST before declaring
+# full LOST and starting a new map.  Governs BOTH the IMU and monocular
+# code paths (was hardcoded to 3.0 s in the monocular path before this
+# change).  Default: 5.0 s.  Raise it in textured / feature-rich
+# environments; lower it if stale-map re-inits are hurting you.
+Tracking.TimeRecentlyLost: 5.0

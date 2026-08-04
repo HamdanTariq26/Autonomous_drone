@@ -108,9 +108,11 @@ void nbvInspection::RrtTree::setStateFromPoseMsg(
   root_[1] = position.y();
   root_[2] = position.z();
   
-  double roll, pitch, yaw;
-  tf2::Matrix3x3(quat).getRPY(roll, pitch, yaw);
-  root_[3] = yaw;
+  // SLAM world convention: yaw is rotation about Y (gravity axis), not Z.
+  // getRPY() assumes Z-up/Z-yaw and gives wrong results here — extract
+  // directly from the quaternion the same way samplePath() and
+  // mission_controller.py's _pose_callback already do.
+  root_[3] = 2.0 * atan2(quat.y(), quat.w());
 
   static double logThrottleTime = node_->now().seconds();
   if (node_->now().seconds() - logThrottleTime > params_.log_throttle_) {
@@ -184,9 +186,11 @@ void nbvInspection::RrtTree::setStateFromOdometryMsg(
   root_[1] = position.y();
   root_[2] = position.z();
   
-  double roll, pitch, yaw;
-  tf2::Matrix3x3(quat).getRPY(roll, pitch, yaw);
-  root_[3] = yaw;
+  // SLAM world convention: yaw is rotation about Y (gravity axis), not Z.
+  // getRPY() assumes Z-up/Z-yaw and gives wrong results here — extract
+  // directly from the quaternion the same way samplePath() and
+  // mission_controller.py's _pose_callback already do.
+  root_[3] = 2.0 * atan2(quat.y(), quat.w());
 
   static double logThrottleTime = node_->now().seconds();
   if (node_->now().seconds() - logThrottleTime > params_.log_throttle_) {
@@ -281,8 +285,27 @@ void nbvInspection::RrtTree::iterate(int iterations)
       + SQ(params_.minZ_ - params_.maxZ_));
   bool solutionFound = false;
   while (!solutionFound) {
-    for (int i = 0; i < 3; i++) {
-      newState[i] = 2.0 * radius * (((double) rand()) / ((double) RAND_MAX) - 0.5);
+    // --- Forward-biased sampling (tunable via nbvp.sampling.*) ---
+    // With probability forwardBiasProbability_, sample a horizontal
+    // direction within a cone around the drone's CURRENT heading
+    // (root_[3]) rather than uniformly over the whole sphere. Vertical
+    // (Y, down-axis) offset stays uniform/unbiased - only horizontal
+    // direction is biased toward "keep going forward." The remaining
+    // probability still samples uniformly, so the tree can still find
+    // side rooms, dead ends, and anything behind the drone.
+    double biasRoll = ((double) rand()) / ((double) RAND_MAX);
+    if (biasRoll < params_.forwardBiasProbability_) {
+      double coneOffset = params_.forwardConeHalfAngle_
+          * (2.0 * (((double) rand()) / ((double) RAND_MAX)) - 1.0);
+      double sampleYaw = root_[3] + coneOffset;
+      double horizDist = radius * (((double) rand()) / ((double) RAND_MAX));
+      newState[0] = horizDist * sin(sampleYaw);   // X = right
+      newState[2] = horizDist * cos(sampleYaw);   // Z = forward
+      newState[1] = 2.0 * radius * (((double) rand()) / ((double) RAND_MAX) - 0.5);  // Y = down
+    } else {
+      for (int i = 0; i < 3; i++) {
+        newState[i] = 2.0 * radius * (((double) rand()) / ((double) RAND_MAX) - 0.5);
+      }
     }
     if (SQ(newState[0]) + SQ(newState[1]) + SQ(newState[2]) > pow(radius, 2.0))
       continue;
@@ -381,13 +404,9 @@ void nbvInspection::RrtTree::iterate(int iterations)
       newState[2] = origin[2] + direction[2];
     }
 
-    // --- Hybrid Yaw Sampling ---
-    // 50% chance: face the direction of travel (smooth forward flight in open space)
-    // 50% chance: face a random direction (allows the drone to look around at dead ends)
-    // The gain function will naturally pick the best yaw — travel-direction paths
-    // win in open hallways, random-direction paths win at dead ends.
+    // --- Hybrid Yaw Sampling (tunable via nbvp.sampling.forward_yaw_probability) ---
     double r = ((double) rand()) / ((double) RAND_MAX);
-    if (r < 0.5) {
+    if (r < params_.forwardYawProbability_) {
       // Direction of travel yaw (SLAM frame: Z forward, X right)
       newState[3] = atan2(direction[0], direction[2]);
     } else {
@@ -640,15 +659,10 @@ double nbvInspection::RrtTree::gain(StateVec state)
   }
 
   // -----------------------------------------------------------------------
-  // Visited-position penalty: subtract a fixed penalty for each previously-
-  // visited position that is within VISITED_PENALTY_RADIUS of this candidate
-  // node. This discourages the planner from re-sending the drone over
-  // already-explored space. If the best gain is 0 (fully mapped region)
-  // the penalty ensures that genuinely unvisited candidates win even if
-  // they also have low raw gain from the occupancy map.
+  // Visited-position penalty (tunable via nbvp.gain.visited_penalty_*)
   // -----------------------------------------------------------------------
-  const double VISITED_PENALTY_RADIUS = 1.0;  // metres - covers drone bounding box
-  const double VISITED_PENALTY        = 0.5;  // subtracted per overlapping past position
+  const double VISITED_PENALTY_RADIUS = params_.visitedPenaltyRadius_;
+  const double VISITED_PENALTY        = params_.visitedPenaltyWeight_;
   Eigen::Vector3d candidatePos(state[0], state[1], state[2]);
   for (const Eigen::Vector3d& vp : visitedPositions_) {
     if ((candidatePos - vp).norm() < VISITED_PENALTY_RADIUS) {

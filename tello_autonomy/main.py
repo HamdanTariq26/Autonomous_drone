@@ -87,7 +87,7 @@ class NodeRunner:
 
 def main():
     # ---- drone_interface layer: no ROS2 involved yet ----
-    driver = TelloDriver(resolution="", fps="", bitrate=constants.TELLO_VIDEO_BITRATE)
+    driver = TelloDriver(resolution="high", fps="high", bitrate=constants.TELLO_VIDEO_BITRATE)
     driver.connect()
 
     frame_receiver = FrameReceiver(driver)
@@ -133,6 +133,8 @@ def main():
 
     manual_control.on_quit_requested = on_quit
     manual_control.on_manual_override = mission_controller.cancel_mission
+    manual_control.is_autonomous_active = mission_controller.is_active
+    manual_control.get_auto_time_since_last_cmd = mission_controller.time_since_last_cmd
     
     # Return to home hover point (0, 0, 1.0m height) when 'h' is pressed.
     # We don't use z=0 because the floor is mapped as occupied space at z=0!

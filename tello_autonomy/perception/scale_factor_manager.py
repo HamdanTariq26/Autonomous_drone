@@ -401,6 +401,7 @@ class ScaleFactorManager(Node):
         """
         points_cam = result.get("dense_points_cam")
         map_id = result.get("map_id")
+        kf_timestamp = result.get("dense_kf_timestamp")
 
         if points_cam is None or len(points_cam) == 0 or map_id is None:
             return
@@ -413,8 +414,17 @@ class ScaleFactorManager(Node):
         if not poses:
             return
 
-        matched_pose = poses[-1] if poses else None
+        # Match by the actual keyframe's timestamp instead of blindly taking
+        # the most recent trajectory pose. poses[-1] could be an entirely
+        # different position than where this depth image was captured,
+        # silently misplacing the dense cloud.
+        matched_pose = self._find_pose_by_timestamp(poses, kf_timestamp)
         if matched_pose is None:
+            self.get_logger().warn(
+                f"map_id {map_id}: no trajectory pose found within tolerance "
+                f"for dense depth keyframe (timestamp={kf_timestamp}) - "
+                f"skipping this dense-points publish."
+            )
             return
 
         raw_pos = matched_pose.pose.position
@@ -445,6 +455,28 @@ class ScaleFactorManager(Node):
         self.get_logger().info(
             f"map_id {map_id}: Published {len(points_world)} dense metric points to {constants.TOPIC_DENSE_POINTS_METRIC}."
         )
+
+    # ****************************************************************************************
+    @staticmethod
+    def _find_pose_by_timestamp(poses, target_timestamp, tolerance_sec=0.05):
+        """
+        Finds the PoseStamped in `poses` whose header.stamp is closest to
+        target_timestamp (a plain float, seconds - matches kf->mTimeStamp on
+        the C++ side). Returns None if nothing is within tolerance, rather
+        than falling back to the wrong pose.
+        """
+        if target_timestamp is None or not poses:
+            return None
+        best_pose, best_diff = None, None
+        for pose_stamped in poses:
+            stamp = pose_stamped.header.stamp
+            pose_ts = stamp.sec + stamp.nanosec * 1e-9
+            diff = abs(pose_ts - target_timestamp)
+            if best_diff is None or diff < best_diff:
+                best_pose, best_diff = pose_stamped, diff
+        if best_diff is not None and best_diff <= tolerance_sec:
+            return best_pose
+        return None
 
     # ****************************************************************************************
     def _resolve_active_scale(self, map_id: int):

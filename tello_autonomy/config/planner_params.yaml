@@ -11,7 +11,7 @@ nbv_planner_node:
     bbx.minZ: -5.0
     bbx.maxZ: 5.0
     # when the drone flies past the 5-meter mark (e.g. into another room).
-    bbx.softBounds: false   #<- recommend switching this so the above numbers actually get enforced
+    bbx.softBounds: true   #<- recommend switching this so the above numbers actually get enforced
 
     # --- Drone body bounding box for collision checking ---
     # Tello: 98 x 92.5 x 41 mm. Add 5 cm safety margin on each side.
@@ -21,8 +21,8 @@ nbv_planner_node:
     system.bbx.overshoot: 0.10
 
     # --- Max flight speed (m/s) and yaw rate (rad/s) ---
-    system.v_max: 0.3
-    system.dyaw_max: 0.5
+    system.v_max: 0.9 # changed -> 0.3:0.6
+    system.dyaw_max: 0.12 # changed -> 0.5:0.9
 
     # --- Tello camera: ~82 deg horizontal, ~60 deg vertical, 0 deg pitch ---
     system.camera.pitch: [0.0]
@@ -51,7 +51,7 @@ nbv_planner_node:
     # Makes close gain much better than far gain.
     # Reduced to 0.05 to encourage exploring far-away frontiers (e.g. through doors)
     # instead of obsessively mapping nearby corners.
-    nbvp.gain.degressive_coeff: 0.05
+    nbvp.gain.degressive_coeff: 0.001 # <- chnaged from  0.05 : 0.005
     # Threshold for gain to be considered valid
     # Set to -1000.0 so the planner ALWAYS finds a "valid" gain and never aborts.
     # It will just pick the highest relative gain (i.e. the straightest path).
@@ -63,6 +63,19 @@ nbv_planner_node:
     # --- Logging (off by default) ---
     nbvp.log.on: false
     nbvp.log.throttle: 0.5
+
+    # --- Forward-bias exploration tuning ---
+    # Raise forward_bias_probability / forward_yaw_probability to make the
+    # planner favor continuing in its current direction more strongly.
+    # Lower visited_penalty_weight if it's still avoiding areas it's
+    # already flown near even when that's the best remaining option.
+    # Set forward_bias_probability: 0.0 and forward_yaw_probability: 0.5 to
+    # reproduce the exact old behavior for A/B testing.
+    nbvp.sampling.forward_bias_probability: 0.7      # 0.0 = fully uniform (old behavior), 1.0 = always forward-cone
+    nbvp.sampling.forward_cone_half_angle_deg: 60.0   # wider = looser bias, narrower = stronger forward preference
+    nbvp.sampling.forward_yaw_probability: 0.8        # was hardcoded 0.5 - fraction of nodes that face direction of travel
+    nbvp.gain.visited_penalty_radius: 1.0             # metres, unchanged from before
+    nbvp.gain.visited_penalty_weight: 0.5             # was hardcoded 0.5 - lower this if it's over-avoiding familiar space
 
 occupancy_map_node:
   ros__parameters:

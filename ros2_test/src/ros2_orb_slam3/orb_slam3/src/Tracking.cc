@@ -1324,12 +1324,23 @@ bool Tracking::ParseORBParamFile(cv::FileStorage &fSettings)
     if(mSensor==System::MONOCULAR || mSensor==System::IMU_MONOCULAR)
         mpIniORBextractor = new ORBextractor(5*nFeatures,fScaleFactor,nLevels,fIniThFAST,fMinThFAST);
 
+    // Allow the recently-lost timeout to be tuned from the settings file
+    // (Tracking.TimeRecentlyLost, seconds).  Defaults to the hard-coded
+    // initialiser (5.0 s) if the key is absent, so all existing YAML files
+    // continue to work unchanged.
+    cv::FileNode nodeRL = fSettings["Tracking.TimeRecentlyLost"];
+    if(!nodeRL.empty() && nodeRL.isReal())
+    {
+        time_recently_lost = nodeRL.real();
+    }
+
     cout << endl << "ORB Extractor Parameters: " << endl;
     cout << "- Number of Features: " << nFeatures << endl;
     cout << "- Scale Levels: " << nLevels << endl;
     cout << "- Scale Factor: " << fScaleFactor << endl;
     cout << "- Initial Fast Threshold: " << fIniThFAST << endl;
     cout << "- Minimum Fast Threshold: " << fMinThFAST << endl;
+    cout << "- Recently-lost timeout: " << time_recently_lost << " s" << endl;
 
     return true;
 }
@@ -2039,7 +2050,7 @@ void Tracking::Track()
                         bOK = Relocalization();
                         //std::cout << "mCurrentFrame.mTimeStamp:" << to_string(mCurrentFrame.mTimeStamp) << std::endl;
                         //std::cout << "mTimeStampLost:" << to_string(mTimeStampLost) << std::endl;
-                        if(mCurrentFrame.mTimeStamp-mTimeStampLost>3.0f && !bOK)
+                        if(mCurrentFrame.mTimeStamp-mTimeStampLost>time_recently_lost && !bOK)
                         {
                             mState = LOST;
                             Verbose::PrintMess("Track Lost...", Verbose::VERBOSITY_NORMAL);

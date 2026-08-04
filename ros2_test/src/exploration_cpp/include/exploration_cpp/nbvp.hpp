@@ -362,6 +362,18 @@ bool nbvInspection::nbvPlanner<stateVec>::setParams()
   // to be visible before stopping, giving the planner time to build a richer
   // tree and pick a genuinely better frontier direction.
   params_.zero_gain_ = this->declare_parameter<double>("nbvp.gain.zero", 0.5);
+
+  // --- Forward-bias exploration tuning ---
+  params_.forwardBiasProbability_ = this->declare_parameter<double>(
+    "nbvp.sampling.forward_bias_probability", 0.7);
+  params_.forwardConeHalfAngle_ = this->declare_parameter<double>(
+    "nbvp.sampling.forward_cone_half_angle_deg", 60.0) * M_PI / 180.0;
+  params_.forwardYawProbability_ = this->declare_parameter<double>(
+    "nbvp.sampling.forward_yaw_probability", 0.8);
+  params_.visitedPenaltyRadius_ = this->declare_parameter<double>(
+    "nbvp.gain.visited_penalty_radius", 1.0);
+  params_.visitedPenaltyWeight_ = this->declare_parameter<double>(
+    "nbvp.gain.visited_penalty_weight", 0.5);
   params_.dOvershoot_ = this->declare_parameter<double>("system.bbx.overshoot", 0.5);
   params_.log_ = this->declare_parameter<bool>("nbvp.log.on", false);
   params_.log_throttle_ = this->declare_parameter<double>("nbvp.log.throttle", 0.5);

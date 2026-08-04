@@ -31,6 +31,13 @@ struct Params
   double degressiveCoeff_;
   double zero_gain_;
 
+  // --- Forward-bias exploration tuning ---
+  double forwardBiasProbability_;   // fraction of RRT samples drawn from the forward cone vs uniform sphere
+  double forwardConeHalfAngle_;     // half-angle (radians) of the forward sampling cone
+  double forwardYawProbability_;    // probability a sampled node faces its direction of travel vs a random yaw
+  double visitedPenaltyRadius_;     // metres - replaces the old hardcoded VISITED_PENALTY_RADIUS
+  double visitedPenaltyWeight_;     // replaces the old hardcoded VISITED_PENALTY
+
   double v_max_;
   double dyaw_max_;
   double dOvershoot_;

@@ -117,6 +117,26 @@ SCALE_FACTOR_RECENT_KEYFRAME_COUNT = 30
 # distance while well clear of the triangulation noise floor.
 MIN_SLAM_DEPTH = 0.2
 
+# ----------------------------------------------------------------------
+# Live point-cloud depth filtering (perception/live_scaler.py)
+# ----------------------------------------------------------------------
+# Points published on TOPIC_CURRENT_POINTS_RAW have no depth filter applied
+# on the C++ side (PublishCurrentPoseAndPoints() only rejects points behind
+# the camera, camPos.z() <= 0). Monocular triangulation is numerically
+# unstable for points with very small parallax between frames - this shows
+# up most often for points near the epipole (i.e. roughly along the
+# direction of travel), where small pixel noise can collapse the estimated
+# depth to near-zero. Those near-zero-depth points land almost on top of
+# the camera and get inserted into the OctoMap as a voxel cluster right in
+# front of the drone during forward flight.
+#
+# Mirrors MIN_SLAM_DEPTH's rationale (perception/scale_factor.py), but
+# applied here in METRIC units (post-scale) since this is the earliest
+# point in the pipeline where the points are already in meters. Filtering
+# here - rather than in common.cpp, which only has raw SLAM units - keeps
+# the threshold tunable/inspectable in real-world units without a rebuild.
+MIN_LIVE_POINT_DEPTH_M = 0.20
+
 # pipeline_audit.md Finding #6: bounds on the raw (metric_depth /
 # slam_depth) ratio itself, applied in
 # scale_factor.compute_scale_factor_from_ratios() before taking the
@@ -316,13 +336,13 @@ BRAKING_RADIUS_M = 0.4
 # Increased to 60 for much faster flight.
 MAX_AUTO_SPEED_XY = 60
 MAX_AUTO_SPEED_Z  = 40
-MAX_AUTO_SPEED_YAW = 50
+MAX_AUTO_SPEED_YAW = 30
 
 # Proportional gain for the position P-controller.
 # Increased significantly so the drone accelerates hard toward waypoints.
 XY_P_GAIN  = 150.0
 Z_P_GAIN   = 100.0
-YAW_P_GAIN = 30.0
+YAW_P_GAIN = 15.0
 
 
 # ----------------------------------------------------------------------
@@ -350,7 +370,7 @@ TOF_MAX_VALID_CM = 800
 
 # Rolling window size (valid samples) kept per map_id in
 # tof_scale_estimator.py for smoothing and noise checks.
-TOF_SCALE_ROLLING_WINDOW = 15
+TOF_SCALE_ROLLING_WINDOW = 30
 
 # Auto-mode primary gate: if the raw ToF readings (cm) in the rolling
 # window have a standard deviation above this, the ToF estimate is

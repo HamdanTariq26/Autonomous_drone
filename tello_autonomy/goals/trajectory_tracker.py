@@ -62,8 +62,12 @@ class TrajectoryTracker:
         if self.is_done():
             return 0, 0, 0, 0
 
-        # Pop all waypoints that are within the acceptance radius
-        while self.path:
+        # Pop AT MOST ONE waypoint per call, regardless of how many technically
+        # fall within WAYPOINT_ACCEPTANCE_RADIUS_M. Bulk-popping caused the path
+        # to appear "complete" almost instantly relative to the drone's actual
+        # position, triggering constant replanning before the drone had time to
+        # execute a turn toward any single target.
+        if self.path:
             target = self.path[0]
             dz = target['z'] - current_z
             dx = target['x'] - current_x
@@ -71,15 +75,13 @@ class TrajectoryTracker:
             distance_to_target = math.sqrt(dz**2 + dx**2 + dy**2)
 
             if distance_to_target < constants.WAYPOINT_ACCEPTANCE_RADIUS_M:
-                # If this is the LAST waypoint, ensure we are also facing the requested yaw
                 if len(self.path) == 1 and 'yaw' in target:
                     yaw_err = target['yaw'] - current_yaw_rad
                     yaw_err = (yaw_err + math.pi) % (2.0 * math.pi) - math.pi
-                    if abs(yaw_err) > 0.17:  # ~10 degrees
-                        break  # Do not pop it yet, we need to finish turning
-                self.path.pop(0)
-            else:
-                break
+                    if abs(yaw_err) <= 0.17:
+                        self.path.pop(0)
+                else:
+                    self.path.pop(0)
 
         if self.is_done():
             return 0, 0, 0, 0
