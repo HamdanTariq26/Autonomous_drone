@@ -36,12 +36,21 @@ from config import constants
 class TrajectoryTracker:
     def __init__(self):
         self.path = []  # List of dicts: {'x': float, 'y': float, 'z': float}
+        # When False, the tracker considers the final waypoint "reached" purely
+        # by position, without also requiring yaw to settle within tolerance
+        # first. Exploration waypoints have no meaningful final orientation
+        # (the RRT samples yaw toward direction of travel or randomly) -
+        # locking onto it wastes time the planner could spend requesting the
+        # next view instead. Set to False by mission_controller for
+        # EXPLORING paths; True (default) for NAVIGATING (goal-directed) paths.
+        self.require_final_yaw_lock = True
 
-    def set_path(self, path_poses):
+    def set_path(self, path_poses, require_final_yaw_lock=True):
         """
         Receives a list of dicts with 'x', 'y', 'z' keys (from PoseStamped messages).
         """
         self.path = list(path_poses)
+        self.require_final_yaw_lock = require_final_yaw_lock
 
     def clear_path(self):
         self.path = []
@@ -75,7 +84,7 @@ class TrajectoryTracker:
             distance_to_target = math.sqrt(dz**2 + dx**2 + dy**2)
 
             if distance_to_target < constants.WAYPOINT_ACCEPTANCE_RADIUS_M:
-                if len(self.path) == 1 and 'yaw' in target:
+                if len(self.path) == 1 and 'yaw' in target and self.require_final_yaw_lock:
                     yaw_err = target['yaw'] - current_yaw_rad
                     yaw_err = (yaw_err + math.pi) % (2.0 * math.pi) - math.pi
                     if abs(yaw_err) <= 0.17:

@@ -217,6 +217,14 @@ QUARANTINE_SCALE_JUMP_RATIO_THRESHOLD = 0.15
 # delay before a real correction takes effect.
 QUARANTINE_CONFIRMATIONS_REQUIRED = 2
 
+# How long a quarantined candidate from an already-smoothed source
+# (ext_tof / internal_tof) must persist within
+# QUARANTINE_SCALE_JUMP_RATIO_THRESHOLD of itself before being adopted.
+# These sources return the same stable float on every poll once locked
+# on, so the "must look like a new measurement" check used for depth
+# never fires for them - a time-based hold is used instead.
+QUARANTINE_MIN_HOLD_SEC = 3.0
+
  
  
 # ----------------------------------------------------------------------
@@ -311,6 +319,27 @@ SLAM_MAP_FRAME_ID_PREFIX = "slam_map_"
 # the old live CSV. One message per active map_id, per periodic tick.
 TOPIC_KEYFRAME_POINTS = "/tello_autonomy/keyframe_points"
 TOPIC_TRAJECTORY = "/tello_autonomy/trajectory"
+
+# Published by perception/live_scaler.py whenever it detects a map_id
+# transition on the raw pose stream. Carries the alignment transform
+# (new_map_raw_frame -> old_map_metric_frame) computed in RAW SLAM units
+# (both anchor poses share the same arbitrary scale, avoiding the bug where
+# comparing two already-scaled metric poses across different scale factors
+# produces a meaningless offset). occupancy_map_cpp subscribes to this
+# instead of computing alignment itself - it never sees raw poses or
+# per-map scale factors so cannot do the math correctly on its own.
+# Message type: tello_autonomy_msgs/msg/MapAlignment
+TOPIC_MAP_ALIGNMENT = "/tello_autonomy/map_alignment"
+
+# Sanity bounds used by live_scaler.py when deciding whether to accept a
+# computed alignment transform. Both conditions must hold independently -
+# the old OR-clause bypass (small offset passes even over a long gap) was
+# incorrect because a small estimated offset over a long gap tells you
+# nothing about whether the anchor is trustworthy.
+MAX_ALIGNMENT_TRANSLATION_M = 4.0   # max acceptable metric offset between anchors
+                                    # (raised from 2.0: drone can travel 3-4m during a recovery
+                                    #  sweep before ORB-SLAM3 re-initialises a new map)
+MAX_ALIGNMENT_GAP_SEC = 25.0        # max acceptable wall-clock gap waiting for new map scale factor
 
 # NEW - the C++ node's periodic publish timer runs every ~1s
 # (LiveCsvTimer_callback). If no keyframe_points message has been
@@ -414,3 +443,11 @@ BARO_WARN_THROTTLE_SEC = 5.0
 #   "auto"  -- prefer ToF when valid and stable (std_dev below threshold);
 #              fall back to Depth-Anything otherwise.
 SCALE_SOURCE_MODE = "auto"
+
+# ----------------------------------------------------------------------
+# Extension-kit ToF (EXT tof? command, mm-precision, ~1.2m range)
+# ----------------------------------------------------------------------
+TOPIC_EXT_TOF_DISTANCE_MM = "/tello_autonomy/ext_tof_distance_mm"
+TOPIC_EXT_TOF_VALID = "/tello_autonomy/ext_tof_valid"
+EXT_TOF_BRIDGE_POLL_HZ = 5.0   # topic publish rate; underlying sensor poll is its own thread's pace
+

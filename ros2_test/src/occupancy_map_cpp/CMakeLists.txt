@@ -20,11 +20,15 @@ find_package(octomap_ros REQUIRED)
 find_package(message_filters REQUIRED)
 find_package(pcl_conversions REQUIRED)
 find_package(PCL REQUIRED COMPONENTS common io)
+find_package(tello_autonomy_msgs REQUIRED)
+
+find_package(Eigen3 REQUIRED)
 
 include_directories(
   include
   ${OCTOMAP_INCLUDE_DIRS}
   ${PCL_INCLUDE_DIRS}
+  ${EIGEN3_INCLUDE_DIRS}
 )
 
 add_executable(occupancy_map_node
@@ -41,6 +45,7 @@ ament_target_dependencies(occupancy_map_node
   octomap_ros
   message_filters
   pcl_conversions
+  tello_autonomy_msgs
 )
 
 target_link_libraries(occupancy_map_node

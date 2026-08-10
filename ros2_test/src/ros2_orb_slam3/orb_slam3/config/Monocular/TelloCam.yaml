@@ -2,31 +2,20 @@
 File.version: "1.0"
 Camera.type: "PinHole"
 
-# Camera calibration and distortion parameters (OpenCV Pinhole Model)
-Camera1.fx: 914.498673
-Camera1.fy: 907.342960
-Camera1.cx: 492.510781
-Camera1.cy: 388.956389
-
-Camera1.k1: -0.003809
-Camera1.k2: -0.271768
-Camera1.p1: 0.006616
-Camera1.p2: 0.007182
-
-# Image resolution
 Camera.width: 960
 Camera.height: 720
-
-# Camera frames per second.
-# NOTE: This value sets mMaxFrames in Tracking.cc (line 621), which controls
-# how many frames must pass before a keyframe is FORCED. Lowering this from
-# 30 to 15 means a forced keyframe every ~0.5s instead of ~1s. During a
-# rotation into a new area this halves the time before new map points are
-# created, dramatically reducing tracking loss in new environments.
 Camera.fps: 15
+Camera.RGB: 0
 
-# Color order of the images (0: BGR, 1: RGB)
-Camera.RGB: 1
+Camera1.fx: 891.360362
+Camera1.fy: 925.896638
+Camera1.cx: 479.321405
+Camera1.cy: 384.367368
+
+Camera1.k1: -0.007323
+Camera1.k2: -0.283893
+Camera1.p1: 0.004625
+Camera1.p2: 0.003885
 
 #--------------------------------------------------------------------------------------------
 # ORB Extractor Parameters
@@ -59,4 +48,4 @@ Viewer.ViewpointF: 500.0
 # code paths (was hardcoded to 3.0 s in the monocular path before this
 # change).  Default: 5.0 s.  Raise it in textured / feature-rich
 # environments; lower it if stale-map re-inits are hurting you.
-Tracking.TimeRecentlyLost: 5.0
+Tracking.TimeRecentlyLost: 3.0

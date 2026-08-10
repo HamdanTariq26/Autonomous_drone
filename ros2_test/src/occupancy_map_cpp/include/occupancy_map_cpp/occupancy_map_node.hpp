@@ -7,6 +7,7 @@
 #include <memory>
 #include <mutex>
 #include <optional>
+#include <set>
 #include <string>
 #include <thread>
 
@@ -16,9 +17,14 @@
 #include <octomap_msgs/msg/octomap.hpp>
 #include <octomap/octomap.h>
 
+#include <Eigen/Dense>
+#include <Eigen/Geometry>
+
 #include <message_filters/subscriber.h>
 #include <message_filters/synchronizer.h>
 #include <message_filters/sync_policies/approximate_time.h>
+
+#include <tello_autonomy_msgs/msg/map_alignment.hpp>
 
 namespace occupancy_map_cpp
 {
@@ -37,6 +43,11 @@ struct InsertionJob
   geometry_msgs::msg::PoseStamped::ConstSharedPtr pose;
   sensor_msgs::msg::PointCloud2::ConstSharedPtr points;
   std::optional<long long> map_id;
+  // True for jobs from the dense_synchronizer_ (dense_pose_metric /
+  // dense_points_metric published by scale_factor_manager.py). These
+  // jobs participate in INSERTION but must never trigger re-init
+  // detection - see the split design in OccupancyMapNode.
+  bool is_dense_stream = false;
 };
 
 // Design note (see ARCHITECTURE.md Section 12.2 and the chat discussion
@@ -54,30 +65,23 @@ struct InsertionJob
 //     and the publish timer; the queue mutex is separate and only ever
 //     touches job_queue_.
 //
-// Map re-init handling (pipeline_audit.md, Finding #1):
-//   Every pose/points message's header.frame_id already carries the
-//   producing map_id as "slam_map_<N>" (see
-//   config.constants.SLAM_MAP_FRAME_ID_PREFIX on the Python side, and
-//   PublishCurrentPoseAndPoints()/PublishLiveMapData() in common.cpp,
-//   which is what actually stamps it there). Previously this node never
-//   looked at that field at all - it inserted every point it ever
-//   received into one never-reset OcTree regardless of which map
-//   produced it. When SLAM loses tracking and re-initializes, the new
-//   map_id's origin is wherever the drone physically was at that
-//   moment, NOT the same physical origin as the old map - so blending
-//   old- and new-map points into one octree produces duplicated/offset
-//   geometry that exploration_cpp's RRT then trusts completely.
+// Map re-init handling (split detection/insertion design):
 //
-//   Fix: track current_map_id_ (guarded by octree_mutex_, since its
-//   lifetime is tied to octree_'s). Whenever a job's map_id differs from
-//   current_map_id_, clear octree_ before inserting that job's points,
-//   and update map_frame_id_ so publishTimerCallback() stamps outgoing
-//   octomap messages with whichever map is actually live right now
-//   (fixes the frame_id going stale after a re-init, too). This is
-//   option (a) from the audit - reset-on-reinit - not an attempt to
-//   align old and new maps via a relative transform; a partially
-//   remapped room beats a corrupted one, and this is by far the
-//   cheaper, lower-risk fix of the two options discussed.
+//   Two synchronizers feed the same job_queue_: synchronizer_ (the
+//   regular per-frame SLAM stream, current_pose_metric /
+//   current_points_metric) and dense_synchronizer_ (the periodic
+//   backprojection from scale_factor_manager.py, dense_pose_metric /
+//   dense_points_metric). Both contribute points to the OcTree, but
+//   only the regular stream is allowed to drive re-init detection.
+//
+//   Points from BOTH streams are pre-aligned into the global Map 0
+//   coordinate frame by live_scaler.py (regular stream) and
+//   scale_factor_manager.py (dense stream) before they reach this node.
+//   This node does NOT apply any additional transform at insertion time.
+//   The mapAlignmentCallback() callback's only remaining job is to gate
+//   workerLoop() via map_ids_already_aligned_ (holding back any job for
+//   a not-yet-registered map_id) and to hard-reset the OcTree when
+//   live_scaler.py signals a rejected alignment.
 class OccupancyMapNode : public rclcpp::Node
 {
 public:
@@ -87,9 +91,12 @@ public:
 private:
   // Fired by the message_filters synchronizer once a pose/points pair
   // within sync_slop_sec_ of each other has been found. Must stay cheap.
+  // is_dense_stream tags which synchronizer produced this pair so
+  // workerLoop() can gate re-init detection to the regular stream only.
   void syncedCallback(
     const geometry_msgs::msg::PoseStamped::ConstSharedPtr & pose,
-    const sensor_msgs::msg::PointCloud2::ConstSharedPtr & points);
+    const sensor_msgs::msg::PointCloud2::ConstSharedPtr & points,
+    bool is_dense_stream);
 
   // Runs on publish_timer_'s own thread via the executor; serializes and
   // publishes the current octree. Independent of insertion_period_ms_.
@@ -105,6 +112,12 @@ private:
   // (treated as "unknown map" - never crashes, never resets on a
   // malformed/unexpected frame_id, only on a genuine, parseable change).
   static std::optional<long long> parseMapIdFromFrameId(const std::string & frame_id);
+
+  // Called on the ROS2 executor thread when perception/live_scaler.py
+  // publishes a MapAlignment message. Sets pending_alignment_ (accepted)
+  // or hard-resets the OcTree (rejected) under octree_mutex_.
+  void mapAlignmentCallback(
+    const tello_autonomy_msgs::msg::MapAlignment::SharedPtr msg);
 
   // --- parameters (loaded once in the constructor) ---
   double resolution_;
@@ -126,10 +139,33 @@ private:
   std::unique_ptr<octomap::OcTree> octree_;
   std::mutex octree_mutex_;
 
-  // Which map_id's points are currently in octree_. std::nullopt means
-  // "no points inserted yet" - the very first job's map_id is adopted
-  // without triggering a reset (there is nothing to reset).
-  std::optional<long long> current_map_id_;
+  // --- Map re-init detection: ONLY driven by the regular stream ---
+  // (current_pose_metric / current_points_metric). The dense stream
+  // (dense_pose_metric / dense_points_metric, from
+  // scale_factor_manager.py's periodic backprojection) shares the same
+  // job_queue_ and worker thread for INSERTION, but must never be
+  // allowed to trigger a re-init decision itself - it's not a continuous
+  // per-frame signal, so its map_id can legitimately arrive slightly
+  // out of order relative to the regular stream even when nothing about
+  // SLAM's actual tracking state changed.
+  //
+  // regular_stream_map_id_: the last map_id seen from the regular
+  // stream. std::nullopt = no regular-stream job yet.
+  std::optional<long long> regular_stream_map_id_;
+
+  // map_ids_already_aligned_: set of map_ids for which we have already
+  // computed and committed an alignment (or hard reset). ORB-SLAM3 map
+  // ids are monotonically increasing - a transition to an already-seen
+  // id is definitionally cross-topic noise, not a real re-init.
+  std::set<long long> map_ids_already_aligned_;
+
+  // --- Map re-init alignment ---
+  // live_scaler.py pre-aligns all points into the global Map 0 frame
+  // before publishing them. This node does NOT apply any additional
+  // transform at insertion time. mapAlignmentCallback() is purely a
+  // gate (map_ids_already_aligned_) and a hard-reset trigger (rejected
+  // alignment -> fresh OcTree).
+  bool force_publish_next_tick_ = false;
 
   // --- queue shared between syncedCallback (producer) and workerLoop (consumer) ---
   std::deque<InsertionJob> job_queue_;
@@ -152,6 +188,11 @@ private:
 
   rclcpp::Publisher<octomap_msgs::msg::Octomap>::SharedPtr occupancy_pub_;
   rclcpp::TimerBase::SharedPtr publish_timer_;
+
+  // Subscriber to TOPIC_MAP_ALIGNMENT published by live_scaler.py.
+  // Fires on the ROS2 executor thread; sets/clears pending_alignment_ under
+  // octree_mutex_ so workerLoop() sees a consistent transform at insertion time.
+  rclcpp::Subscription<tello_autonomy_msgs::msg::MapAlignment>::SharedPtr alignment_sub_;
 };
 
 }  // namespace occupancy_map_cpp

@@ -83,6 +83,11 @@ _TOPIC_QOS = {
     # ToF-based scale estimation topics (middleware/telemetry_bridge.py)
     constants.TOPIC_TOF_HEIGHT_CM: DEFAULT_QOS,
     constants.TOPIC_BARO_HEIGHT_M: DEFAULT_QOS,
+    # Map alignment topic (perception/live_scaler.py)
+    constants.TOPIC_MAP_ALIGNMENT: DEFAULT_QOS,
+    # Extension-kit ToF topics (middleware/ext_tof_bridge.py)
+    constants.TOPIC_EXT_TOF_DISTANCE_MM: DEFAULT_QOS,
+    constants.TOPIC_EXT_TOF_VALID: DEFAULT_QOS,
 }
 
 

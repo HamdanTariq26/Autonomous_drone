@@ -17,6 +17,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/NbvPlan.srv"
   "srv/SearchPlan.srv"
   "msg/Segment.msg"
+  "msg/MapAlignment.msg"
   DEPENDENCIES std_msgs geometry_msgs
 )
 

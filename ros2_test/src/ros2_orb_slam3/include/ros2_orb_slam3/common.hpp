@@ -12,7 +12,8 @@
 #include <thread> // class to represent individual threads of execution.
 #include <mutex> // A mutex is a lockable object that is designed to signal when critical sections of code need exclusive access, preventing other threads with the same protection from executing concurrently and access the same memory locations.
 #include <cstdlib> // to find home directory
-#include <set> // Addded : (Needed to keep track of distinict maps seen in each tick)
+#include <set>   // Added: (Needed to keep track of distinct maps seen in each tick)
+#include <map>   // Added: for keyframePoseHistory_ (per-map culled-keyframe grace-period cache)
 
 #include <cstring>
 #include <sstream> // String stream processing functionalities
@@ -123,6 +124,20 @@ class MonocularMode : public rclcpp::Node
         rclcpp::TimerBase::SharedPtr liveCsvTimer_;   // fires every ~1s, rewrites live_sparse_map_points.csv from scratch
 
         std::set<long unsigned int> prevMapIds_; //Added: maps_ids seen on the prev LIveCsvTimer_callback tick (Hamdan)
+
+        // Added: per-map history of keyframe poses, kept for a grace period
+        // after ORB-SLAM3 culls the keyframe (isBad()==true). Needed because
+        // perception/scale_factor_manager.py's depth-inference worker runs
+        // asynchronously (a separate OS process) and can take longer than a
+        // keyframe's live-in-the-Atlas lifetime; without this, a late-arriving
+        // dense-backprojection result can no longer find its anchor pose in
+        // TOPIC_TRAJECTORY because PublishLiveMapData() only ever reflects
+        // keyframes that are CURRENTLY live, not historical ones. (Hamdan)
+        // Outer key: map_id. Inner key: keyframe_id ->
+        //   (last-seen wall-clock seconds, PoseStamped as of when we last saw it).
+        std::map<long unsigned int,
+                 std::map<long unsigned int, std::pair<double, geometry_msgs::msg::PoseStamped>>>
+          keyframePoseHistory_;
 
         //* ROS callbacks
         void experimentSetting_callback(const std_msgs::msg::String& msg); // Callback to process settings sent over by Python node

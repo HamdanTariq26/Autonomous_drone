@@ -127,27 +127,41 @@ class ManualControl:
     # ****************************************************************************************
     def _on_key_press(self, key):
         try:
-            if key.char == 'h':
+            ch = key.char.lower() if getattr(key, "char", None) else None
+            if ch == 'h':
                 if self.on_rth_requested is not None:
                     self.on_rth_requested()
-            elif key.char == 'e':
+            elif ch == 'e':
                 if self.on_explore_requested is not None:
                     self.on_explore_requested()
-            elif key.char == 'm':
+            elif ch == 'm':
                 if self.on_scale_mode_cycle_requested is not None:
                     self.on_scale_mode_cycle_requested()
-            elif key.char in MOVE_KEYS or key.char in ("q", "t"):
-                self._held_keys.add(key.char)
+            elif (ch in MOVE_KEYS or ch in ("q", "t")) and ch is not None:
+                self._held_keys.add(ch)
                 if self.on_manual_override is not None:
                     self.on_manual_override()
-        except AttributeError:
-            pass  # special keys (ctrl, shift, alt, etc) - not used, ignore
+        except Exception:
+            pass
+
+        # Handle special keys (Arrow keys, Spacebar, ESC)
+        if hasattr(key, 'name'):
+            name = key.name
+            if name in ("up", "down", "left", "right", "space", "esc"):
+                self._held_keys.add(name)
+                if self.on_manual_override is not None:
+                    self.on_manual_override()
 
     def _on_key_release(self, key):
         try:
-            self._held_keys.discard(key.char)
-        except AttributeError:
+            ch = key.char.lower() if getattr(key, "char", None) else None
+            if ch:
+                self._held_keys.discard(ch)
+        except Exception:
             pass
+
+        if hasattr(key, 'name'):
+            self._held_keys.discard(key.name)
     # ****************************************************************************************
 
     # ****************************************************************************************
@@ -203,10 +217,10 @@ class ManualControl:
                     and not self._command_handler.is_landing_in_progress()
                     and not self._command_handler.is_takeoff_in_progress()):
                 lr = fb = ud = yv = 0
-                if "w" in self._held_keys: fb = self.manual_speed
-                if "s" in self._held_keys: fb = -self.manual_speed
-                if "a" in self._held_keys: lr = self.manual_speed
-                if "d" in self._held_keys: lr = -self.manual_speed
+                if "w" in self._held_keys or "up" in self._held_keys: fb = self.manual_speed
+                if "s" in self._held_keys or "down" in self._held_keys: fb = -self.manual_speed
+                if "a" in self._held_keys or "left" in self._held_keys: lr = -self.manual_speed
+                if "d" in self._held_keys or "right" in self._held_keys: lr = self.manual_speed
                 if "i" in self._held_keys: ud = self.manual_speed
                 if "k" in self._held_keys: ud = -self.manual_speed
                 if "j" in self._held_keys: yv = -self.manual_speed

@@ -38,6 +38,7 @@ import time
 from collections import OrderedDict
 
 import multiprocessing
+import numpy as np
 from rclpy.node import Node
 from std_msgs.msg import Bool, Float64, Int32, String
 from sensor_msgs.msg import PointCloud2, Image
@@ -49,7 +50,11 @@ from cv_bridge import CvBridge
 from config import constants
 from middleware.topic_manager import TopicManager
 from perception.depth_inference_worker import run_worker
-from perception.pose_transform import transform_camera_points_to_world
+from perception.pose_transform import (
+    transform_camera_points_to_world,
+    _quaternion_to_rotation_matrix,
+    _rotation_matrix_to_quat,
+)
 
 
 def _parse_map_id_from_frame_id(frame_id):
@@ -82,14 +87,24 @@ class ScaleFactorManager(Node):
         any other node/layer (e.g. perception.live_scaler) to read.
     """
 
-    def __init__(self, node_name="scale_factor_manager", tof_estimator=None):
+    def __init__(self, node_name="scale_factor_manager", tof_estimator=None, ext_tof_estimator=None):
         super().__init__(node_name)
 
         # Optional reference to a ToFScaleEstimator instance (same process).
         # None means ToF source is unavailable (e.g. simulation, or before
         # the node starts).  ScaleFactorManager never creates this itself -
-        # scripts/main.py wires it in.
+        # main.py wires it in.
         self._tof_estimator = tof_estimator
+        self._ext_tof_estimator = ext_tof_estimator
+
+        # Reference to LiveScaler (same process), set post-construction via
+        # set_live_scaler(). Needed by _publish_dense_depth_points to look
+        # up the cumulative global alignment transform for dense points,
+        # exactly mirroring what live_scaler already does for sparse points.
+        # Cannot be set in __init__ because LiveScaler takes a reference to
+        # THIS node - circular dependency; main.py wires it after both are
+        # constructed.
+        self._live_scaler = None
 
         # Runtime scale-source mode, initialised from constants but mutable
         # at runtime via cycle_scale_source_mode() (bound to 'm' key).
@@ -159,6 +174,9 @@ class ScaleFactorManager(Node):
         # instance has its own independent dict.
         self.current_scale_factors = {}
 
+        # map_id -> name of active scale source ("ext_tof", "internal_tof", or "depth")
+        self._active_scale_sources = {}
+
         # pipeline_audit.md Finding #3: map_id -> {"candidate": float,
         # "confirmations": int} for a scale-factor jump that exceeded
         # constants.QUARANTINE_SCALE_JUMP_RATIO_THRESHOLD relative to the
@@ -211,6 +229,10 @@ class ScaleFactorManager(Node):
             f"and {constants.TOPIC_MAP_TOPOLOGY_CHANGED}. Depth inference worker "
             f"process started (pid={self._worker_process.pid})."
         )
+
+    def set_live_scaler(self, live_scaler):
+        """Wire in the LiveScaler reference post-construction (see __init__)."""
+        self._live_scaler = live_scaler
 
     # ****************************************************************************************
     def _on_recent_frame(self, msg: Image):
@@ -339,6 +361,23 @@ class ScaleFactorManager(Node):
             first result.
         """
         self.get_logger().info(f"New map_id {map_id} detected - starting scale-factor tracking.")
+
+        if map_id not in self.current_scale_factors and self.current_scale_factors:
+            last_known_scale = list(self.current_scale_factors.values())[-1]
+            if last_known_scale is not None and last_known_scale > 0.0:
+                self.get_logger().info(
+                    f"map_id {map_id}: seeding scale factor with previous map's scale ({last_known_scale:.2f})"
+                )
+                self.current_scale_factors[map_id] = last_known_scale
+                self._active_scale_sources[map_id] = "seeded_prev_map"
+                # FIX: the HUD only ever updates from on_scale_ready, which was
+                # previously fired exclusively from _resolve_active_scale(). The
+                # seed path bypassed that entirely, so manual_control's status
+                # text stayed stuck on "Computing..." even though live_scaler
+                # was already publishing metric poses/points for this map_id.
+                if self.on_scale_ready is not None:
+                    self.on_scale_ready(map_id, last_known_scale)
+
         timer = self.create_timer(
             constants.PERIODIC_RECALIBRATION_SECONDS,
             lambda: self._trigger_recompute(map_id),
@@ -360,11 +399,14 @@ class ScaleFactorManager(Node):
         if state is not None and state["timer"] is not None:
             state["timer"].cancel()
         self.current_scale_factors.pop(map_id, None)
+        self._active_scale_sources.pop(map_id, None)
         self._depth_scale_factors.pop(map_id, None)
         self._map_points_cache.pop(map_id, None)
         self._last_seen.pop(map_id, None)
         self._in_flight_map_ids.discard(map_id)
         self._quarantine.pop(map_id, None)
+        if self._ext_tof_estimator is not None:
+            self._ext_tof_estimator.reset_map(map_id)
         self.get_logger().info(f"map_id {map_id} no longer active - dropped its scale-factor state.")
 
     # ****************************************************************************************
@@ -460,8 +502,11 @@ class ScaleFactorManager(Node):
     def _publish_dense_depth_points(self, result: dict):
         """
             Transforms camera-frame dense points from Depth-Anything backprojection
-            into the world frame using the keyframe's pose and current metric scale factor,
-            then publishes on TOPIC_DENSE_POINTS_METRIC.
+            into the global world frame using the keyframe's pose, current metric
+            scale factor, and the same cumulative map-alignment transform that
+            live_scaler applies to the sparse stream. Previously this method only
+            applied scale (local frame), so dense clouds for any map_id after the
+            first re-init were silently mis-registered by up to several meters.
         """
         points_cam = result.get("dense_points_cam")
         map_id = result.get("map_id")
@@ -473,6 +518,23 @@ class ScaleFactorManager(Node):
         active_scale = self.current_scale_factors.get(map_id)
         if not active_scale or active_scale <= 0:
             return
+
+        # Dense points must go through the same global registration as
+        # current_points_metric. Without this, every dense cloud published for
+        # a map after the first re-init lands in that map's own local frame -
+        # offset from the rest of the map by that submap's alignment vector
+        # (up to several meters, per diagnostics). Refuse to publish rather
+        # than publish something silently mis-registered.
+        if self._live_scaler is None:
+            return
+        global_transform = self._live_scaler.get_global_transform(map_id)
+        if global_transform is None:
+            self.get_logger().debug(
+                f"map_id {map_id}: global alignment not resolved yet - "
+                f"holding dense-points publish until it is."
+            )
+            return
+        R_glob, T_glob = global_transform
 
         poses = self._trajectory_cache.get(map_id, [])
         if not poses:
@@ -493,13 +555,29 @@ class ScaleFactorManager(Node):
 
         raw_pos = matched_pose.pose.position
         orientation = matched_pose.pose.orientation
-        translation_m = (raw_pos.x * active_scale, raw_pos.y * active_scale, raw_pos.z * active_scale)
 
-        points_world = transform_camera_points_to_world(
+        # Local metric frame (same as current_pose_metric's un-aligned branch).
+        translation_local_m = np.array(
+            [raw_pos.x * active_scale, raw_pos.y * active_scale, raw_pos.z * active_scale],
+            dtype=np.float64,
+        )
+        rotation_local = _quaternion_to_rotation_matrix(
+            orientation.x, orientation.y, orientation.z, orientation.w
+        )
+
+        # --- Local -> global, matching live_scaler exactly ---
+        translation_global_m = R_glob @ translation_local_m + T_glob
+        rotation_global = R_glob @ rotation_local
+        qx, qy, qz, qw = _rotation_matrix_to_quat(rotation_global)
+
+        # Points: camera-frame -> local metric world (rotation is scale-
+        # invariant, so rotation_local via orientation is correct here) -> global.
+        points_local_world = transform_camera_points_to_world(
             points_cam=points_cam,
             orientation=orientation,
-            translation_m=translation_m,
+            translation_m=tuple(translation_local_m),
         )
+        points_world = (points_local_world @ R_glob.T) + T_glob
 
         frame_id_str = f"{constants.SLAM_MAP_FRAME_ID_PREFIX}{map_id}"
         now_stamp = self.get_clock().now().to_msg()
@@ -507,17 +585,21 @@ class ScaleFactorManager(Node):
         dense_pose_msg = PoseStamped()
         dense_pose_msg.header.stamp = now_stamp
         dense_pose_msg.header.frame_id = frame_id_str
-        dense_pose_msg.pose.position.x = translation_m[0]
-        dense_pose_msg.pose.position.y = translation_m[1]
-        dense_pose_msg.pose.position.z = translation_m[2]
-        dense_pose_msg.pose.orientation = orientation
+        dense_pose_msg.pose.position.x = float(translation_global_m[0])
+        dense_pose_msg.pose.position.y = float(translation_global_m[1])
+        dense_pose_msg.pose.position.z = float(translation_global_m[2])
+        dense_pose_msg.pose.orientation.x = qx
+        dense_pose_msg.pose.orientation.y = qy
+        dense_pose_msg.pose.orientation.z = qz
+        dense_pose_msg.pose.orientation.w = qw
         self._dense_pose_pub.publish(dense_pose_msg)
 
         header = dense_pose_msg.header
         cloud_msg = point_cloud2.create_cloud_xyz32(header, points_world.tolist())
         self._dense_points_pub.publish(cloud_msg)
         self.get_logger().info(
-            f"map_id {map_id}: Published {len(points_world)} dense metric points to {constants.TOPIC_DENSE_POINTS_METRIC}."
+            f"map_id {map_id}: Published {len(points_world)} dense metric points "
+            f"to {constants.TOPIC_DENSE_POINTS_METRIC}."
         )
 
     # ****************************************************************************************
@@ -564,40 +646,82 @@ class ScaleFactorManager(Node):
         if self._tof_estimator is not None:
             tof_scale, tof_reliable = self._tof_estimator.get_scale_estimate(map_id)
 
+        ext_tof_scale_mm, ext_tof_reliable = None, False
+        if self._ext_tof_estimator is not None:
+            ext_tof_scale_mm, ext_tof_reliable = self._ext_tof_estimator.get_scale_estimate(map_id)
+        ext_tof_scale = (ext_tof_scale_mm / 1000.0) if ext_tof_scale_mm is not None else None
+
+        chosen_source = "none"
         mode = self.scale_source_mode
         if mode == "tof":
             # Prefer ToF; fall back to last depth result if ToF not ready yet.
-            chosen = tof_scale if tof_scale is not None else depth_scale
+            if tof_scale is not None:
+                chosen = tof_scale
+                chosen_source = "internal_tof"
+            else:
+                chosen = depth_scale
+                chosen_source = "depth"
         elif mode == "depth":
             chosen = depth_scale
+            chosen_source = "depth"
         else:  # "auto"
             # Prefer ToF when it's reliable (low std-dev, enough samples);
             # fall back to Depth-Anything otherwise.
-            chosen = (tof_scale if (tof_scale is not None and tof_reliable)
-                      else depth_scale)
+            if tof_scale is not None and tof_reliable:
+                chosen = tof_scale
+                chosen_source = "internal_tof"
+            else:
+                chosen = depth_scale
+                chosen_source = "depth"
+
+        # ext_tof takes priority over WHATEVER the mode above selected,
+        # whenever it's currently reliable - it's the most accurate available
+        # source (+/-4mm) but only intermittently available (needs the floor
+        # or an obstacle within ~1.2m below the drone).
+        if ext_tof_scale is not None and ext_tof_reliable:
+            chosen = ext_tof_scale
+            chosen_source = "ext_tof"
 
         if chosen is None:
             return
 
-        adopted_value = self._maybe_adopt_scale(map_id, chosen)
+        adopted_value = self._maybe_adopt_scale(map_id, chosen, chosen_source)
         if adopted_value is None:
             return  # candidate is quarantined - current_scale_factors untouched this call
 
         self.current_scale_factors[map_id] = adopted_value
+
+        # Log scale governor switch or active governor
+        previous_source = self._active_scale_sources.get(map_id)
+        if previous_source != chosen_source:
+            self.get_logger().info(
+                f"ScaleFactorManager: [SCALE_SOURCE_SWITCH] map_id={map_id}: scale governor changed "
+                f"'{previous_source}' -> '{chosen_source}' | active_scale={adopted_value:.6f}m "
+                f"(ext_tof={ext_tof_scale}, int_tof={tof_scale}, depth={depth_scale})"
+            )
+            self._active_scale_sources[map_id] = chosen_source
+        else:
+            self.get_logger().info(
+                f"ScaleFactorManager: [SCALE_SOURCE_ACTIVE] map_id={map_id}: active_scale={adopted_value:.6f}m "
+                f"governed by '{chosen_source}' (ext_tof_reliable={ext_tof_reliable}, int_tof_reliable={tof_reliable}, mode={mode})"
+            )
 
         _sf_msg = Float64()
         _sf_msg.data = adopted_value
         self._scale_factor_pub.publish(_sf_msg)
 
         dbg = String()
-        dbg.data = f"map_id={map_id} mode={mode} tof_reliable={tof_reliable}"
+        dbg.data = (
+            f"map_id={map_id} active_source={chosen_source} mode={mode} "
+            f"tof_reliable={tof_reliable} ext_tof_reliable={ext_tof_reliable}"
+        )
         self._debug_pub.publish(dbg)
 
         if self.on_scale_ready is not None:
             self.on_scale_ready(map_id, adopted_value)
 
     # ****************************************************************************************
-    def _maybe_adopt_scale(self, map_id: int, candidate: float):
+    def _maybe_adopt_scale(self, map_id: int, candidate: float, source: str):
         """
             pipeline_audit.md Finding #3: gate between "a source proposed
             this scale factor" and "current_scale_factors[map_id] is
@@ -605,123 +729,114 @@ class ScaleFactorManager(Node):
             contains points inserted under whatever scale was active
             before this call - there's no mechanism reconciling old
             insertions with a corrected scale, so a large, sudden jump
-            (calibrate_scale_factor.py's own docstring cites a real
-            example: "suggested_scale = current * 1.35") would silently
-            smear/duplicate geometry in the live map the instant it took
-            effect, with no visible error.
+            would silently smear/duplicate geometry in the live map.
 
             Returns the value that should be written to
             current_scale_factors[map_id] THIS call, or None if the
             candidate is being held in quarantine and nothing should be
-            adopted yet (the caller must leave current_scale_factors
-            untouched in that case - the previous value, if any, simply
-            stays active).
+            adopted yet.
 
-            IMPORTANT SUBTLETY this implementation has to account for:
-            _resolve_active_scale() is called both from _poll_results()
-            (only when a genuinely NEW Depth-Anything result arrives,
-            every PERIODIC_RECALIBRATION_SECONDS) and from
-            _resolve_all_active_scales() (on a fast ~0.5s timer, for
-            EVERY tracked map_id, regardless of whether anything
-            actually changed - this is what lets ToF's fast updates
-            reach current_scale_factors promptly). In "depth" mode
-            between two real recomputes, that fast timer re-proposes the
-            exact same stale depth_scale value roughly 30-120 times
-            before the next actual measurement. If confirmations were
-            counted per CALL rather than per genuinely new PROPOSAL, a
-            single bad Depth-Anything result would rack up
-            QUARANTINE_CONFIRMATIONS_REQUIRED confirmations within about
-            a second of wall-clock time - defeating the entire point of
-            requiring the jump to be seen again on a SEPARATE
-            measurement. So: a confirmation is only counted when
-            `candidate` differs (beyond floating-point noise) from the
-            candidate this same map_id was quarantined against on the
-            previous call - i.e. the source must have actually produced
-            a new number, not merely been asked again.
+            Sources are split into two confirmation styles:
+              - "depth": requires QUARANTINE_CONFIRMATIONS_REQUIRED proposals
+                that visibly differ from the previous one. Depth-Anything
+                only produces a new number on a real recompute, so "did it
+                change" is a meaningful signal of a new measurement.
+              - "ext_tof" / "internal_tof": these are already smoothed /
+                rate-limited at the source (see ExtTofScaleEstimator /
+                ToFScaleEstimator). A genuinely-good reading returns the
+                SAME float on every poll once locked on. Gating on "did it
+                change" would starve these sources in quarantine forever.
+                Instead, adopt once the candidate has persisted within
+                threshold of itself for QUARANTINE_MIN_HOLD_SEC wall-clock
+                seconds, regardless of whether the float literally changed
+                between polls.
 
             Logic:
-              - No active value for this map_id yet (this is the very
-                first scale factor ever computed for it): adopt
-                immediately. There's nothing to "jump" from, and
-                withholding a map's first-ever scale factor would only
-                delay when live_scaler starts publishing metric poses
-                for no safety benefit.
-              - Candidate within QUARANTINE_SCALE_JUMP_RATIO_THRESHOLD of
-                the active value: adopt immediately, same as before this
-                fix - small, gradual updates (which is most of them,
-                especially from the fast-updating ToF path) are not
-                delayed by any of this.
-              - Candidate is a sharp jump from the active value: don't
-                adopt outright. If the exact same candidate value was
-                already being quarantined, count this as a repeat
-                observation only if it looks like a genuinely new
-                measurement (see subtlety above) - simplified here by
-                comparing against the previous call's candidate rather
-                than trying to detect "new measurement" at this layer.
-                Once confirmations reach QUARANTINE_CONFIRMATIONS_REQUIRED
-                distinct-looking proposals, the jump is treated as a
-                genuine, sustained correction and IS adopted, with the
-                quarantine entry cleared.
+              - No active value yet: adopt immediately.
+              - Within QUARANTINE_SCALE_JUMP_RATIO_THRESHOLD of active: adopt
+                immediately, clear any stale quarantine entry.
+              - Sharp jump detected:
+                  depth   -> change-based confirmation (unchanged logic).
+                  tof     -> time-based confirmation (QUARANTINE_MIN_HOLD_SEC).
+              - If the quarantined source changes between calls, reset the
+                quarantine so the two styles' held state don't cross-contaminate.
         """
         active = self.current_scale_factors.get(map_id)
 
         if active is None or active == 0.0:
-            return candidate  # nothing to compare against - adopt the first value outright
+            return candidate  # nothing to compare against - adopt outright
 
         jump_ratio = abs(candidate - active) / abs(active)
         if jump_ratio <= constants.QUARANTINE_SCALE_JUMP_RATIO_THRESHOLD:
-            # Small, gradual change - adopt immediately and clear any
-            # stale quarantine entry (the source has evidently settled
-            # back down near the active value on its own).
             self._quarantine.pop(map_id, None)
             return candidate
 
+        now = time.monotonic()
+        is_time_based = source in ("ext_tof", "internal_tof")
+
         held = self._quarantine.get(map_id)
+
+        # If the winning source changed (e.g. ext_tof took over from depth
+        # mid-quarantine), the two styles' held state aren't comparable -
+        # reset so we don't confirm a depth hold with a tof timer or vice versa.
+        if held is not None and held.get("source") != source:
+            held = None
+
         if held is None:
-            self._quarantine[map_id] = {
-                "candidate": candidate,
-                "confirmations": 1,
-                "last_proposal": candidate,
-            }
+            entry = {"candidate": candidate, "source": source}
+            if is_time_based:
+                entry["first_seen"] = now
+            else:
+                entry["confirmations"] = 1
+                entry["last_proposal"] = candidate
+            self._quarantine[map_id] = entry
             self.get_logger().warn(
                 f"map_id {map_id}: scale factor jump {active:.6f} -> {candidate:.6f} "
-                f"({jump_ratio * 100:.1f}%) exceeds "
-                f"{constants.QUARANTINE_SCALE_JUMP_RATIO_THRESHOLD * 100:.0f}% threshold - "
-                f"quarantining (1/{constants.QUARANTINE_CONFIRMATIONS_REQUIRED} confirmations)."
+                f"({jump_ratio * 100:.1f}%) from '{source}' exceeds "
+                f"{constants.QUARANTINE_SCALE_JUMP_RATIO_THRESHOLD * 100:.0f}% threshold - quarantining."
             )
             return None
 
         held_candidate = held["candidate"]
-        agreement_ratio = abs(candidate - held_candidate) / abs(held_candidate) if held_candidate != 0.0 else 1.0
+        agreement_ratio = (
+            abs(candidate - held_candidate) / abs(held_candidate) if held_candidate != 0.0 else 1.0
+        )
         if agreement_ratio > constants.QUARANTINE_SCALE_JUMP_RATIO_THRESHOLD:
-            # The jump target itself moved since last time - still noisy,
-            # restart the quarantine against this newest candidate rather
-            # than confirming a moving target.
-            self._quarantine[map_id] = {
-                "candidate": candidate,
-                "confirmations": 1,
-                "last_proposal": candidate,
-            }
+            # The jump target itself moved - still noisy, restart quarantine.
+            entry = {"candidate": candidate, "source": source}
+            if is_time_based:
+                entry["first_seen"] = now
+            else:
+                entry["confirmations"] = 1
+                entry["last_proposal"] = candidate
+            self._quarantine[map_id] = entry
             self.get_logger().warn(
                 f"map_id {map_id}: quarantined candidate moved ({held_candidate:.6f} -> "
-                f"{candidate:.6f}) - restarting confirmation count "
-                f"(1/{constants.QUARANTINE_CONFIRMATIONS_REQUIRED})."
+                f"{candidate:.6f}) - restarting quarantine for '{source}'."
             )
             return None
 
-        # Candidate agrees with the held one - but only count this as a
-        # NEW confirmation if it's not just the fast resolve timer asking
-        # again about the same unchanged proposal (see docstring). Exact
-        # float equality is fine here: an unchanged source genuinely
-        # returns the identical Python float, since neither depth_scale
-        # nor a ToF median recomputes between ticks unless new underlying
-        # data arrived.
+        # Candidate still agrees with the held one - check confirmation
+        # using the style appropriate for this source.
+        if is_time_based:
+            held_duration = now - held.get("first_seen", now)
+            if held_duration < constants.QUARANTINE_MIN_HOLD_SEC:
+                return None
+            self.get_logger().warn(
+                f"map_id {map_id}: '{source}' jump to {candidate:.6f} held stable for "
+                f"{held_duration:.1f}s (>= {constants.QUARANTINE_MIN_HOLD_SEC}s) - adopting."
+            )
+            self._quarantine.pop(map_id, None)
+            return candidate
+
+        # depth: original change-based confirmation - only count if the
+        # float actually changed (i.e. a genuine new recompute arrived).
         last_proposal = held.get("last_proposal")
         if last_proposal is not None and candidate == last_proposal:
-            return None  # same proposal seen again on the fast timer - not a new confirmation
+            return None  # fast timer re-asking about the same stale depth result
 
         held["last_proposal"] = candidate
-        held["confirmations"] += 1
+        held["confirmations"] = held.get("confirmations", 1) + 1
         if held["confirmations"] < constants.QUARANTINE_CONFIRMATIONS_REQUIRED:
             self.get_logger().info(
                 f"map_id {map_id}: quarantined jump to {candidate:.6f} confirmed "
@@ -729,9 +844,6 @@ class ScaleFactorManager(Node):
             )
             return None
 
-        # Confirmed enough distinct times in a row - this is a genuine,
-        # sustained correction, not a single noisy cycle's outlier.
-        # Adopt it and clear the quarantine entry.
         self.get_logger().warn(
             f"map_id {map_id}: scale factor jump to {candidate:.6f} confirmed "
             f"{held['confirmations']}x - adopting."

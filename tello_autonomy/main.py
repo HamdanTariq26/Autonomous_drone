@@ -55,11 +55,15 @@ from drone_interface.frame_receiver import FrameReceiver
 from drone_interface.telemetry import TelemetryMonitor
 from drone_interface.command_handler import CommandHandler
 from drone_interface.manual_control import ManualControl
+from drone_interface.ext_tof_driver import ExtTofDriver
 from middleware.ros_bridge import RosBridge
 from middleware.telemetry_bridge import TelemetryBridge
+from middleware.ext_tof_bridge import ExtTofBridge
 from perception.scale_factor_manager import ScaleFactorManager
 from perception.live_scaler import LiveScaler
 from perception.tof_scale_estimator import ToFScaleEstimator
+from perception.ext_tof_scale_estimator import ExtTofScaleEstimatorNode
+from perception.global_map_diagnostic_exporter import GlobalMapDiagnosticExporter
 from goals.mission_controller import MissionControllerNode
 
 
@@ -89,6 +93,9 @@ def main():
     driver = TelloDriver(resolution="high", fps="high", bitrate=constants.TELLO_VIDEO_BITRATE)
     driver.connect()
 
+    ext_tof_driver = ExtTofDriver(driver)
+    ext_tof_driver.start()
+
     frame_receiver = FrameReceiver(driver)
     telemetry = TelemetryMonitor(
         driver, enabled=True,
@@ -102,19 +109,32 @@ def main():
 
     ros_bridge = RosBridge(frame_receiver, node_name="tello_ros_bridge")
     telemetry_bridge = TelemetryBridge(telemetry, node_name="telemetry_bridge")
+    ext_tof_bridge = ExtTofBridge(ext_tof_driver, node_name="ext_tof_bridge")
     tof_scale_estimator = ToFScaleEstimator(node_name="tof_scale_estimator")
+    ext_tof_estimator = ExtTofScaleEstimatorNode(node_name="ext_tof_scale_estimator")
     scale_factor_manager = ScaleFactorManager(
-        node_name="scale_factor_manager", tof_estimator=tof_scale_estimator
+        node_name="scale_factor_manager",
+        tof_estimator=tof_scale_estimator,
+        ext_tof_estimator=ext_tof_estimator,
     )
     live_scaler = LiveScaler(scale_factor_manager, node_name="live_scaler")
-    mission_controller = MissionControllerNode(command_handler, node_name="mission_controller")
+    scale_factor_manager.set_live_scaler(live_scaler)   # wire global-transform accessor for dense-point publish
+    diagnostic_exporter = GlobalMapDiagnosticExporter(node_name="global_map_diagnostic_exporter")
+    mission_controller = MissionControllerNode(
+        command_handler,
+        scale_factor_manager=scale_factor_manager,
+        node_name="mission_controller",
+    )
 
     runners = [
         NodeRunner(ros_bridge),
         NodeRunner(telemetry_bridge),
+        NodeRunner(ext_tof_bridge),
         NodeRunner(tof_scale_estimator),
+        NodeRunner(ext_tof_estimator),
         NodeRunner(scale_factor_manager),
         NodeRunner(live_scaler),
+        NodeRunner(diagnostic_exporter),
         NodeRunner(mission_controller),
     ]
     for runner in runners:
@@ -182,6 +202,7 @@ def main():
         print("Shutting down drone_interface...")
         manual_control.stop()
         command_handler.stop_keepalive()
+        ext_tof_driver.stop()
         driver.disconnect()
 
         print("Shutting down ROS2 nodes...")

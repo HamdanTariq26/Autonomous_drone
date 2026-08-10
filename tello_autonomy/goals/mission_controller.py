@@ -44,6 +44,29 @@ Map re-init handling (pipeline_audit.md, Finding #1):
     the bug: making sure the mission controller stops trusting stale
     waypoints the instant it knows its coordinate frame just changed,
     rather than silently flying them.
+
+Recalibration hop (MissionState.RECALIBRATING):
+    After a SLAM map re-init, ToFScaleEstimator needs at least
+    MIN_DELTA_TOF_M (20 cm) of vertical motion before it can accumulate
+    the samples required for reliable=True. If the drone is hovering
+    stationary post-reinit, that motion never happens passively, so the
+    system would otherwise wait up to MAX_ALIGNMENT_GAP_SEC (25 s) for
+    a Depth-Anything result instead.
+
+    _start_reinit_calibration_hop() manufactures the needed motion:
+      Phase 'escape_near_field': climb until ToF >= TARGET_MARGIN_CM (45 cm)
+        - ensures we are above the near-field clamp zone.
+      Phase 'climb_delta': continue climbing until delta_tof from the
+        baseline >= DELTA_TARGET_CM (30 cm) - crosses MIN_DELTA_TOF_M.
+      Phase 'wait_scale': hover; poll scale_factor_manager for the new
+        map_id's scale. Finish on success or WAIT_SCALE_TIMEOUT_SEC.
+    A hard HOP_TIMEOUT_SEC = 8 s cap terminates the whole maneuver
+    regardless of phase - falls through to _finish_recalibration() which
+    transitions to IDLE and calls start_exploration().
+
+    RC ownership: is_active() returns True during RECALIBRATING (it
+    is non-IDLE), so ManualControl's idle-hover loop stays suppressed
+    exactly as it does during NAVIGATING/EXPLORING - no extra logic.
 """
 
 from geometry_msgs.msg import TransformStamped
@@ -82,13 +105,18 @@ class MissionState:
     IDLE = 0
     NAVIGATING = 1
     EXPLORING = 2
+    RECALIBRATING = 3   # deliberate calibration hop after map re-init
 
 class MissionControllerNode(Node):
-    def __init__(self, command_handler, node_name="mission_controller"):
+    def __init__(self, command_handler, scale_factor_manager=None, node_name="mission_controller"):
         super().__init__(node_name)
         self._command_handler = command_handler
         self._tracker = TrajectoryTracker()
         self._state = MissionState.IDLE
+
+        # Reference to ScaleFactorManager (same process) so _handle_recalibration
+        # can poll whether the new map's scale has landed yet.
+        self._scale_factor_manager = scale_factor_manager
 
         self._current_x = 0.0
         self._current_y = 0.0
@@ -99,9 +127,17 @@ class MissionControllerNode(Node):
         self._nbv_request_in_flight = False
         self._search_request_in_flight = False
         self._last_auto_cmd_time = None
-        
+
+        # --- Recalibration hop state (MissionState.RECALIBRATING) ---
+        self._latest_tof_cm = None          # updated by _on_tof subscription below
+        self._recal_map_id = None           # new map_id the hop is calibrating for
+        self._recal_phase = None            # 'escape_near_field' | 'climb_delta' | 'wait_scale'
+        self._recal_start_time = None       # monotonic time the hop began
+        self._recal_baseline_tof_cm = None  # ToF reading at start of climb_delta phase
+        self._recal_wait_start = None       # monotonic time 'wait_scale' phase began
+
         #To fix frame_id mismatch between rivz2 and in coming messages
-        
+
         self._tf_broadcaster = StaticTransformBroadcaster(self)
         self._known_slam_frames = set()
         self._broadcast_identity_frame("slam_map_0")  # publish immediately, don't wait for a pose
@@ -130,11 +166,33 @@ class MissionControllerNode(Node):
         self._recovery_turning = False               # True = currently rotating to next step
         self._recovery_yaw_elapsed = 0.0             # seconds spent turning this step
 
-        # Subscriber for live pose
+        # Subscriber for raw (unscaled) SLAM pose - used ONLY for map_id
+        # change detection. Raw poses arrive before any scale factor exists
+        # for the new map, so this lets the calibration hop start immediately
+        # at re-init time rather than after the alignment deadline expires.
+        self.create_subscription(
+            PoseStamped,
+            constants.TOPIC_CURRENT_POSE_RAW,
+            self._on_raw_pose,
+            10
+        )
+
+        # Subscriber for metric (scaled) pose - position tracking + relay.
+        # Map_id change detection has moved to _on_raw_pose above.
         self.create_subscription(
             PoseStamped,
             constants.TOPIC_CURRENT_POSE_METRIC,
             self._pose_callback,
+            10
+        )
+
+        # Subscriber for raw ToF height - used by _handle_recalibration to
+        # track altitude during the calibration hop.
+        from std_msgs.msg import Float64
+        self.create_subscription(
+            Float64,
+            constants.TOPIC_TOF_HEIGHT_CM,
+            self._on_tof,
             10
         )
 
@@ -214,12 +272,17 @@ class MissionControllerNode(Node):
         
         self.get_logger().info("Requesting Next-Best-View path...")
         self._nbv_request_in_flight = True
+        self._state = MissionState.EXPLORING
         self._last_auto_cmd_time = time.monotonic()
         future = self._nbv_client.call_async(req)
         future.add_done_callback(self._on_nbv_plan_received)
 
     def _on_nbv_plan_received(self, future):
         self._nbv_request_in_flight = False
+        if self._state == MissionState.IDLE:
+            self.get_logger().info("NBV plan received, but mission was canceled by manual override — discarding path.")
+            return
+
         try:
             response = future.result()
             if not response.path:
@@ -245,41 +308,65 @@ class MissionControllerNode(Node):
             if len(waypoints) > 1:
                 waypoints.pop(0)
 
-            self._tracker.set_path(waypoints)
+            self._tracker.set_path(waypoints, require_final_yaw_lock=False)  # exploration: skip final yaw-lock
             self._state = MissionState.EXPLORING
             self.get_logger().info(f"Exploration path received ({len(waypoints)} waypoints). Moving.")
         except Exception as e:
             self.get_logger().error(f"NbvPlan Service call failed: {e}")
             self.cancel_mission()
 
-    def _pose_callback(self, msg: PoseStamped):
-        # To fix frame id mismatch between rviz and exploration message header
+    def _on_raw_pose(self, msg: PoseStamped):
+        """
+        Subscribes to TOPIC_CURRENT_POSE_RAW for map_id change detection.
+
+        Raw poses arrive from the C++ SLAM node before any scale factor
+        exists for the new map_id, and therefore before live_scaler starts
+        publishing metric poses for it. Detecting the transition here means
+        the calibration hop starts immediately at re-init time - inside the
+        25 s alignment window - rather than 13+ seconds after it expires
+        (which was the failure mode when detection lived in _pose_callback,
+        a metric-topic subscriber).
+
+        Position state (x/y/z/yaw) is NOT updated here - raw poses are in
+        arbitrary SLAM units, not meters. That stays in _pose_callback.
+        """
         frame_id = msg.header.frame_id
-        if frame_id.startswith("slam_map_"):
+        # Broadcast identity TF frame as soon as we see a new slam_map_N id,
+        # satisfying TF2 lookups before the first metric pose arrives.
+        if frame_id.startswith(constants.SLAM_MAP_FRAME_ID_PREFIX):
             self._broadcast_identity_frame(frame_id)
 
-        # --- Map re-init detection (pipeline_audit.md, Finding #1) ---
-        # A genuine map_id change means SLAM lost and regained tracking
-        # since the last pose - the new map's origin is NOT the same
-        # physical point as the old map's origin (see module docstring).
-        # Distinct from the tracking-loss recovery sweep below: that
-        # handles the GAP in poses while SLAM is relocalizing on what
-        # turns out to be the SAME map most of the time; this handles the
-        # case where it comes back with a NEW map_id instead. The two are
-        # independent and can both fire around the same event (a gap,
-        # then a resumed pose that turns out to carry a new map_id).
         incoming_map_id = _parse_map_id_from_frame_id(frame_id)
-        if incoming_map_id is not None:
-            if self._current_map_id is not None and incoming_map_id != self._current_map_id:
-                self.get_logger().warn(
-                    f"SLAM map re-initialized: map_id {self._current_map_id} -> "
-                    f"{incoming_map_id}. Canceling any in-flight mission - its "
-                    f"waypoints were computed against the old map's occupancy "
-                    f"data, which occupancy_map_cpp has now discarded."
-                )
-                self.cancel_mission()
-            self._current_map_id = incoming_map_id
+        if incoming_map_id is None:
+            return
 
+        if self._current_map_id is not None and incoming_map_id != self._current_map_id:
+            self.get_logger().warn(
+                f"SLAM map re-initialized: map_id {self._current_map_id} -> "
+                f"{incoming_map_id}. Starting calibration hop immediately "
+                f"(detected on raw pose stream, before scale/metric poses)."
+            )
+            self.cancel_mission()
+            self._start_reinit_calibration_hop(incoming_map_id)
+            # If tracking_lost was active, clear it now. The hop handles
+            # exploration resumption; the metric-pose tracking_lost block in
+            # _pose_callback must not independently call start_exploration.
+            if self._tracking_lost:
+                self._tracking_lost = False
+                self._recovery_map_id_at_loss = None
+
+        self._current_map_id = incoming_map_id
+
+    def _pose_callback(self, msg: PoseStamped):
+        """
+        Handles TOPIC_CURRENT_POSE_METRIC: updates position state, handles
+        same-map tracking-loss recovery, and relays pose to exploration_cpp.
+
+        Map_id change detection has moved to _on_raw_pose (raw pose stream)
+        so the calibration hop fires before scale/metric poses exist for the
+        new map. This callback only sees a new map_id after scale is ready
+        - by then the hop is already running or completed.
+        """
         self._current_x = msg.pose.position.x
         self._current_y = msg.pose.position.y
         self._current_z = msg.pose.position.z
@@ -292,29 +379,32 @@ class MissionControllerNode(Node):
         self._has_pose = True
         self._last_pose_time = time.monotonic()
 
-        # If we were in recovery sweep mode, tracking just came back.
-        # Distinguish same-map re-localization from new-map initialization so
-        # we can log the right reason; in both cases clear the flag and
-        # auto-resume exploration (instead of waiting for the user to press 'e').
+        # Tracking-loss recovery: if SLAM came back on the SAME map, resume
+        # exploration immediately. If it came back on a NEW map, _on_raw_pose
+        # already cleared _tracking_lost and started the calibration hop when
+        # raw poses arrived - so the else branch here is a safety fallback only.
         if self._tracking_lost:
+            incoming_map_id = _parse_map_id_from_frame_id(msg.header.frame_id)
             if incoming_map_id == self._recovery_map_id_at_loss:
-                # Re-localized on the SAME map - coordinate frame is unchanged,
-                # safe to resume immediately.
-                self.get_logger().info(
-                    f"Re-localized on same map (map_id={incoming_map_id}). "
-                    "Auto-resuming exploration."
-                )
+                was_active = (self._state != MissionState.IDLE)
+                self._tracking_lost = False
+                self._recovery_map_id_at_loss = None
+                if was_active:
+                    self.get_logger().info(
+                        f"Re-localized on same map (map_id={incoming_map_id}). "
+                        "Auto-resuming exploration."
+                    )
+                    self.start_exploration()
+                else:
+                    self.get_logger().info(
+                        f"Re-localized on same map (map_id={incoming_map_id}), "
+                        "but mission was canceled — remaining in IDLE."
+                    )
             else:
-                # New map_id - cancel_mission() already fired in the map-reinit
-                # block above. Exploration will start fresh on the new map.
-                self.get_logger().info(
-                    f"New map {incoming_map_id} initializing after loss. "
-                    "Auto-resuming exploration on new map."
-                )
-            self._tracking_lost = False
-            self._recovery_map_id_at_loss = None
-            # Auto-resume: don't make the user press 'e' after every tracking loss.
-            self.start_exploration()
+                # _on_raw_pose already handled this (cleared tracking_lost,
+                # started hop). Clear any residual state defensively.
+                self._tracking_lost = False
+                self._recovery_map_id_at_loss = None
 
         # Relay pose to exploration_cpp which expects PoseWithCovarianceStamped.
         # Covariance is all zeros - exploration only uses the mean position.
@@ -369,6 +459,9 @@ class MissionControllerNode(Node):
 
     def _on_search_plan_received(self, future):
         self._search_request_in_flight = False
+        if self._state == MissionState.RECALIBRATING:
+            self.get_logger().info("Ignoring Search plan response received during recalibration hop.")
+            return
         try:
             response = future.result()
             if not response.success or not response.path:
@@ -410,11 +503,129 @@ class MissionControllerNode(Node):
             # Send zero velocity to stop immediately
             self._send_rc_control(0, 0, 0, 0)
 
+    def _on_tof(self, msg):
+        """Store the latest ToF reading for use in _handle_recalibration."""
+        self._latest_tof_cm = msg.data
+
+    def _start_reinit_calibration_hop(self, new_map_id):
+        """
+        Enter RECALIBRATING state to manufacture vertical motion so that
+        ToFScaleEstimator can accumulate enough delta-based samples for
+        the new map_id quickly, rather than waiting passively for a
+        Depth-Anything result (which may take up to MAX_ALIGNMENT_GAP_SEC).
+        """
+        self._recal_map_id = new_map_id
+        self._recal_phase = "escape_near_field"
+        self._recal_start_time = time.monotonic()
+        self._recal_baseline_tof_cm = None
+        self._recal_wait_start = None
+        self._nbv_request_in_flight = False
+        self._search_request_in_flight = False
+        self._state = MissionState.RECALIBRATING
+        self.get_logger().info(
+            f"map_id {new_map_id}: starting calibration hop "
+            f"(phase=escape_near_field, timeout=8s)."
+        )
+
+    def _handle_recalibration(self):
+        """
+        Runs from _control_loop while self._state == MissionState.RECALIBRATING.
+        Drives the three-phase calibration hop:
+          escape_near_field -> climb_delta -> wait_scale -> _finish_recalibration
+        A hard HOP_TIMEOUT_SEC cap terminates the whole maneuver if something
+        goes wrong (bad ToF, out-of-range readings, etc.).
+        """
+        HOP_TIMEOUT_SEC = 8.0           # hard safety cap on the whole maneuver
+        CLIMB_SPEED = 20                # gentle climb (not MAX_AUTO_SPEED_Z)
+        TARGET_MARGIN_CM = 45           # above TOF_MIN_VALID_CM (35), safety buffer
+        DELTA_TARGET_CM = 30            # comfortably above MIN_DELTA_TOF_M (20 cm)
+        WAIT_SCALE_TIMEOUT_SEC = 5.0
+
+        elapsed = time.monotonic() - self._recal_start_time
+        if elapsed > HOP_TIMEOUT_SEC:
+            self.get_logger().warn(
+                f"map_id {self._recal_map_id}: calibration hop timed out after "
+                f"{elapsed:.1f}s - resuming without forced scale."
+            )
+            self._finish_recalibration()
+            return
+
+        tof_cm = self._latest_tof_cm
+
+        # Direction guard: prefer ascending (near-field clamp means we're close
+        # to the floor). If somehow we're very high, descend instead.
+        # planner_params.yaml bbx.maxZ: 5.0 m -> 500 cm; leave 100 cm headroom.
+        CEILING_LIMIT_CM = 400
+        climb_dir = -1 if (tof_cm is not None and tof_cm > CEILING_LIMIT_CM) else 1
+        climb_cmd = CLIMB_SPEED * climb_dir
+
+        if self._recal_phase == "escape_near_field":
+            if tof_cm is not None and tof_cm >= TARGET_MARGIN_CM:
+                self._recal_baseline_tof_cm = tof_cm
+                self._recal_phase = "climb_delta"
+                self.get_logger().info(
+                    f"map_id {self._recal_map_id}: ToF {tof_cm:.0f} cm >= "
+                    f"{TARGET_MARGIN_CM} cm — switching to climb_delta phase."
+                )
+            else:
+                self._send_rc_control(0, 0, climb_cmd, 0)
+            return
+
+        if self._recal_phase == "climb_delta":
+            if tof_cm is not None and self._recal_baseline_tof_cm is not None:
+                delta = abs(tof_cm - self._recal_baseline_tof_cm)
+                if delta >= DELTA_TARGET_CM:
+                    self._send_rc_control(0, 0, 0, 0)  # hover, let samples accumulate
+                    self._recal_phase = "wait_scale"
+                    self._recal_wait_start = time.monotonic()
+                    self.get_logger().info(
+                        f"map_id {self._recal_map_id}: delta ToF {delta:.0f} cm >= "
+                        f"{DELTA_TARGET_CM} cm — switching to wait_scale phase."
+                    )
+                    return
+            self._send_rc_control(0, 0, climb_cmd, 0)
+            return
+
+        if self._recal_phase == "wait_scale":
+            self._send_rc_control(0, 0, 0, 0)
+            scale_ready = (
+                self._scale_factor_manager is not None
+                and self._scale_factor_manager.current_scale_factors.get(self._recal_map_id) is not None
+            )
+            if scale_ready:
+                self.get_logger().info(
+                    f"map_id {self._recal_map_id}: scale ready via forced hop — resuming exploration."
+                )
+                self._finish_recalibration()
+            elif time.monotonic() - self._recal_wait_start > WAIT_SCALE_TIMEOUT_SEC:
+                self.get_logger().warn(
+                    f"map_id {self._recal_map_id}: scale not ready after hop wait — resuming anyway."
+                )
+                self._finish_recalibration()
+
+    def _finish_recalibration(self):
+        """
+        Exits RECALIBRATING state: clear all hop vars, transition to IDLE,
+        and kick off exploration on the new map.
+        """
+        self._recal_map_id = None
+        self._recal_phase = None
+        self._recal_start_time = None
+        self._recal_baseline_tof_cm = None
+        self._recal_wait_start = None
+        self._state = MissionState.IDLE
+        self.start_exploration()
+
     def _control_loop(self):
         """
         Runs at GOALS_LOOP_RATE_HZ. Checks state and sends velocities.
         """
         if self._state == MissionState.IDLE:
+            return
+
+        # ---- Recalibration hop: runs independently of tracking-loss logic ----
+        if self._state == MissionState.RECALIBRATING:
+            self._handle_recalibration()
             return
 
         # ---- Tracking-loss detection ----

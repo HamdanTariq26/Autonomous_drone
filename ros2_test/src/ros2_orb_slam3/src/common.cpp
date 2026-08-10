@@ -308,7 +308,7 @@ void MonocularMode::LiveCsvTimer_callback()
 
     std::vector<double> timestamps;
     std::set<long unsigned int> currentMapIds;
-    WriteKeyframeDataToFile("/dev/null", timestamps, currentMapIds);  // CHANGED: only used now to collect timestamps/map_ids for the checks below - no longer writes a real file. See note below.
+    WriteKeyframeDataToFile("/home/hamdan/autonomous_drone/global_keyframe_pixels.csv", timestamps, currentMapIds);
 
     PublishLiveMapData();  // ADDED - replaces what used to be the CSV write
 
@@ -473,6 +473,17 @@ void MonocularMode::PublishLiveMapData()
         keyframePoints_publisher_->publish(cloudMsg);
 
         // ---- trajectory: nav_msgs/Path, fixes the GetAllKeyframePoses() single-map bug ----
+        // Added: grace-period constant - how long (wall-clock seconds) a culled keyframe's
+        // pose stays available in the published trajectory after ORB-SLAM3 removes it from
+        // the live Atlas. Should comfortably exceed PERIODIC_RECALIBRATION_SECONDS (15s)
+        // plus worst-case depth-inference time on CPU. (Hamdan)
+        static constexpr double KEYFRAME_HISTORY_GRACE_SEC = 60.0;
+
+        double nowWall = std::chrono::duration<double>(
+            std::chrono::steady_clock::now().time_since_epoch()).count();
+        auto& mapHistory = keyframePoseHistory_[mapId];
+        std::set<long unsigned int> liveIds;
+
         nav_msgs::msg::Path pathMsg;
         pathMsg.header.stamp = this->now();
         pathMsg.header.frame_id = frameIdStr;
@@ -495,7 +506,38 @@ void MonocularMode::PublishLiveMapData()
             ps.pose.orientation.z = q.z();
             ps.pose.orientation.w = q.w();
             pathMsg.poses.push_back(ps);
+
+            // Added: refresh/insert this keyframe's history entry (Hamdan)
+            liveIds.insert(kf->mnId);
+            mapHistory[kf->mnId] = {nowWall, ps};
         }
+
+        // Added: merge in recently-culled keyframes (present in history,
+        // no longer live) that are still inside the grace period, and
+        // prune anything older than the grace period out of the cache
+        // entirely so it doesn't grow unbounded over a long flight. (Hamdan)
+        for (auto it = mapHistory.begin(); it != mapHistory.end(); )
+        {
+          double age = nowWall - it->second.first;
+          if (age > KEYFRAME_HISTORY_GRACE_SEC) {
+            it = mapHistory.erase(it);
+            continue;
+          }
+          if (liveIds.count(it->first) == 0) {
+            pathMsg.poses.push_back(it->second.second);
+          }
+          ++it;
+        }
+
+        // Keep poses chronologically ordered - merging history entries above
+        // breaks the original live-keyframe ordering.
+        std::sort(pathMsg.poses.begin(), pathMsg.poses.end(),
+          [](const geometry_msgs::msg::PoseStamped& a, const geometry_msgs::msg::PoseStamped& b) {
+            double ta = a.header.stamp.sec + a.header.stamp.nanosec * 1e-9;
+            double tb = b.header.stamp.sec + b.header.stamp.nanosec * 1e-9;
+            return ta < tb;
+          });
+
         trajectory_publisher_->publish(pathMsg);
     }
 }

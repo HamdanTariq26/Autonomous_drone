@@ -65,6 +65,13 @@ OccupancyMapNode::OccupancyMapNode(const rclcpp::NodeOptions & options)
   clamping_max_ = this->declare_parameter<double>("clamping_max", 0.97);
   occupancy_thres_ = this->declare_parameter<double>("occupancy_thres", 0.50);
 
+  // Alignment sanity bounds are now evaluated in live_scaler.py (Python),
+  // which has access to both the RAW poses and the per-map scale factors
+  // needed to compute a geometrically correct metric offset. The parameters
+  // are declared there (via constants.MAX_ALIGNMENT_TRANSLATION_M /
+  // constants.MAX_ALIGNMENT_GAP_SEC) and the outcome arrives here as a
+  // pre-validated MapAlignment message on TOPIC_MAP_ALIGNMENT.
+
   const std::string pose_topic = this->declare_parameter<std::string>(
     "pose_topic", "/tello_autonomy/current_pose_metric");
   const std::string points_topic = this->declare_parameter<std::string>(
@@ -76,17 +83,30 @@ OccupancyMapNode::OccupancyMapNode(const rclcpp::NodeOptions & options)
   const std::string occupancy_topic = this->declare_parameter<std::string>(
     "occupancy_topic", "/tello_autonomy/occupancy_grid");
 
+  const std::string alignment_topic = this->declare_parameter<std::string>(
+    "alignment_topic", "/tello_autonomy/map_alignment");
+
   octree_ = std::make_unique<octomap::OcTree>(resolution_);
   octree_->setProbHit(prob_hit_);
   octree_->setProbMiss(prob_miss_);
   octree_->setClampingThresMin(clamping_min_);
   octree_->setClampingThresMax(clamping_max_);
   octree_->setOccupancyThres(occupancy_thres_);
-  current_map_id_ = std::nullopt;  // nothing inserted yet - first job's map_id is adopted, not "changed into"
+  // regular_stream_map_id_ starts as nullopt - the first regular-stream
+  // job's map_id is adopted without triggering a re-init event.
+  regular_stream_map_id_ = std::nullopt;
 
   // --- publisher ---
   occupancy_pub_ = this->create_publisher<octomap_msgs::msg::Octomap>(
     occupancy_topic, rclcpp::QoS(10));
+
+  // --- TOPIC_MAP_ALIGNMENT subscriber ---
+  // live_scaler.py publishes here whenever it detects a map_id transition on
+  // the raw pose stream. This callback either arms pending_alignment_ (accepted
+  // case) or hard-resets the OcTree (rejected case), both under octree_mutex_.
+  alignment_sub_ = this->create_subscription<tello_autonomy_msgs::msg::MapAlignment>(
+    alignment_topic, rclcpp::QoS(10),
+    std::bind(&OccupancyMapNode::mapAlignmentCallback, this, std::placeholders::_1));
 
   // --- synchronized subscribers ---
   // Pose and points are published as two separate topics per frame by
@@ -103,7 +123,7 @@ OccupancyMapNode::OccupancyMapNode(const rclcpp::NodeOptions & options)
   synchronizer_->registerCallback(
     std::bind(
       &OccupancyMapNode::syncedCallback, this,
-      std::placeholders::_1, std::placeholders::_2));
+      std::placeholders::_1, std::placeholders::_2, /*is_dense=*/false));
 
   // Also subscribe to dense metric points published by ScaleFactorManager
   dense_pose_sub_.subscribe(this, dense_pose_topic, rmw_qos_profile_sensor_data);
@@ -115,7 +135,7 @@ OccupancyMapNode::OccupancyMapNode(const rclcpp::NodeOptions & options)
   dense_synchronizer_->registerCallback(
     std::bind(
       &OccupancyMapNode::syncedCallback, this,
-      std::placeholders::_1, std::placeholders::_2));
+      std::placeholders::_1, std::placeholders::_2, /*is_dense=*/true));
 
   // --- decoupled publish timer (Section 12.2: "two independently
   // tunable rates, not one") ---
@@ -145,18 +165,19 @@ OccupancyMapNode::~OccupancyMapNode()
 
 void OccupancyMapNode::syncedCallback(
   const geometry_msgs::msg::PoseStamped::ConstSharedPtr & pose,
-  const sensor_msgs::msg::PointCloud2::ConstSharedPtr & points)
+  const sensor_msgs::msg::PointCloud2::ConstSharedPtr & points,
+  bool is_dense_stream)
 {
   // Deliberately the only real work this callback does beyond parsing
   // the map_id: push a job onto the queue and return. All insertion (and
   // any resulting octree reset) happens on worker_thread_ - see
   // workerLoop(). Parsing here is cheap (a prefix check + stoll) and
   // avoids re-deriving it later; it does NOT touch octree_ or
-  // current_map_id_, so it needs no lock.
+  // regular_stream_map_id_, so it needs no lock.
   const auto map_id = parseMapIdFromFrameId(pose->header.frame_id);
   {
     std::lock_guard<std::mutex> lock(queue_mutex_);
-    job_queue_.push_back(InsertionJob{pose, points, map_id});
+    job_queue_.push_back(InsertionJob{pose, points, map_id, is_dense_stream});
   }
   queue_cv_.notify_one();
 }
@@ -199,46 +220,40 @@ void OccupancyMapNode::workerLoop()
         static_cast<float>(job.pose->pose.position.y),
         static_cast<float>(job.pose->pose.position.z));
 
+      // Track the most recent pose seen under the CURRENT map_id, so that
+      // if the next job's map_id changes, we have an anchor to align
+      // against. Must happen before the map_id comparison below uses it.
+      Eigen::Vector3d incoming_pos(origin.x(), origin.y(), origin.z());
+      Eigen::Quaterniond incoming_rot(
+        job.pose->pose.orientation.w, job.pose->pose.orientation.x,
+        job.pose->pose.orientation.y, job.pose->pose.orientation.z);
+
       std::lock_guard<std::mutex> lock(octree_mutex_);
 
-      // --- Map re-init detection (pipeline_audit.md, Finding #1) ---
-      // If this job's map_id is known (parseable) and differs from
-      // whatever map_id is currently in octree_, the SLAM node has lost
-      // and regained tracking since the last job: it started a new map
-      // whose origin is NOT the same physical point as the old map's
-      // origin. Continuing to insert into the same octree would ray-cast
-      // two unrelated coordinate systems' worth of points into one grid,
-      // producing duplicated/offset geometry that exploration_cpp's RRT
-      // then trusts completely. Reset (not merge/align) - see the class
-      // doc comment in the header for why this is the deliberately
-      // chosen, cheaper fix over attempting a relative-transform
-      // reconciliation between old and new maps.
-      //
-      // A std::nullopt map_id (frame_id didn't parse) never triggers a
-      // reset by itself - only a genuine, parsed change does. This means
-      // a malformed/unexpected frame_id degrades to "just insert it",
-      // not "wipe the map for no reason."
-      if (job.map_id.has_value()) {
-        if (current_map_id_.has_value() && *job.map_id != *current_map_id_) {
-          RCLCPP_WARN(
-            this->get_logger(),
-            "Detected SLAM map re-initialization: map_id %lld -> %lld. "
-            "Clearing OcTree to avoid inserting two unrelated coordinate "
-            "systems into the same grid (previously mapped area for the "
-            "old map_id is discarded).",
-            *current_map_id_, *job.map_id);
-          octree_ = std::make_unique<octomap::OcTree>(resolution_);
-          octree_->setProbHit(prob_hit_);
-          octree_->setProbMiss(prob_miss_);
-          octree_->setClampingThresMin(clamping_min_);
-          octree_->setClampingThresMax(clamping_max_);
-          octree_->setOccupancyThres(occupancy_thres_);
-        }
-        current_map_id_ = job.map_id;
-        // Keep the frame_id we publish under in sync with whichever map
-        // is actually live right now, so RViz/exploration_cpp don't keep
-        // receiving octomap messages stamped with a stale map_id after
-        // a re-init.
+      // Alignment gate: applies to BOTH regular and dense jobs. A map_id
+      // > 0 that hasn't had its MapAlignment message processed yet must
+      // not have ANY points inserted - dense (backprojected) points are
+      // just as capable of landing in the wrong local frame as regular
+      // SLAM points, so exempting them from this gate (as before) let
+      // mis-registered dense points slip into the OcTree during every
+      // re-init, independently of the Python-side fix in
+      // scale_factor_manager.py.
+      if (job.map_id.has_value() && *job.map_id > 0 &&
+        map_ids_already_aligned_.count(*job.map_id) == 0)
+      {
+        RCLCPP_DEBUG(
+          this->get_logger(),
+          "map_id %lld (dense=%d): job before alignment message - skipping frame until aligned.",
+          *job.map_id, static_cast<int>(job.is_dense_stream));
+        continue;
+      }
+
+      // Detection: regular stream only. Dense jobs must never advance
+      // regular_stream_map_id_ - see the class-level header comment on
+      // why the dense stream's map_id can legitimately race the regular
+      // stream's.
+      if (!job.is_dense_stream && job.map_id.has_value()) {
+        regular_stream_map_id_ = job.map_id;
         map_frame_id_ = "slam_map_" + std::to_string(*job.map_id);
       }
 
@@ -251,6 +266,56 @@ void OccupancyMapNode::workerLoop()
   }
 }
 
+void OccupancyMapNode::mapAlignmentCallback(
+  const tello_autonomy_msgs::msg::MapAlignment::SharedPtr msg)
+{
+  // Called on the ROS2 executor thread whenever live_scaler.py publishes
+  // a MapAlignment. Runs under octree_mutex_ so any modification to
+  // octree_ is visible to workerLoop() atomically.
+  //
+  // map_ids_already_aligned_ is checked here as a second-guard against
+  // duplicate application (e.g. if the message is delivered twice, or if
+  // workerLoop() already processed this transition before the message arrived).
+  std::lock_guard<std::mutex> lock(octree_mutex_);
+  const long long new_id = msg->new_map_id;
+
+  if (map_ids_already_aligned_.count(new_id) != 0) {
+    RCLCPP_DEBUG(
+      this->get_logger(),
+      "mapAlignmentCallback: map_id %lld already processed - ignoring duplicate.",
+      new_id);
+    return;
+  }
+  map_ids_already_aligned_.insert(new_id);
+
+  if (msg->accepted) {
+    // live_scaler.py pre-aligns BOTH streams (regular and dense) before they
+    // reach this node, so there is nothing to transform here. This callback's
+    // job is purely to gate workerLoop() via map_ids_already_aligned_ and to
+    // hard-reset the OcTree when a rejection is received.
+    RCLCPP_WARN(
+      this->get_logger(),
+      "Received accepted alignment for map %lld -> %lld (offset %.3fm over %.2fs). "
+      "Points pre-aligned by live_scaler.py - gate opened for map_id %lld.",
+      static_cast<long long>(msg->old_map_id), static_cast<long long>(new_id),
+      msg->offset_m, msg->gap_sec, static_cast<long long>(new_id));
+  } else {
+    octree_ = std::make_unique<octomap::OcTree>(resolution_);
+    octree_->setProbHit(prob_hit_);
+    octree_->setProbMiss(prob_miss_);
+    octree_->setClampingThresMin(clamping_min_);
+    octree_->setClampingThresMax(clamping_max_);
+    octree_->setOccupancyThres(occupancy_thres_);
+    RCLCPP_WARN(
+      this->get_logger(),
+      "Rejected alignment for map %lld -> %lld (offset %.3fm / gap %.2fs) - "
+      "OcTree hard-reset. New map starts with empty geometry.",
+      static_cast<long long>(msg->old_map_id), static_cast<long long>(new_id),
+      msg->offset_m, msg->gap_sec);
+  }
+  force_publish_next_tick_ = true;
+}
+
 void OccupancyMapNode::publishTimerCallback()
 {
   octomap_msgs::msg::Octomap msg;
@@ -258,9 +323,10 @@ void OccupancyMapNode::publishTimerCallback()
 
   {
     std::lock_guard<std::mutex> lock(octree_mutex_);
-    if (octree_->size() == 0) {
+    if (octree_->size() == 0 && !force_publish_next_tick_) {
       return;  // nothing inserted yet, skip this publish tick
     }
+    force_publish_next_tick_ = false;
     if (!octomap_msgs::fullMapToMsg(*octree_, msg)) {
       RCLCPP_WARN(this->get_logger(), "fullMapToMsg failed, skipping this publish tick");
       return;
